@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StoryBlock from '../components/StoryBlock.astro';
+import Marquee from '../components/Marquee.astro';
+import Testimonial from '../components/Testimonial.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+
+const principles = [
+  {
+    no: '01 — Quiet',
+    title: 'We do not direct your day',
+    body: 'Twenty minutes of portraits is all we ask for. The rest of the day is yours, and we photograph it as it happens.',
+  },
+  {
+    no: '02 — Honest',
+    title: 'The light is whatever it is',
+    body: 'Rain stays rain, a dark church stays a dark church. Photographs that lie about a day are no use in ten years.',
+  },
+  {
+    no: '03 — Finished',
+    title: 'Galleries in four weeks',
+    body: 'Every frame edited by us, print files included, and a preview of thirty within three days.',
+  },
+];
+---
+<BaseLayout title="Studio" description="Tomasz, a second camera, and twelve years of other people's best days.">
+  <section class="sh-section">
+    <div class="sh-container">
+      <StoryBlock image="/images/portrait-of-the-photographer.jpg" alt="Portrait of the photographer" cursorLabel="Hello">
+        <p class="sh-meta" data-reveal>Studio</p>
+        <h1 class="sh-d-xl" data-split style="margin:0;">Tomasz, and a second camera called Ada</h1>
+        <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
+          Twelve years of other people's best days, still slightly nervous every time — which we have decided is the
+          correct amount.
+        </p>
+        <p class="sh-muted sh-measure" data-reveal data-reveal-delay="200" style="margin:0;">
+          We work out of Poznań and go wherever the day is. The reason we started is a shoebox of badly lit
+          photographs of a house that no longer exists, and how much they still matter.
+        </p>
+      </StoryBlock>
+    </div>
+  </section>
+
+  <Marquee items={['No posing marathon', 'No shot list to perform', 'No fake first look']} />
+
+  <section class="sh-section">
+    <div class="sh-container">
+      <div class="sh-plans">
+        {principles.map((p) => (
+          <div class="sh-plan">
+            <p class="sh-meta">{p.no}</p>
+            <h2 class="sh-d-s" style="margin:0;">{p.title}</h2>
+            <p class="sh-muted sh-body-s" style="margin:0;">{p.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sh-section sh-section--band">
+    <div class="sh-container">
+      <StoryBlock image="/images/the-table-after-dark.jpg" alt="Working at the edge of the room" reverse>
+        <h2 class="sh-d-l" data-split style="margin:0;">A day with us, hour by hour</h2>
+        <p class="sh-muted sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
+          We arrive while the room is still a mess, photograph the getting ready without asking anyone to repeat
+          anything, and then mostly vanish. Near sunset we steal twenty minutes and walk.
+        </p>
+        <p class="sh-muted sh-measure" data-reveal data-reveal-delay="200" style="margin:0;">
+          We eat when you eat, stay through the first hour of dancing, and never photograph anyone mid-chew.
+        </p>
+        <p style="margin:0;" data-reveal data-reveal-delay="260"><a class="sh-btn sh-btn--outline" href="/rates/">See the rates</a></p>
+      </StoryBlock>
+    </div>
+  </section>
+
+  <section class="sh-section">
+    <div class="sh-container">
+      <Testimonial
+        quote="He felt like a guest who happened to be holding a camera. My father still talks about it."
+        by="Zofia — June, Gdańsk"
+      />
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>

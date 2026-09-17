@@ -1,0 +1,77 @@
+/* Still Hours design tokens — generated from the design system's tokens.json.
+   Night is the default theme; Day is set with data-theme="day" on <html>. */
+
+:root,
+:root[data-theme="night"] {
+  color-scheme: dark;
+  --surface-100: #0a0a0b;
+  --surface-200: #111113;
+  --surface-300: #1a1a1e;
+  --ink: #f4f4f1;
+  --ink-muted: #a3a3aa;
+  --ink-faint: #7d7d86;
+  --accent: #d4ff3f;
+  --accent-text: #c9f53a;
+  --on-accent: #08080a;
+  --line: #26262b;
+  --line-strong: #70707a;
+  --focus: #d4ff3f;
+  --scrim: rgba(4, 4, 5, 0.52);
+  --scrim-strong: rgba(4, 4, 5, 0.82);
+  --success: #7ce0a0;
+  --danger: #ff8a73;
+  --glow-accent: 0 0 0 1px rgba(212, 255, 63, 0.4), 0 12px 40px rgba(212, 255, 63, 0.18);
+}
+
+:root[data-theme="day"] {
+  color-scheme: light;
+  --surface-100: #f3f3f1;
+  --surface-200: #e8e8e4;
+  --surface-300: #dcdcd6;
+  --ink: #0a0a0b;
+  --ink-muted: #55555c;
+  --ink-faint: #63636b;
+  --accent: #bdf227;
+  --accent-text: #4c6300;
+  --on-accent: #0a0a0b;
+  --line: #cdcdc6;
+  --line-strong: #767680;
+  --focus: #0a0a0b;
+  --scrim: rgba(4, 4, 5, 0.46);
+  --scrim-strong: rgba(4, 4, 5, 0.78);
+  --success: #1d6b3f;
+  --danger: #b4291a;
+  --glow-accent: 0 0 0 1px rgba(76, 99, 0, 0.3), 0 12px 32px rgba(76, 99, 0, 0.12);
+}
+
+:root {
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-sans: "Instrument Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --space-9: 120px;
+  --space-10: 180px;
+
+  --radius-none: 0;
+  --radius-xs: 2px;
+  --radius-pill: 999px;
+
+  --layout-max: 1440px;
+  --layout-narrow: 760px;
+  --layout-measure: 56ch;
+
+  --dur-fast: 180ms;
+  --dur-base: 520ms;
+  --dur-slow: 900ms;
+  --stagger: 60ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}

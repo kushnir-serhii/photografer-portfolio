@@ -1,0 +1,53 @@
+---
+import { nav, site } from '../data/site';
+import Icon from './Icon.astro';
+
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isCurrent = (href: string) => path === href;
+---
+<header class="sh-header" transition:persist="site-header">
+  <div class="sh-container">
+    <nav class="sh-nav" aria-label="Primary">
+      <a class="sh-brand" href="/">{site.name}</a>
+      <ul class="sh-nav__links">
+        {nav.map((item) => (
+          <li>
+            <a class="sh-nav__link" href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <div class="sh-nav__end">
+        <button class="sh-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch colour theme">
+          <span data-theme-label>Day</span>
+        </button>
+        <a class="sh-btn sh-btn--primary" href="/contact/">Enquire</a>
+        <button class="sh-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sh-drawer" data-drawer-open>
+          <Icon name="burger" />
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="sh-drawer" id="sh-drawer" role="dialog" aria-modal="true" aria-label="Menu" data-drawer inert transition:persist="site-drawer">
+  <div class="sh-drawer__top">
+    <a class="sh-brand" href="/">{site.name}</a>
+    <button class="sh-burger" type="button" aria-label="Close menu" data-drawer-close>
+      <Icon name="close" />
+    </button>
+  </div>
+  <ul class="sh-drawer__links">
+    {nav.map((item, i) => (
+      <li>
+        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+          <span class="sh-meta">{String(i + 1).padStart(2, '0')}</span>
+          <span class="sh-d-l">{item.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <div class="sh-drawer__foot">
+    <a class="sh-btn sh-btn--primary sh-btn--block" href="/contact/">Check my date</a>
+    <p class="sh-meta-s">{site.email} · {site.phone}</p>
+  </div>
+</div>

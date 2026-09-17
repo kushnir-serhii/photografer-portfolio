@@ -1,0 +1,63 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+
+const action = site.formEndpoint || `mailto:${site.email}`;
+---
+<form
+  class="sh-form"
+  method="post"
+  action={action}
+  enctype={site.formEndpoint ? undefined : 'text/plain'}
+  novalidate
+  data-enquiry
+  data-endpoint={site.formEndpoint}
+  style="margin-top:12px;"
+>
+  <div class="sh-row sh-row--2">
+    <div class="sh-field">
+      <label class="sh-label" for="c-name">Your names</label>
+      <input class="sh-input" id="c-name" name="name" type="text" placeholder="Marta & Jakub" autocomplete="name" required aria-describedby="c-name-err" />
+      <p class="sh-error" id="c-name-err" hidden><Icon name="error" /><span>Tell us who we are writing back to.</span></p>
+    </div>
+    <div class="sh-field">
+      <label class="sh-label" for="c-mail">Email</label>
+      <input class="sh-input" id="c-mail" name="email" type="email" placeholder="marta@example.com" autocomplete="email" required aria-describedby="c-mail-err" />
+      <p class="sh-error" id="c-mail-err" hidden><Icon name="error" /><span>This email address does not look complete.</span></p>
+    </div>
+  </div>
+  <div class="sh-row sh-row--2">
+    <div class="sh-field">
+      <label class="sh-label" for="c-date">Date</label>
+      <input class="sh-input" id="c-date" name="date" type="date" aria-describedby="c-date-help" />
+      <p class="sh-help" id="c-date-help">Not fixed yet? Leave it empty.</p>
+    </div>
+    <div class="sh-field">
+      <label class="sh-label" for="c-kind">What for</label>
+      <select class="sh-select" id="c-kind" name="kind">
+        <option>Wedding</option>
+        <option>Family session</option>
+        <option>Elopement</option>
+        <option>Editorial</option>
+      </select>
+    </div>
+  </div>
+  <div class="sh-field">
+    <label class="sh-label" for="c-msg">Where, and what is the plan</label>
+    <textarea class="sh-textarea" id="c-msg" name="message" placeholder="A barn outside Poznań, 60 people, ceremony at four." aria-describedby="c-msg-help"></textarea>
+    <p class="sh-help" id="c-msg-help">Two sentences are plenty.</p>
+  </div>
+  <div class="sh-sr-only" aria-hidden="true">
+    <label for="c-website">Leave this empty</label>
+    <input id="c-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+  <div class="sh-field">
+    <label class="sh-check"><input type="checkbox" name="consent" required aria-describedby="c-consent-err" /><span>I agree that my details are used to answer this enquiry.</span></label>
+    <p class="sh-error" id="c-consent-err" hidden><Icon name="error" /><span>We need your permission to reply.</span></p>
+  </div>
+  <div>
+    <button class="sh-btn sh-btn--primary" type="submit" data-magnetic="0.2">Send enquiry</button>
+  </div>
+  <p class="sh-success" role="status" data-form-success hidden><Icon name="check" /><span>Enquiry sent. We will write back within two days.</span></p>
+  <p class="sh-error" role="alert" data-form-failure hidden><Icon name="error" /><span>That did not go through. Write to <a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a> instead.</span></p>
+</form>

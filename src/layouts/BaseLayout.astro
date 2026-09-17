@@ -1,0 +1,76 @@
+---
+import '../styles/tokens.css';
+import '../styles/components.css';
+import '../styles/site.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { ClientRouter } from 'astro:transitions';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+const { title, description = site.description, image = '/images/two-people-at-the-end-of-the-night.jpg' } = Astro.props;
+const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — wedding and family photographer, Poznań`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en" data-theme="night">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0a0a0b" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+
+    <script is:inline>
+      // Restore the theme before first paint so the page never flashes. Client-side
+      // navigation copies <html> attributes from the incoming page, so re-apply it
+      // onto each new document before it is swapped in.
+      (function () {
+        if (window.__shThemeRestore) return;
+        function restore(doc) {
+          var saved = null;
+          try { saved = localStorage.getItem('sh-theme'); } catch (e) {}
+          if (!saved && window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) saved = 'day';
+          if (saved) doc.documentElement.setAttribute('data-theme', saved);
+          if (doc !== document) doc.documentElement.classList.add('sh-js');
+        }
+        window.__shThemeRestore = restore;
+        restore(document);
+        document.addEventListener('astro:before-swap', function (e) { restore(e.newDocument); });
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@500&display=swap"
+    />
+
+    <ClientRouter />
+  </head>
+  <body>
+    <div class="sh-page">
+      <a class="sh-skip" href="#main-content">Skip to content</a>
+      <Header />
+      <main id="main-content">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Packages from '../components/Packages.astro';
+import StoryBlock from '../components/StoryBlock.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { plans } from '../data/site';
+
+const addOns = [
+  { name: 'Second photographer', detail: '1 600 zł, worth it above 90 guests' },
+  { name: 'Fine-art album, 30 spreads', detail: 'from 2 200 zł' },
+  { name: 'Next-day brunch coverage', detail: '1 400 zł' },
+  { name: 'Two rolls of film, hand developed', detail: '900 zł' },
+];
+
+const faq = [
+  {
+    q: 'How do we hold a date?',
+    a: 'A signed agreement and 25 percent. Dates go to whoever confirms first — we do not hold one quietly.',
+  },
+  {
+    q: 'What if it rains all day?',
+    a: 'Then it rains in the photographs. Bring two umbrellas; the wet ones tend to be the favourites.',
+  },
+  {
+    q: 'Do we get every frame?',
+    a: 'Every good one, edited. Blinks, backs of heads and eleven versions of the same laugh stay with us.',
+  },
+  {
+    q: 'Can we ask you not to publish them?',
+    a: 'Always, and without explaining. Say so in the enquiry and nothing goes online.',
+  },
+];
+---
+<BaseLayout title="Rates" description="Three collections, the numbers in the open, everything that matters included.">
+  <section class="sh-section">
+    <div class="sh-container">
+      <p class="sh-meta" data-reveal style="margin-bottom:20px;">Rates — 2026 / 2027</p>
+      <h1 class="sh-d-xl" data-split style="margin:0 0 24px;max-width:15ch;">What it costs, plainly</h1>
+      <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
+        Three collections, the numbers in the open, everything that matters included rather than sold back to you
+        later.
+      </p>
+    </div>
+  </section>
+
+  <section class="sh-section" style="padding-top:0;">
+    <Packages plans={plans} />
+    <div class="sh-container" style="margin-top:24px;">
+      <p class="sh-meta">Travel inside Wielkopolska included · further away we split the cost and tell you the number first</p>
+    </div>
+  </section>
+
+  <section class="sh-section sh-section--band">
+    <div class="sh-container">
+      <StoryBlock image="/images/rings-on-linen.jpg" alt="An album on a table" ratio="3x2" reverse>
+        <p class="sh-meta" data-reveal>Add on</p>
+        <h2 class="sh-d-l" data-split style="margin:0 0 8px;">What people usually add</h2>
+        <ul class="sh-plan__list" style="font-size:16px;">
+          {addOns.map((a) => (
+            <li><span><b style="color:var(--ink);">{a.name}</b> — {a.detail}</span></li>
+          ))}
+        </ul>
+      </StoryBlock>
+    </div>
+  </section>
+
+  <section class="sh-section">
+    <div class="sh-container sh-container--narrow">
+      <p class="sh-meta" data-reveal style="margin-bottom:18px;">Questions</p>
+      <h2 class="sh-d-l" data-split style="margin:0 0 32px;">Asked most often</h2>
+      <div class="sh-faq">
+        {faq.map((item, i) => (
+          <>
+            {i > 0 && <hr class="sh-rule" />}
+            <div data-reveal>
+              <h3 class="sh-d-s">{item.q}</h3>
+              <p class="sh-muted">{item.a}</p>
+            </div>
+          </>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>

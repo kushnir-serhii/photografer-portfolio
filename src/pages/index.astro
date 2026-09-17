@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import Slider from '../components/Slider.astro';
+import IndexList from '../components/IndexList.astro';
+import StoryBlock from '../components/StoryBlock.astro';
+import Packages from '../components/Packages.astro';
+import Testimonial from '../components/Testimonial.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { days, plans, site } from '../data/site';
+---
+<BaseLayout>
+  <Hero
+    image="/images/two-people-at-the-end-of-the-night.jpg"
+    alt="Two people at the end of the night"
+    eyebrow={`Poznań — worldwide — ${site.year} dates open`}
+    title="Not the wedding. The day."
+    disciplines="Weddings · Families · Elopements · Editorial"
+  >
+    <a class="sh-btn sh-btn--primary" href="/contact/" data-magnetic="0.25">Check my date</a>
+    <a class="sh-btn sh-btn--on-image" href="/work/">Selected work</a>
+  </Hero>
+
+  <div id="after-hero">
+    <Marquee accent speed={20} items={[`${site.year} dates open`, 'Four days left in June', `Now taking ${site.year + 1}`]} />
+  </div>
+
+  <section class="sh-section">
+    <div class="sh-container">
+      <div style="display:grid;gap:32px;max-width:960px;">
+        <h2 class="sh-d-l" data-split>We photograph the parts of a day nobody thinks to ask for.</h2>
+        <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
+          The kitchen at eight in the morning. Your mother's face during the vows. The twenty minutes when everyone
+          finally sits down. Two or three weddings a month, on purpose.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sh-section sh-section--flush">
+    <div class="sh-container--wide">
+      <div class="sh-section-head" style="margin-bottom:24px;">
+        <h2 class="sh-d-l" data-split style="margin:0;">Selected days</h2>
+        <p class="sh-meta" data-reveal>Drag · or use the arrows</p>
+      </div>
+      <Slider days={days} label="Selected days" autoplay={5600} />
+    </div>
+  </section>
+
+  <section class="sh-section">
+    <div class="sh-container">
+      <div class="sh-section-head">
+        <h2 class="sh-d-l" data-split style="margin:0;">The index</h2>
+        <a class="sh-link" href="/work/">All work</a>
+      </div>
+      <IndexList days={days} />
+    </div>
+  </section>
+
+  <section class="sh-section sh-section--band">
+    <div class="sh-container">
+      <StoryBlock image="/images/getting-ready-in-the-morning.jpg" alt="Getting ready in the morning">
+        <p class="sh-meta" data-reveal>How it works</p>
+        <h2 class="sh-d-l" data-split>We are there before anything starts</h2>
+        <p class="sh-muted sh-measure" data-reveal data-reveal-delay="120" style="margin:0;">
+          A walk through the day, a look at where the light lands, a plan for the twenty minutes that actually matter.
+          By the morning itself we are people you already know.
+        </p>
+        <p class="sh-muted sh-measure" data-reveal data-reveal-delay="180" style="margin:0;">
+          Then we disappear. You will mostly forget we are there — and four weeks later the gallery gives the whole
+          thing back.
+        </p>
+        <p style="margin:0;" data-reveal data-reveal-delay="240"><a class="sh-link" href="/studio/">Read the full approach</a></p>
+      </StoryBlock>
+    </div>
+  </section>
+
+  <section class="sh-section">
+    <div class="sh-container">
+      <div style="max-width:720px;margin-bottom:36px;">
+        <p class="sh-meta" data-reveal style="margin-bottom:18px;">Rates</p>
+        <h2 class="sh-d-l" data-split style="margin:0 0 16px;">Prices in the open</h2>
+        <p class="sh-muted" data-reveal data-reveal-delay="140" style="margin:0;">So you can decide in private, before writing to anyone.</p>
+      </div>
+    </div>
+    <Packages plans={plans} />
+  </section>
+
+  <section class="sh-section sh-section--band">
+    <div class="sh-container">
+      <Testimonial
+        quote="We forgot he was there, and then the gallery arrived and we got the whole day back."
+        by="Marta & Jakub — September, Wielkopolska"
+      />
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>

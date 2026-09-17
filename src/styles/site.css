@@ -1,0 +1,62 @@
+/* Site-level additions on top of the design system stylesheet. */
+
+html, body { margin: 0; background: var(--surface-100); }
+/* Always reserve the scrollbar's space so short and long pages (and the open
+   drawer, which locks scroll) share the same viewport width — no sideways jump.
+   scroll-padding-top keeps the sticky header from covering in-page anchor targets. */
+html { scroll-behavior: smooth; scrollbar-gutter: stable; scroll-padding-top: 88px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.sh-skip {
+  position: absolute; left: var(--space-4); top: -100px; z-index: 50;
+  padding: var(--space-3) var(--space-4); background: var(--accent); color: var(--on-accent);
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.sh-skip:focus { top: var(--space-4); }
+
+.sh-sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.sh-section-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap; margin-bottom: 28px;
+}
+
+/* ---------- mobile drawer ---------- */
+
+.sh-drawer {
+  position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+  padding: 18px var(--space-5) var(--space-6); background: var(--surface-100);
+  opacity: 0; visibility: hidden; transform: translateY(-12px);
+  transition: opacity var(--dur-base) var(--ease-out-expo), transform var(--dur-base) var(--ease-out-expo), visibility 0s linear var(--dur-base);
+}
+.sh-drawer.is-open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.sh-drawer__top { display: flex; align-items: center; justify-content: space-between; min-height: 44px; }
+.sh-drawer__links { list-style: none; margin: var(--space-7) 0 0; padding: 0; display: grid; gap: var(--space-3); }
+.sh-drawer__links a {
+  display: flex; align-items: baseline; gap: var(--space-4); text-decoration: none; color: var(--ink);
+  padding-block: var(--space-2); border-bottom: 1px solid var(--line);
+}
+.sh-drawer__links a[aria-current="page"] .sh-d-l { color: var(--accent-text); }
+.sh-drawer__foot { margin-top: auto; display: grid; gap: var(--space-4); }
+@media (min-width: 901px) { .sh-drawer { display: none; } }
+body.has-drawer { overflow: hidden; }
+
+/* ---------- gallery filters ---------- */
+
+.sh-filters { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.sh-gallery__item[hidden] { display: none; }
+
+/* ---------- FAQ ---------- */
+
+.sh-faq { display: grid; gap: 26px; }
+.sh-faq h3 { margin: 0 0 8px; }
+.sh-faq p { margin: 0; }
+
+/* ---------- prose ---------- */
+
+.sh-prose { display: grid; gap: var(--space-4); }
+.sh-prose h2 { margin-top: var(--space-6); }
+.sh-prose p { margin: 0; color: var(--ink-muted); }

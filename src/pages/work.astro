@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GalleryGrid from '../components/GalleryGrid.astro';
+import IndexList from '../components/IndexList.astro';
+import ClosingCta from '../components/ClosingCta.astro';
+import { days, frames } from '../data/site';
+---
+<BaseLayout title="Work" description="Weddings, families and two elopements, in the order they happened.">
+  <section class="sh-section">
+    <div class="sh-container">
+      <p class="sh-meta" data-reveal style="margin-bottom:20px;">Work — 2024 / 2026</p>
+      <h1 class="sh-d-xl" data-split style="margin:0 0 24px;max-width:15ch;">Twelve days worth showing</h1>
+      <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
+        Weddings, families and two elopements, in the order they happened.
+      </p>
+    </div>
+  </section>
+
+  <section class="sh-section" style="padding-top:0;">
+    <GalleryGrid frames={frames} />
+  </section>
+
+  <section class="sh-section sh-section--band">
+    <div class="sh-container">
+      <h2 class="sh-d-l" data-split style="margin:0 0 28px;">Whole days, start to finish</h2>
+      <IndexList days={days} />
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>

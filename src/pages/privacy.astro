@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+// Placeholder copy: have this reviewed before launch.
+---
+<BaseLayout title="Privacy" description="What we do with the details you send us.">
+  <section class="sh-section">
+    <div class="sh-container sh-container--narrow">
+      <p class="sh-meta" style="margin-bottom:20px;">Privacy</p>
+      <h1 class="sh-d-xl" style="margin:0 0 32px;">What we do with your details</h1>
+      <div class="sh-prose">
+        <p>When you send an enquiry we keep your names, email, date and message so we can answer it. Nothing else.</p>
+        <p>We do not sell or share them, and we do not add you to a mailing list.</p>
+        <p>
+          Photographs of your day are published only with your agreement. Ask us to take one down and we will.
+        </p>
+        <p>
+          To see or delete what we hold about you, write to <a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

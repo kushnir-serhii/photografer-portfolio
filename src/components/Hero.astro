@@ -1,0 +1,33 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  image: string;
+  alt: string;
+  eyebrow: string;
+  title: string;
+  disciplines: string;
+}
+const { image, alt, eyebrow, title, disciplines } = Astro.props;
+---
+<section class="sh-hero">
+  <div class="sh-hero__media">
+    <img class="sh-img" alt={alt} src={image} fetchpriority="high" />
+  </div>
+  <div class="sh-container">
+    <div class="sh-hero__body">
+      <p class="sh-meta">{eyebrow}</p>
+      <h1 class="sh-d-hero" data-split style="margin:16px 0 0;">{title}</h1>
+      <div class="sh-hero__actions">
+        <slot />
+      </div>
+      <div class="sh-hero__foot">
+        <p class="sh-meta" style="color:inherit;">{disciplines}</p>
+        <a class="sh-scroll sh-meta" style="color:inherit;text-decoration:none;" href="#after-hero">
+          <span class="sh-scroll__dot"><Icon name="scroll" /></span>
+          Scroll
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

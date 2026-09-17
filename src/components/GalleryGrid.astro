@@ -1,0 +1,39 @@
+---
+import { categories, type Frame } from '../data/site';
+
+interface Props {
+  frames: Frame[];
+}
+const { frames } = Astro.props;
+const delays = [0, 90, 150];
+---
+<div data-gallery>
+  <div class="sh-container" style="margin-bottom:24px;">
+    <div class="sh-filters" role="group" aria-label="Filter the work">
+      {categories.map((c, i) => (
+        <button class="sh-chip" type="button" data-filter={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>{c.label}</button>
+      ))}
+    </div>
+  </div>
+  <div class="sh-container--wide">
+    <div class="sh-gallery">
+      {frames.map((frame, i) => (
+        <figure
+          class:list={['sh-gallery__item', 'sh-frame', frame.size !== 'default' && `sh-gallery__item--${frame.size}`]}
+          style="margin:0;"
+          data-category={frame.category}
+          data-reveal="clip"
+          data-reveal-delay={delays[i % 3] || undefined}
+          data-cursor-label="View"
+        >
+          <img class="sh-img" alt={frame.alt} src={frame.src} loading="lazy" />
+        </figure>
+      ))}
+    </div>
+    <p class="sh-meta" data-gallery-empty hidden style="margin-top:28px;">Nothing in this set yet.</p>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:28px;">
+      <p class="sh-meta">98 frames · 12 days · full galleries sent privately</p>
+      <a class="sh-btn sh-btn--outline" href="/contact/">Ask for a full gallery</a>
+    </div>
+  </div>
+</div>

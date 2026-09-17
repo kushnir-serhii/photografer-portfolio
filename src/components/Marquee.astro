@@ -1,0 +1,15 @@
+---
+interface Props {
+  items: string[];
+  accent?: boolean;
+  speed?: number;
+}
+const { items, accent = false, speed = 26 } = Astro.props;
+---
+<div class:list={['sh-marquee', { 'sh-marquee--accent': accent }]} data-marquee data-marquee-speed={speed}>
+  <div class="sh-marquee__track">
+    {items.map((item) => (
+      <span>{item}<i class="sh-marquee__dot"></i></span>
+    ))}
+  </div>
+</div>

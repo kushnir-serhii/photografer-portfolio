@@ -1,0 +1,38 @@
+---
+import type { Day } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  days: Day[];
+  label: string;
+  autoplay?: number;
+}
+const { days, label, autoplay } = Astro.props;
+const total = String(days.length).padStart(2, '0');
+---
+<div class="sh-slider" data-slider data-slider-autoplay={autoplay} tabindex="0" aria-label={label}>
+  <div class="sh-slider__viewport">
+    <div class="sh-slider__track">
+      {days.map((day, i) => (
+        <article class="sh-slide" aria-label={`${i + 1} of ${days.length}`}>
+          <div class="sh-slide__media" data-cursor-label="Drag">
+            <img class="sh-img" alt={day.alt} src={day.image} loading={i === 0 ? 'eager' : 'lazy'} draggable="false" />
+          </div>
+          <div class="sh-slide__cap">
+            <div>
+              <p class="sh-meta">{day.kind} — {day.month} — {day.place}</p>
+              <h3 class="sh-d-m" style="margin-top:8px;">{day.title}</h3>
+            </div>
+            <a class="sh-btn sh-btn--on-image" href="/work/">{day.cta}</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+  <div class="sh-slider__ui">
+    <button class="sh-round" type="button" data-slider-prev aria-label="Previous slide"><Icon name="arrow-left" /></button>
+    <button class="sh-round" type="button" data-slider-next aria-label="Next slide"><Icon name="arrow-right" /></button>
+    <div class="sh-slider__progress"><span data-slider-bar></span></div>
+    <p class="sh-slider__count"><b data-slider-index>01</b> / <span data-slider-total>{total}</span></p>
+  </div>
+</div>

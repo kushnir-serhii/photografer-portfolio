@@ -1,0 +1,18 @@
+---
+interface Props {
+  image: string;
+  alt: string;
+  ratio?: '4x5' | '3x2';
+  reverse?: boolean;
+  cursorLabel?: string;
+}
+const { image, alt, ratio = '4x5', reverse = false, cursorLabel = 'View' } = Astro.props;
+---
+<div class:list={['sh-story', { 'sh-story--reverse': reverse }]}>
+  <div class="sh-story__media sh-frame" data-reveal="clip" data-cursor-label={cursorLabel}>
+    <img class={`sh-img sh-ratio-${ratio}`} alt={alt} src={image} loading="lazy" />
+  </div>
+  <div class="sh-story__body">
+    <slot />
+  </div>
+</div>

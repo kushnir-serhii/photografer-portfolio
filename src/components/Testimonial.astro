@@ -1,0 +1,11 @@
+---
+interface Props {
+  quote: string;
+  by: string;
+}
+const { quote, by } = Astro.props;
+---
+<figure class="sh-quote">
+  <blockquote style="margin:0;"><p class="sh-quote__text" data-split>{quote}</p></blockquote>
+  <figcaption class="sh-quote__by" data-reveal data-reveal-delay="200">{by}</figcaption>
+</figure>
