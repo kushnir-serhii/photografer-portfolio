@@ -1,6 +1,6 @@
 # 001 — Playwright UI check
 
-**Status:** draft · **Depends on:** — · **Route(s):** all existing (`root`, `work`, `studio`, `rates`, `contact`, `privacy`, `404`)
+**Status:** done · **Depends on:** — · **Route(s):** all existing (`root`, `work`, `studio`, `rates`, `contact`, `privacy`, `404`)
 
 ## Goal
 Every spec ends with an automatic check that each of its pages opens at phone and desktop width, in both themes, without console errors or horizontal scroll, and leaves screenshots to review. The demo is judged on a phone in a meeting, so layout breaks must be caught before the photographer sees them.
@@ -14,35 +14,49 @@ None. New files: `playwright.config.ts`, `e2e/ui-check.spec.ts`. `package.json` 
 
 - **Routes:** `ROUTES` is a comma list without slashes; `root` → `/`; `404` → a route that doesn't exist (e.g. `/this-page-does-not-exist/`, expecting the 404 page). Empty `ROUTES` → every route listed in the spec file's default list (all existing pages).
 - **Matrix:** each route × width (375, 1280) × theme (`night`, `day`, set through `localStorage['sh-theme']` before load). Reduced motion emulated so `data-reveal` content is visible in screenshots.
-- **Fails on:** `console.error`, `pageerror`, failed same-origin requests, `document.documentElement.scrollWidth > window.innerWidth`.
+- **Fails on:** `console.error`, `pageerror`, failed same-origin requests, `document.documentElement.scrollWidth > window.innerWidth`, and visible elements cut off at the screen edge (`.sh-page` clips overflow-x, so overflow never scrolls; elements inside a container that clips on purpose, like the slider or marquee, are ignored).
+- **Phone:** the 375 run emulates a phone (`isMobile`, touch), so no desktop scrollbar eats the width.
 - **Screenshots:** full page, `e2e/screenshots/<SPEC or "all">/<route>-<width>-<theme>.png`.
-- **Server:** Playwright `webServer` runs `npm run build && npm run preview -- --port 4321` and reuses a running server locally.
+- **Server:** `npm run ui-check` builds, then Playwright `webServer` runs `astro preview --port 4322 --ignore-lock`. Port 4322, not 4321, so a running `astro dev` is never tested by mistake; `--ignore-lock` keeps preview in the foreground (run by an AI agent, Astro 7 detaches it into a background server that outlives the check and serves an old build); a server already on 4322 is never reused.
 
 ## Slices
 
-### [ ] 1. Playwright + ui-check
+### [x] 1. Playwright + ui-check
 - **Build:** add `@playwright/test` (dev) and Chromium, the config, the spec file as described in **Data**, the npm script and gitignore entries. Document the PowerShell form of the env vars in `docs/process.md` step 8 if it differs from what is written there.
 - **Files:** `package.json`, `package-lock.json`, `playwright.config.ts`, `e2e/ui-check.spec.ts`, `.gitignore`
 - **Agent:** frontend
 - **Accept:**
-  - [ ] `SPEC=001 ROUTES=root,contact npm run ui-check` runs 8 checks and writes 8 screenshots
-  - [ ] a page with a forced `console.error` or a 2000px-wide element fails the check (tried locally, not committed)
-  - [ ] screenshots and reports are git-ignored; `npm run build` still green
+  - [x] `SPEC=001 ROUTES=root,contact npm run ui-check` runs 8 checks and writes 8 screenshots
+  - [x] a page with a forced `console.error` or a 2000px-wide element fails the check (tried locally, not committed)
+  - [x] screenshots and reports are git-ignored; `npm run build` still green
 
-### [ ] 2. First run over the existing site
+### [x] 2. First run over the existing site
 - **Build:** run the check over every existing route, review all screenshots, fix layout problems it finds (overflow, contrast, cut-off text, broken Day theme) within the existing design system.
 - **Files:** whatever the fixes touch (`src/styles/*`, `src/components/*`, `src/pages/*`)
 - **Agent:** designer
 - **Accept:**
-  - [ ] the full check passes for all routes at 375 and 1280, Night and Day
-  - [ ] every screenshot reviewed; fixes listed in the log
+  - [x] the full check passes for all routes at 375 and 1280, Night and Day
+  - [x] every screenshot reviewed; fixes listed in the log
 
 ## External needs
 None.
 
 ## Open questions
-- Chromium only, or also WebKit (iPhone Safari is what photographers will hold)? Recommended: Chromium now, WebKit as a later option because the download is large.
+- The `/work/` gallery packs without holes only for the current mix of frame sizes; a client's different list can leave holes again (noted in `docs/setup.md`). A masonry layout would remove the dependency; not done.
+- The custom cursor dot stays lime in Day (it sits behind a dark "View" label). Acceptable?
+- Home: packages → testimonial keeps its full gap (a background change, same as every band edge). Tighten band edges site-wide?
+- Placeholder photos are tiny, blurred JPEGs and the copy still says weddings / Poznań / 2026: both are replaced by spec 008, not fixed here.
+- A full-page screenshot of `/` at 1280 Night is sometimes 173px taller than the page, with an empty band under the footer. Measured in the browser the page is the same height in both themes (6057px), so it is a capture artifact, not a page bug.
+- **Decided (2026-11-02):** Chromium only; WebKit stays a later option (large download).
+- **Decided:** slice 2 fixes everything the run finds (layout breaks and smaller visual flaws), within the existing design system, even if 008 may rework it later.
+- **Decided:** branch `spec/001-ui-check` is created from `rebranding` (it has the specs and process; `main` does not).
+- `@types/node` was added as a devDependency (types only) so `astro check` can type-check `process.env` in `playwright.config.ts` and `e2e/`; the alternative was excluding them from the type check.
+- One unreproduced failure of `root 375 day` on the first run (no message kept); 116 repeated runs after it passed. If it comes back, read `test-results/*/error-context.md`.
+- **Decided:** the `404` route expects the 404 page with HTTP 404; that status is not counted as a failed request.
 
 ## Log
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
+| 2026-11-02 | 1 | done: 8 checks for root,contact, 28 for all routes, all pass; forced console.error and 2000px element fail as expected | `playwright.config.ts`, `e2e/ui-check.spec.ts`, `package.json` (`@playwright/test`, `@types/node`, `ui-check`), `package-lock.json`, `.gitignore` |
+| 2026-11-02 | 1 (fix) | the first runs hit the running `astro dev` on 4321 and later a detached stale preview; overflow could never trip because `.sh-page` clips. Fixed: port 4322, foreground preview, phone emulation at 375, cut-off element check; forced 2000px div and console.error fail, real site passes 28/28 | `playwright.config.ts`, `e2e/ui-check.spec.ts`, `package.json` |
+| 2026-11-02 | 2 | done: 28/28 pass; all screenshots reviewed. Fixed: gallery holes at 375/1280 and in filtered sets; contact select/date alignment and select indent; system-styled consent checkbox (44px row); stacked padding between same-background sections and the overridden `--flush` on desktop; Day accents via new `--accent-mark` token; package card margins and the "Most booked" tag moved into a header row. UI check waits for `document.fonts.ready` | `src/styles/tokens.css`, `components.css`, `site.css`, `src/components/Packages.astro`, `e2e/ui-check.spec.ts`, `docs/setup.md` |

@@ -18,12 +18,16 @@
 }
 .sh-section { padding-block: var(--space-8); }
 .sh-section--band { background: var(--surface-200); }
-.sh-section--flush { padding-block: 0; }
 .sh-section--huge { padding-block: var(--space-9); }
 @media (min-width: 900px) {
   .sh-section { padding-block: var(--space-9); }
   .sh-section--huge { padding-block: var(--space-10); }
 }
+.sh-section--flush { padding-block: 0; }
+/* Two sections on the same background read as one: the second doesn't add its own top
+   padding on top of the first's bottom padding, so the gap stays one section step. */
+.sh-section:not(.sh-section--band):not(.sh-section--flush) + .sh-section:not(.sh-section--band),
+.sh-section--band + .sh-section--band { padding-top: 0; }
 .sh-measure { max-width: var(--layout-measure); }
 .sh-rule { height: 1px; border: 0; margin: 0; background: var(--line); }
 .sh-muted { color: var(--ink-muted); }
@@ -121,7 +125,7 @@
   font-family: var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: -0.03em; text-transform: uppercase;
 }
 .sh-brand::before {
-  content: ""; width: 9px; height: 9px; border-radius: var(--radius-pill); background: var(--accent);
+  content: ""; width: 9px; height: 9px; border-radius: var(--radius-pill); background: var(--accent-mark);
 }
 .sh-nav__links { display: flex; align-items: center; gap: var(--space-6); list-style: none; margin: 0; padding: 0; }
 .sh-nav__link {
@@ -130,7 +134,7 @@
   transition: color var(--dur-fast) linear;
 }
 .sh-nav__link::after {
-  content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 0; background: var(--accent);
+  content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 0; background: var(--accent-mark);
   transition: width 360ms var(--ease-out-expo);
 }
 .sh-nav__link:hover { color: var(--ink); }
@@ -152,7 +156,7 @@
   border-radius: var(--radius-pill); cursor: pointer;
   transition: color var(--dur-fast) linear, border-color var(--dur-fast) linear;
 }
-.sh-toggle::before { content: ""; width: 7px; height: 7px; border-radius: var(--radius-pill); background: var(--accent); }
+.sh-toggle::before { content: ""; width: 7px; height: 7px; border-radius: var(--radius-pill); background: var(--accent-mark); }
 .sh-toggle:hover { color: var(--ink); border-color: var(--ink); }
 
 /* ---------- hero ---------- */
@@ -194,7 +198,7 @@
   animation: sh-marquee var(--sh-marquee-dur, 26s) linear infinite;
 }
 .sh-marquee__track span { display: inline-flex; align-items: center; gap: var(--space-6); }
-.sh-marquee__dot { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--accent); flex: 0 0 auto; }
+.sh-marquee__dot { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--accent-mark); flex: 0 0 auto; }
 .sh-marquee--accent .sh-marquee__dot { background: var(--on-accent); }
 @keyframes sh-marquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-100%, 0, 0); } }
 
@@ -224,7 +228,7 @@
 .sh-slide__cap .sh-meta { color: #dcdcd7; }
 .sh-slider__ui { display: flex; align-items: center; gap: var(--space-4); margin-top: var(--space-4); }
 .sh-slider__progress { position: relative; flex: 1; height: 2px; background: var(--line); }
-.sh-slider__progress span { display: block; height: 100%; width: 0; background: var(--accent); transition: width var(--dur-base) var(--ease-out-expo); }
+.sh-slider__progress span { display: block; height: 100%; width: 0; background: var(--accent-mark); transition: width var(--dur-base) var(--ease-out-expo); }
 .sh-slider__count { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; color: var(--ink-faint); }
 .sh-slider__count b { color: var(--ink); font-weight: 500; }
 
@@ -233,12 +237,16 @@
 .sh-gallery { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: 88px; grid-auto-flow: dense; gap: var(--space-2); }
 .sh-gallery__item { position: relative; overflow: hidden; background: var(--surface-300); grid-column: span 4; grid-row: span 3; }
 .sh-gallery__item--tall { grid-row: span 5; }
-.sh-gallery__item--wide { grid-column: span 8; }
+.sh-gallery__item--wide { grid-column: span 8; grid-row: span 5; }
 .sh-gallery__item--half { grid-column: span 6; grid-row: span 4; }
+/* Spans are chosen so the sizes pack without holes: a tall frame pairs with a wide one of
+   the same height, three defaults or two halves fill a row (phone: two columns). */
 @media (max-width: 860px) {
   .sh-gallery { grid-template-columns: repeat(6, 1fr); grid-auto-rows: 62px; }
-  .sh-gallery__item { grid-column: span 3; }
-  .sh-gallery__item--wide, .sh-gallery__item--half { grid-column: span 6; }
+  .sh-gallery__item { grid-column: span 3; grid-row: span 4; }
+  .sh-gallery__item--tall { grid-row: span 6; }
+  .sh-gallery__item--wide { grid-column: span 6; grid-row: span 3; }
+  .sh-gallery__item--half { grid-column: span 3; grid-row: span 2; }
 }
 
 /* ---------- index list ---------- */
@@ -279,12 +287,14 @@
 @media (min-width: 900px) { .sh-plans { grid-template-columns: repeat(3, 1fr); } }
 .sh-plan { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-6); background: var(--surface-100); }
 .sh-plan--feature { background: var(--surface-200); }
-.sh-plan__tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--on-accent); background: var(--accent); align-self: flex-start; padding: 5px 10px; }
-.sh-plan__price { font-family: var(--font-display); font-size: clamp(30px, 3.4vw, 44px); line-height: 1; letter-spacing: -0.03em; font-weight: 700; }
+.sh-plan__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--space-2) var(--space-4); min-height: 26px; }
+.sh-plan__tag { font-family: var(--font-mono); font-size: 11px; line-height: 16px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--on-accent); background: var(--accent); padding: 5px 10px; margin: 0; }
+.sh-plan__price { margin: 0; font-family: var(--font-display); font-size: clamp(30px, 3.4vw, 44px); line-height: 1; letter-spacing: -0.03em; font-weight: 700; }
 .sh-plan__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); font-size: 15px; line-height: 24px; color: var(--ink-muted); }
 .sh-plan__list li { display: grid; grid-template-columns: 14px 1fr; gap: var(--space-3); }
-.sh-plan__list li::before { content: ""; width: 8px; height: 8px; margin-top: 8px; background: var(--accent); }
+.sh-plan__list li::before { content: ""; width: 8px; height: 8px; margin-top: 8px; background: var(--accent-mark); }
 .sh-plan .sh-btn { margin-top: auto; }
 
 /* ---------- quote ---------- */
@@ -299,7 +309,7 @@
 .sh-form { display: grid; gap: var(--space-6); }
 .sh-row { display: grid; gap: var(--space-6); }
 @media (min-width: 760px) { .sh-row--2 { grid-template-columns: 1fr 1fr; } }
-.sh-field { display: grid; gap: var(--space-2); }
+.sh-field { display: grid; gap: var(--space-2); align-content: start; }
 .sh-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
 .sh-input, .sh-select, .sh-textarea {
   font-family: var(--font-sans); font-size: 18px; line-height: 30px; color: var(--ink);
@@ -308,16 +318,40 @@
   transition: border-color var(--dur-fast) linear;
 }
 .sh-textarea { min-height: 120px; resize: vertical; }
+.sh-select {
+  appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: var(--space-6);
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 14px) 52%, calc(100% - 8px) 52%;
+  background-size: 6px 6px; background-repeat: no-repeat;
+}
+.sh-select option { background-color: var(--surface-200); color: var(--ink); }
 .sh-input::placeholder, .sh-textarea::placeholder { color: var(--ink-faint); }
+/* Chromium pads the date field inside; drop it so it lines up with the text inputs and select. */
+.sh-input::-webkit-datetime-edit, .sh-input::-webkit-datetime-edit-fields-wrapper { padding: 0; }
 .sh-input:hover, .sh-textarea:hover, .sh-select:hover { border-bottom-color: var(--ink); }
-.sh-input:focus, .sh-select:focus, .sh-textarea:focus { border-bottom-color: var(--accent); outline-offset: 4px; }
-.sh-help { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-faint); }
+.sh-input:focus, .sh-select:focus, .sh-textarea:focus { border-bottom-color: var(--accent-mark); outline-offset: 4px; }
+.sh-help { font-family: var(--font-mono); font-size: 11px; line-height: 16px; letter-spacing: 0.1em; color: var(--ink-faint); margin: 0; }
 .sh-field--error .sh-input, .sh-field--error .sh-textarea, .sh-field--error .sh-select { border-bottom-color: var(--danger); }
-.sh-error { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--danger); }
-.sh-success { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--success); }
+.sh-error { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--danger); margin: 0; }
+.sh-success { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--success); margin: 0; }
 .sh-error[hidden], .sh-success[hidden] { display: none; }
-.sh-check { display: flex; align-items: flex-start; gap: var(--space-3); font-size: 15px; line-height: 24px; color: var(--ink-muted); }
-.sh-check input { margin-top: 5px; width: 16px; height: 16px; accent-color: var(--accent); }
+.sh-check { display: flex; align-items: flex-start; gap: var(--space-3); min-height: 44px; padding-block: 10px;
+  font-size: 15px; line-height: 24px; color: var(--ink-muted); cursor: pointer; }
+.sh-check input {
+  appearance: none; -webkit-appearance: none; flex: 0 0 22px; width: 22px; height: 22px; margin: 1px 0 0;
+  display: grid; place-content: center; cursor: pointer;
+  background: transparent; border: 1px solid var(--line-strong); border-radius: var(--radius-xs);
+  transition: background-color var(--dur-fast) linear, border-color var(--dur-fast) linear;
+}
+.sh-check input::before {
+  content: ""; width: 11px; height: 6px; margin-top: -3px;
+  border-left: 2px solid var(--on-accent); border-bottom: 2px solid var(--on-accent);
+  transform: rotate(-45deg) scale(0); transition: transform var(--dur-fast) var(--ease-out-expo);
+}
+.sh-check:hover input { border-color: var(--ink); }
+.sh-check input:checked { background: var(--accent); border-color: var(--accent-mark); }
+.sh-check input:checked::before { transform: rotate(-45deg) scale(1); }
+.sh-field--error .sh-check input { border-color: var(--danger); }
 
 /* ---------- footer ---------- */
 

@@ -10,8 +10,10 @@ const { plans } = Astro.props;
   <div class="sh-plans">
     {plans.map((plan) => (
       <article class:list={['sh-plan', { 'sh-plan--feature': plan.featured }]}>
-        {plan.featured && <p class="sh-plan__tag">Most booked</p>}
-        <p class="sh-meta">{plan.no} — {plan.name}</p>
+        <div class="sh-plan__head">
+          <p class="sh-meta">{plan.no} — {plan.name}</p>
+          {plan.featured && <p class="sh-plan__tag">Most booked</p>}
+        </div>
         <p class="sh-plan__price">{plan.price}</p>
         <ul class="sh-plan__list">
           {plan.items.map((item) => <li><span>{item}</span></li>)}

@@ -12,6 +12,8 @@
   --ink-faint: #7d7d86;
   --accent: #d4ff3f;
   --accent-text: #c9f53a;
+  /* Small decorative marks (dots, bullets, underlines, progress) drawn on the page surface. */
+  --accent-mark: #d4ff3f;
   --on-accent: #08080a;
   --line: #26262b;
   --line-strong: #70707a;
@@ -33,6 +35,7 @@
   --ink-faint: #63636b;
   --accent: #bdf227;
   --accent-text: #4c6300;
+  --accent-mark: #5f7c00;
   --on-accent: #0a0a0b;
   --line: #cdcdc6;
   --line-strong: #767680;
