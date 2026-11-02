@@ -144,3 +144,8 @@ vite.config.ts.timestamp-*
 
 # Astro
 .astro/
+
+# Playwright UI check
+e2e/screenshots/
+test-results/
+playwright-report/
