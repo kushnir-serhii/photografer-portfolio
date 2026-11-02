@@ -149,3 +149,37 @@ body.has-drawer { overflow: hidden; }
 @media (min-width: 640px) { .sh-gets__item { grid-template-columns: 160px 1fr; gap: var(--space-4); } }
 .sh-studio-cta { margin: var(--space-5) 0 0; }
 .sh-plan__title, .sh-plan__body { margin: 0; }
+
+/* ---------- selection ---------- */
+
+::selection { background: var(--selection-bg); color: var(--selection-ink); }
+
+/* ---------- rates ---------- */
+
+.sh-rates__note { margin-top: var(--space-5); }
+.sh-addons__title { margin: 0; }
+.sh-addons { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.sh-addons__item {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4);
+  padding-block: var(--space-3); border-bottom: 1px solid var(--line);
+}
+.sh-addons__name { display: grid; gap: 2px; min-width: 0; font-size: 16px; line-height: 24px; font-weight: 600; color: var(--ink); }
+.sh-addons__detail { font-size: 14px; line-height: 20px; font-weight: 400; color: var(--ink-muted); }
+.sh-addons__price {
+  flex: none; font-family: var(--font-mono); font-size: 13px; line-height: 24px; letter-spacing: 0.04em;
+  color: var(--accent-text); font-variant-numeric: tabular-nums; text-align: right;
+}
+.sh-faq__eyebrow { margin-bottom: 18px; }
+.sh-faq__title { margin: 0 0 32px; }
+
+/* ---------- contact ---------- */
+
+.sh-contact { align-items: start; }
+.sh-contact__title { margin: 0; }
+.sh-enquiry { margin-top: var(--space-3); }
+.sh-contact__aside { display: grid; gap: 28px; }
+.sh-contact__direct-title { margin: 0 0 14px; }
+/* Phones read the direct contacts first; from two columns the photo leads the side column. */
+@media (min-width: 900px) { .sh-contact__photo { order: -1; } }
+.sh-contact__next-title { margin: 0 0 28px; }
+.sh-contact__steps { list-style: none; margin: 0; padding: 0; }

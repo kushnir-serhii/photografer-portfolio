@@ -2,28 +2,28 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { Picture } from 'astro:assets';
-import { site, pictures } from '../data/site';
-
-const steps = [
-  { no: '01', title: 'A reply', body: 'Within two days, with availability and the full price list.' },
-  { no: '02', title: 'A call', body: 'Half an hour, camera off if you prefer, no pitch.' },
-  { no: '03', title: 'The date', body: 'Agreement, 25 percent, and the day is yours.' },
-];
+import { site, pictures, contactPage } from '../data/site';
 ---
-<BaseLayout title="Contact" description="Tell us the date. Every enquiry gets a written reply within two days.">
+<BaseLayout title={contactPage.title} description={contactPage.description}>
   <section class="sh-section">
     <div class="sh-container">
-      <div class="sh-story" style="align-items:start;">
+      <div class="sh-story sh-contact">
         <div class="sh-story__body">
-          <p class="sh-meta" data-reveal>Enquire</p>
-          <h1 class="sh-d-xl" data-split style="margin:0;">Tell us the date</h1>
-          <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
-            Every enquiry gets a written reply within two days — date free or not.
-          </p>
+          <p class="sh-meta" data-reveal>{contactPage.eyebrow}</p>
+          <h1 class="sh-d-xl sh-contact__title" data-split>{contactPage.heading}</h1>
+          <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140">{contactPage.lead}</p>
           <ContactForm />
         </div>
-        <div class="sh-story__media" style="display:grid;gap:28px;">
-          <div class="sh-frame" data-reveal="clip" data-cursor-label="View">
+        <div class="sh-story__media sh-contact__aside">
+          <div class="sh-contact__direct">
+            <h2 class="sh-meta sh-contact__direct-title">{contactPage.directTitle}</h2>
+            <ul class="sh-footer__list">
+              <li><a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a></li>
+              <li><a class="sh-link" href={site.phoneHref}>{site.phone}</a></li>
+              <li><span class="sh-muted sh-body-s">{contactPage.directNote}</span></li>
+            </ul>
+          </div>
+          <div class="sh-frame sh-contact__photo" data-reveal="clip" data-cursor-label="View">
             <Picture
               class="sh-img sh-ratio-4x5"
               pictureAttributes={{ class: 'sh-pic' }}
@@ -35,14 +35,6 @@ const steps = [
               loading="lazy"
             />
           </div>
-          <div>
-            <p class="sh-meta" style="margin-bottom:14px;">Directly</p>
-            <ul class="sh-footer__list">
-              <li><a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a></li>
-              <li><a class="sh-link" href={site.phoneHref}>{site.phone}</a></li>
-              <li><span class="sh-muted sh-body-s">Poznań · replies Mon–Fri</span></li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
@@ -50,16 +42,16 @@ const steps = [
 
   <section class="sh-section sh-section--band">
     <div class="sh-container">
-      <h2 class="sh-meta" data-reveal style="margin-bottom:28px;">What happens next</h2>
-      <div class="sh-plans">
-        {steps.map((s) => (
-          <div class="sh-plan">
+      <h2 class="sh-meta sh-contact__next-title" data-reveal>{contactPage.nextTitle}</h2>
+      <ol class="sh-plans sh-contact__steps">
+        {contactPage.steps.map((s) => (
+          <li class="sh-plan">
             <p class="sh-meta">{s.no}</p>
-            <h3 class="sh-d-s" style="margin:0;">{s.title}</h3>
-            <p class="sh-muted sh-body-s" style="margin:0;">{s.body}</p>
-          </div>
+            <h3 class="sh-d-s sh-plan__title">{s.title}</h3>
+            <p class="sh-muted sh-body-s sh-plan__body">{s.body}</p>
+          </li>
         ))}
-      </div>
+      </ol>
     </div>
   </section>
 </BaseLayout>

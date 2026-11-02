@@ -153,8 +153,8 @@ export interface Plan {
   no: string;
   name: string;
   price: string;
-  // Shown after the price, e.g. "per person, min. 5".
-  unit?: string;
+  // What the price buys, shown under it: "per shoot", "per person, min. 5".
+  unit: string;
   items: string[];
   // Licence terms included in the price.
   usage: string;
@@ -164,12 +164,12 @@ export interface Plan {
 // Placeholder prices, ex VAT.
 export const plans: Plan[] = [
   {
-    no: '01', name: 'Half day', price: '£950',
+    no: '01', name: 'Half day', price: '£950', unit: 'per shoot',
     items: ['Four hours on location or in studio', 'About 40 edited images', 'First edit in five working days'],
     usage: '12 months, web and social',
   },
   {
-    no: '02', name: 'Full day', price: '£1,750', featured: true,
+    no: '02', name: 'Full day', price: '£1,750', unit: 'per shoot', featured: true,
     items: ['Eight hours, up to three set-ups', 'About 80 edited images', 'Shot list planned with you'],
     usage: '12 months, web and social',
   },
@@ -179,6 +179,120 @@ export const plans: Plan[] = [
     usage: '12 months, web and social',
   },
 ];
+
+// ---------- /rates/ copy ----------
+
+export interface AddOn {
+  name: string;
+  // Price as shown, ex VAT: "from £300", "£25 per image", "at cost".
+  price: string;
+  detail?: string;
+}
+
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
+export const ratesPage = {
+  title: 'Rates',
+  description:
+    'Brand and commercial photography rates in London: half day £950, full day £1,750, headshots £120 per person. Ex VAT, 12 months of web and social usage included.',
+  eyebrow: 'Rates — 2026 / 2027',
+  heading: 'What it costs, plainly',
+  lead: 'Three ways to book, the numbers in the open. Every price is ex VAT and includes 12 months of web and social usage, so you can get sign-off before you write.',
+  note: 'Prices ex VAT · travel within the M25 included',
+  addOnsEyebrow: 'Add-ons',
+  addOnsTitle: 'What clients usually add',
+  addOnsNote: 'All ex VAT, quoted in writing before you book.',
+  faqEyebrow: 'Questions',
+  faqTitle: 'Asked most often',
+};
+
+export const addOns: AddOn[] = [
+  { name: 'Extra usage', price: 'from £300', detail: 'Print, paid ads, out-of-home or longer terms' },
+  { name: 'Extra retouching', price: '£25 per image' },
+  { name: 'Short video', price: 'from £650', detail: 'A 30–60 second cut for social' },
+  { name: 'Extra hour', price: '£200' },
+  { name: 'Travel outside the M25', price: 'at cost' },
+];
+
+export const faq: FaqItem[] = [
+  {
+    q: 'What do usage rights mean, and what is included?',
+    a: 'Usage is where and for how long you can publish the pictures. Every package includes 12 months on your website and social channels. Print, paid ads, out-of-home and longer terms are extra usage, quoted before you book. I keep the copyright; you never pay twice for the same use.',
+  },
+  {
+    q: 'Do your prices include VAT?',
+    a: 'No. Every price on this site is ex VAT; VAT is added at the standard rate on the invoice.',
+  },
+  {
+    q: 'How do deposits work?',
+    a: 'A 25% deposit holds the date. The balance is due on delivery of the final files.',
+  },
+  {
+    q: 'Do you charge for travel?',
+    a: 'Not within the M25. Further out, travel is charged at cost and agreed in the quote.',
+  },
+  {
+    q: 'What if we need to reschedule or cancel?',
+    a: 'You can move the shoot once, free, with 7 days’ notice. For later changes or a cancellation the deposit is kept.',
+  },
+  {
+    q: 'How fast do the files arrive?',
+    a: 'The first edit arrives within five working days, the final files within ten.',
+  },
+  {
+    q: 'Can you shoot at our office? Do you have a studio?',
+    a: 'Most shoots happen on location: your office, kitchen, shop or workshop. When a job needs a studio, I book a day-hire one and quote it at cost.',
+  },
+];
+
+// ---------- /contact/ copy ----------
+
+export interface NextStep {
+  no: string;
+  title: string;
+  body: string;
+}
+
+export const contactPage = {
+  title: 'Contact',
+  description: 'Send Robin Hale a brief for a brand, food, product or team shoot in London. Every brief gets a reply and a quote within two working days.',
+  eyebrow: 'Book a shoot',
+  heading: 'Tell me about the shoot',
+  lead: 'A few lines are enough. I reply within two working days with a quote and the dates I have free.',
+  directTitle: 'Directly',
+  directNote: `${site.city} · replies Mon–Fri`,
+  nextTitle: 'What happens next',
+  steps: [
+    { no: '01', title: 'A reply', body: 'Within two working days, with a quote and the dates I have free.' },
+    { no: '02', title: 'A call', body: 'Thirty minutes to agree the shot list, the location and where the pictures will be used.' },
+    { no: '03', title: 'The booking', body: 'A short agreement and a 25% deposit, and the date is yours.' },
+  ] satisfies NextStep[],
+};
+
+// Options for the "shoot type" field: the work categories without "Everything", plus "Not sure yet".
+export const shootTypes: string[] = [
+  ...categories.filter((c) => c.id !== 'all').map((c) => c.label),
+  'Not sure yet',
+];
+
+// Options for the "budget" field, ex VAT.
+export const budgetRanges: string[] = ['Under £1,000', '£1,000–2,500', '£2,500–5,000', '£5,000+', 'Not sure yet'];
+
+export const enquiryForm = {
+  namePlaceholder: 'Alex Morgan',
+  companyPlaceholder: 'Saltroom',
+  emailPlaceholder: 'alex@saltroom.co.uk',
+  dateHelp: 'A rough week is fine. Not fixed yet? Leave it empty.',
+  briefPlaceholder: 'A spring menu launch, 12 dishes, at our place in Peckham. Pictures for the website and Instagram.',
+  briefHelp: 'What the pictures are for, where, and roughly how many.',
+  consent: 'I agree that my details are used to answer this brief.',
+  submit: 'Send the brief',
+  success: 'Brief sent. I will reply within two working days.',
+  failure: 'That did not go through. Write to me at',
+};
 
 export const hero = {
   image: heroTeamPortraitStudio,

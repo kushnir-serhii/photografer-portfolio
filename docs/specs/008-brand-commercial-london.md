@@ -74,15 +74,15 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
   - [x] `/work/?category=food` opens with that filter pressed; an unknown value shows everything
   - [x] `/work/#<slug>` from the home page lands on the right project
 
-### [ ] 5. Rates and contact
+### [x] 5. Rates and contact
 - **Build:** `/rates/` with packages in £ (e.g. half day, full day, headshots per person), add-ons (extra usage, retouching, short video), FAQ for commercial clients (usage rights, VAT, deposits, travel within the M25). `/contact/` with a business brief: name, company, email, shoot type, preferred date, budget range, brief. Fix the `<select>` misalignment (`.sh-field { align-content: start; }`, native padding removed with a custom chevron). On phones the direct contacts come before the photo. Branded `::selection` site-wide.
 - **Files:** `src/pages/rates.astro`, `src/pages/contact.astro`, `src/components/ContactForm.astro`, `src/components/Packages.astro`, `src/styles/components.css`, `src/data/site.ts`
 - **Agent:** designer
 - **Accept:**
-  - [ ] in a two-column row the fields' bottom lines align, with or without help text, at 1280px
-  - [ ] select text starts at the same x as the other inputs
-  - [ ] the form still submits without JS (mailto fallback) with the new fields in the body
-  - [ ] on a 375px screen, email and phone are visible before the contact photo
+  - [x] in a two-column row the fields' bottom lines align, with or without help text, at 1280px
+  - [x] select text starts at the same x as the other inputs
+  - [x] the form still submits without JS (mailto fallback) with the new fields in the body
+  - [x] on a 375px screen, email and phone are visible before the contact photo
 
 ### [ ] 6. Remaining pages and docs
 - **Build:** 404 and privacy wording for a UK business (UK GDPR wording, no legal claims beyond a placeholder); `product.md` (what it is, audiences, demo story, pages), `CLAUDE.md` overview, `README.md`, `setup.md`; specs 002–007 reworded for the new niche (004: London areas and UK cities instead of Polish cities; 007: brand & commercial as the base niche, wedding as a possible variant).
@@ -116,3 +116,4 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 | 2026-11-02 | 2 | done | 18 Unsplash photos in `src/assets/work/` via `<Picture>` (AVIF/WebP); hero 43 KB AVIF at 1440px, contrast measured ≥5.2:1; old `public/images/` deleted; credits in `setup.md`; conventions Images row; `.sh-pic` |
 | 2026-11-02 | 3 | done | Home: hero `lead`, intro, Selected projects, sectors index → `/work/?category=`, how it works (brief→call→shoot→delivery), packages head, testimonial, closing CTA; copy in `site.ts` (`intro`, `howItWorks`, `packagesIntro`, `closingCta`, `IndexRow`); inline styles moved to `site.css` |
 | 2026-11-02 | 4 | done | `/work/`: new head, Projects cards with `id={slug}`, `?category=` preselect + `replaceState`, designed empty state with reset; `/studio/` rewritten in first person (principles, how a shoot runs, who I work with, what you get); copy in `site.ts` (`workPage`, `studioPage`) |
+| 2026-11-02 | 5 | done | `/rates/`: packages (unit · ex VAT, usage line), add-ons, commercial FAQ; `/contact/`: business brief form (company, shoot type, budget), steps; contacts before photo on phones; `::selection` tokens; copy in `site.ts` (`ratesPage`, `addOns`, `faq`, `contactPage`, `shootTypes`, `budgetRanges`, `enquiryForm`) |
