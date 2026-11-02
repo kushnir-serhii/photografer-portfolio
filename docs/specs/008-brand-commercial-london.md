@@ -84,13 +84,13 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
   - [x] the form still submits without JS (mailto fallback) with the new fields in the body
   - [x] on a 375px screen, email and phone are visible before the contact photo
 
-### [ ] 6. Remaining pages and docs
+### [x] 6. Remaining pages and docs
 - **Build:** 404 and privacy wording for a UK business (UK GDPR wording, no legal claims beyond a placeholder); `product.md` (what it is, audiences, demo story, pages), `CLAUDE.md` overview, `README.md`, `setup.md`; specs 002–007 reworded for the new niche (004: London areas and UK cities instead of Polish cities; 007: brand & commercial as the base niche, wedding as a possible variant).
 - **Files:** `src/pages/404.astro`, `src/pages/privacy.astro`, `docs/*.md`, `docs/specs/00{2..7}-*.md`, `CLAUDE.md`, `README.md`
 - **Model:** haiku
 - **Accept:**
-  - [ ] `grep -ri "wedding\|poznań\|zł\|couple"` over `src/` returns nothing
-  - [ ] docs describe one product: a London brand & commercial photographer
+  - [x] `grep -ri "wedding\|poznań\|zł\|couple"` over `src/` returns nothing
+  - [x] docs describe one product: a London brand & commercial photographer
 
 ## External needs
 - A real client later supplies: name, descriptor, contacts, prices and usage terms, their own photos (the stock placeholders must be replaced before launch). Listed in `docs/setup.md`.
@@ -117,3 +117,4 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 | 2026-11-02 | 3 | done | Home: hero `lead`, intro, Selected projects, sectors index → `/work/?category=`, how it works (brief→call→shoot→delivery), packages head, testimonial, closing CTA; copy in `site.ts` (`intro`, `howItWorks`, `packagesIntro`, `closingCta`, `IndexRow`); inline styles moved to `site.css` |
 | 2026-11-02 | 4 | done | `/work/`: new head, Projects cards with `id={slug}`, `?category=` preselect + `replaceState`, designed empty state with reset; `/studio/` rewritten in first person (principles, how a shoot runs, who I work with, what you get); copy in `site.ts` (`workPage`, `studioPage`) |
 | 2026-11-02 | 5 | done | `/rates/`: packages (unit · ex VAT, usage line), add-ons, commercial FAQ; `/contact/`: business brief form (company, shoot type, budget), steps; contacts before photo on phones; `::selection` tokens; copy in `site.ts` (`ratesPage`, `addOns`, `faq`, `contactPage`, `shootTypes`, `budgetRanges`, `enquiryForm`) |
+| 2026-11-02 | 6 | done | 404 and privacy (UK GDPR placeholder, ICO); `product.md`, `CLAUDE.md` overview, `README.md`, `docs/README.md`, `setup.md`, `roadmap.md`, `conventions.md`, `process.md`; specs 001 (one note), 002–007 reworded (004: London areas + UK cities, `/brand-photographer/[slug]/`; 007: brand base, wedding/events variants) |

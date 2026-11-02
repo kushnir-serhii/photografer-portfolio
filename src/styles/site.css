@@ -183,3 +183,17 @@ body.has-drawer { overflow: hidden; }
 @media (min-width: 900px) { .sh-contact__photo { order: -1; } }
 .sh-contact__next-title { margin: 0 0 28px; }
 .sh-contact__steps { list-style: none; margin: 0; padding: 0; }
+
+/* ---------- 404 ---------- */
+
+.sh-notfound { display: grid; justify-items: center; text-align: center; }
+.sh-notfound__code { margin: 0 0 var(--space-4); }
+.sh-notfound__title { margin: 0 auto var(--space-6); max-width: 14ch; }
+.sh-notfound__lead { margin: 0 0 var(--space-6); max-width: 40ch; color: var(--ink-muted); }
+.sh-notfound__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }
+
+/* ---------- privacy ---------- */
+
+.sh-privacy__eyebrow { margin: 0 0 var(--space-4); }
+.sh-privacy__title { margin: 0 0 var(--space-6); }
+.sh-privacy__h { margin: var(--space-5) 0 0; }

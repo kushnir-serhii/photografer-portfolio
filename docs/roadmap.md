@@ -2,7 +2,7 @@
 
 The single source of truth for what is done, what is next, and in which order. `/run-implement` (`/run-impl`) reads this file. The process behind it is in [process.md](process.md).
 
-Already built before the process existed: the Still Hours site (home, work, studio, rates, contact, privacy, 404) on the Still Hours design system. Specs below build on it. Feature research behind them: [reference/bemazal-analysis.md](reference/bemazal-analysis.md).
+Already built before the process existed: the demo site (home, work, studio, rates, contact, privacy, 404) on the Still Hours design system, repositioned as Robin Hale, a London brand & commercial photographer (spec 008). Specs below build on it. Feature research behind them: [reference/bemazal-analysis.md](reference/bemazal-analysis.md).
 
 ## Status
 
@@ -11,7 +11,7 @@ Already built before the process existed: the Still Hours site (home, work, stud
 | 001 | [Playwright UI check](specs/001-ui-check.md) | done | — |
 | 002 | [Booking flow: package → enquiry, quick contact, availability](specs/002-booking-flow.md) | draft | 001, 008 |
 | 003 | [Price calculator](specs/003-price-calculator.md) | draft | 002 |
-| 004 | [City pages + SEO](specs/004-city-pages-seo.md) | draft | 001, 008 |
+| 004 | [Area pages + SEO](specs/004-city-pages-seo.md) | draft | 001, 008 |
 | 005 | [Film reel](specs/005-film-reel.md) | draft | 001, 008 |
 | 006 | [Client gallery (demo)](specs/006-client-gallery.md) | draft | 001, 008 |
 | 007 | [Niche variants](specs/007-niche-variants.md) | draft | 002, 003, 004 |
@@ -36,4 +36,4 @@ Read top to bottom; the next spec is the first one that isn't `done`. Specs in o
 - New spec: copy [specs/_template.md](specs/_template.md), take the next number, add a row to **Status** and put it in a wave.
 
 ## Later (not specced)
-Journal / blog (content collections), more testimonials with a reviews block, buyer-tips page ("how to choose a photographer", "where you can save"), Instagram feed, multilingual (PL / EN), Lighthouse report page for the pitch.
+Journal / blog (content collections), more testimonials with a reviews block, buyer-tips page ("how to choose a photographer", "where you can save"), Instagram feed, multilingual pages, Lighthouse report page for the pitch.

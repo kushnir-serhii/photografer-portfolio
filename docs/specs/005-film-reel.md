@@ -3,7 +3,7 @@
 **Status:** draft · **Depends on:** 001 · **Route(s):** `/`, `/work/`
 
 ## Goal
-Video has its own place: a short reel on the home page and film entries in the work gallery, loading only when played so the site stays fast. In the demo: *"my stills and my video both have a place"* — many photographers also shoot film.
+Video has its own place: a short reel on the home page and film entries in the work gallery, loading only when played so the site stays fast. In the demo: *"my stills and my video both have a place"* — many brand and commercial clients need film as well as stills.
 
 ## Scope
 - In: a reel section on the home page (poster + play, click-to-load); film items in the `/work/` gallery (`film` category) that play in a dialog; video sources from data (self-hosted mp4 or a Vimeo/YouTube id).
@@ -15,8 +15,8 @@ Video has its own place: a short reel on the home page and film entries in the w
 ## Slices
 
 ### [ ] 1. Home reel
-- **Build:** `FilmReel.astro`: a 16:9 poster with title and a play button; on click it swaps in `<video controls>` (file) or the provider iframe (privacy-friendly `youtube-nocookie` / `dnt=1`), nothing loaded before. Placed on the home page between "Selected days" and "The index".
-- **Files:** `src/components/FilmReel.astro`, `src/pages/index.astro`, `src/scripts/film.ts`, `src/scripts/site.ts`, `src/data/site.ts`, `public/images/*` (poster)
+- **Build:** `FilmReel.astro`: a 16:9 poster with title and a play button; on click it swaps in `<video controls>` (file) or the provider iframe (privacy-friendly `youtube-nocookie` / `dnt=1`), nothing loaded before. Placed on the home page between "Selected projects" and "What I shoot".
+- **Files:** `src/components/FilmReel.astro`, `src/pages/index.astro`, `src/scripts/film.ts`, `src/scripts/site.ts`, `src/data/site.ts`, `src/assets/work/*` (poster)
 - **Agent:** designer → frontend
 - **Accept:**
   - [ ] no video or iframe request is made before play (checked in the network panel)
@@ -33,7 +33,7 @@ Video has its own place: a short reel on the home page and film entries in the w
   - [ ] filters still work; the empty-filter state is unchanged
 
 ## External needs
-A placeholder reel for the demo (licence-free) and, for a client, their video files or Vimeo/YouTube links.
+A placeholder reel for the demo (licence-free) and, for a client, their film work as video files or Vimeo/YouTube links.
 
 ## Open questions
 - Demo video source: a short licence-free stock clip self-hosted in `public/` (heavier repo, works offline) or a public Vimeo/YouTube video (light, depends on a third party)? Recommended: a public stock clip on Vimeo/YouTube for the demo, the component supports both.

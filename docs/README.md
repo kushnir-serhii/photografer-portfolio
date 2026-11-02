@@ -1,4 +1,4 @@
-# Still Hours photographer demo — docs
+# Robin Hale brand & commercial photographer demo — docs
 
 | Path | What it is |
 | --- | --- |

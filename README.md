@@ -1,6 +1,6 @@
-# Still Hours — photographer portfolio
+# Robin Hale — brand & commercial photographer, London (demo)
 
-Astro site built from the Still Hours design system: dark first, ink + electric lime, a heavy grotesk, and a small motion runtime.
+Astro site for a fictional brand and commercial photographer, built from the Still Hours design system: dark first, ink + electric lime, a heavy grotesk, and a small motion runtime.
 
 ## Commands
 
@@ -15,7 +15,7 @@ Astro site built from the Still Hours design system: dark first, ink + electric 
 
 ```
 src/
-  data/site.ts          all copy that repeats: contact details, days, gallery frames, rates
+  data/site.ts          all copy that repeats: contact details, projects, gallery frames, rates
   layouts/BaseLayout    <head>, theme restore before paint, header + footer
   components/           Header, Hero, Marquee, Slider, IndexList, StoryBlock,
                         Packages, Testimonial, GalleryGrid, ContactForm, ClosingCta, Footer

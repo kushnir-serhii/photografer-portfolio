@@ -3,25 +3,25 @@
 **Status:** draft · **Depends on:** 001 · **Route(s):** `/`, `/rates/`, `/contact/`, header on every page
 
 ## Goal
-A visitor picks a package, sees whether the date is free, and reaches the photographer in one tap — by form (already filled in), phone, WhatsApp or Messenger. In the demo this is the main story: *"fewer vague messages, more booked dates."*
+A visitor picks a package, sees whether the date is free, and reaches me in one tap — by brief (already filled in), phone or WhatsApp. In the demo this is the main story: *"fewer vague emails, more booked shoots."*
 
 ## Scope
-- In: plan ids and `?plan=` prefill of the enquiry form; a quick-contact dialog (Call / WhatsApp / Messenger / Form) opened from the header, the packages and the hero; a WhatsApp message pre-written with the date and package when known; an availability calendar on `/contact/` from static data; the `site.demo` flag.
+- In: plan ids and `?plan=` prefill of the brief form; a quick-contact dialog (Call / WhatsApp / Messenger / Form) opened from the header, the packages and the hero; a WhatsApp message pre-written with the shoot date and package when known; an availability calendar on `/contact/` from static data; the `site.demo` flag.
 - Out: price totals and add-ons (003), real calendar sync (Google Calendar / iCal — later, listed in setup), payments, booking without a conversation.
 
 ## Data
 `src/data/site.ts`:
 - `site.demo: boolean` (true here).
 - `site.whatsapp` (international number, digits only), `site.messenger` (m.me username, optional); empty = that channel isn't shown.
-- `Plan.id` (`half-day`, `whole-day`, `family`), stable, used in URLs.
-- `availability`: `{ booked: string[]; limited?: string[] }` ISO dates, plus how many months ahead to show. Demo data looks plausible (Saturdays in summer mostly booked).
+- `Plan.id` (`half-day`, `full-day`, `headshots`), stable, used in URLs.
+- `availability`: `{ booked: string[]; limited?: string[] }` ISO dates, plus how many months ahead to show. Demo data looks plausible from January 2027 (a few booked days, a few with limited availability).
 
 Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.ts`. URL params: `plan`, `date` (ISO). Unknown values are ignored.
 
 ## Slices
 
-### [ ] 1. Package → prefilled enquiry
-- **Build:** plan ids; each package CTA links to `/contact/?plan=<id>`; the contact form gets a "Collection" select (plans + "Not sure yet") that is preselected from `?plan=`, and `?date=` fills the date; a short line above the form confirms the choice ("Whole day — 9 800 zł") with a way to change it.
+### [ ] 1. Package → prefilled brief
+- **Build:** plan ids; each package CTA links to `/contact/?plan=<id>`; the contact form gets a "Package" select (plans + "Not sure yet") that is preselected from `?plan=`, and `?date=` fills the date; a short line above the form confirms the choice ("Full day — £1,750 ex VAT") with a way to change it.
 - **Files:** `src/data/site.ts`, `src/components/Packages.astro`, `src/components/ContactForm.astro`, `src/scripts/booking.ts`, `src/scripts/site.ts`
 - **Agent:** frontend → designer (the confirmation line)
 - **Accept:**
@@ -31,7 +31,7 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
   - [ ] 375px without horizontal scroll, Night and Day
 
 ### [ ] 2. Quick-contact dialog
-- **Build:** `QuickContact.astro` (native `<dialog>`, outside `<main>` so it persists) with Call (`tel:`), WhatsApp (`https://wa.me/<number>?text=…`), Messenger (`https://m.me/<user>`) and "Write a message" (→ `/contact/`, carrying `plan`/`date`). Opened from a header button ("Talk to us"), each package card and the hero. The WhatsApp text is pre-written: "Hi! Is <date> free for a <package>?" when known, a neutral line otherwise. Without JS the openers are plain links to `/contact/`.
+- **Build:** `QuickContact.astro` (native `<dialog>`, outside `<main>` so it persists) with Call (`tel:`), WhatsApp (`https://wa.me/<number>?text=…`), Messenger (`https://m.me/<user>`) and "Write a message" (→ `/contact/`, carrying `plan`/`date`). Opened from a header button ("Call or message"), each package card and the hero. The WhatsApp text is pre-written: "Hi! Is <date> free for a <package>?" when known, a neutral line otherwise. Without JS the openers are plain links to `/contact/`.
 - **Files:** `src/components/QuickContact.astro`, `src/components/Header.astro`, `src/components/Packages.astro`, `src/components/Hero.astro`, `src/layouts/BaseLayout.astro`, `src/scripts/booking.ts`, `src/styles/site.css`, `src/data/site.ts`
 - **Agent:** designer → frontend
 - **Accept:**
@@ -45,7 +45,7 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
 - **Files:** `src/components/AvailabilityCalendar.astro`, `src/pages/contact.astro`, `src/scripts/booking.ts`, `src/styles/site.css`, `src/data/site.ts`
 - **Agent:** designer → frontend
 - **Accept:**
-  - [ ] the grid is keyboard usable (arrow keys move between days, Enter picks), each day has an accessible name ("Saturday 12 June 2027, booked")
+  - [ ] the grid is keyboard usable (arrow keys move between days, Enter picks), each day has an accessible name ("Friday 12 March 2027, booked")
   - [ ] booked and past days can't be picked; picking a free day fills the date field
   - [ ] states: a month with everything booked shows a line pointing to the form/quick contact
   - [ ] 375px without horizontal scroll, Night and Day
@@ -56,7 +56,7 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
 
 ## Open questions
 - Show Messenger at all, or Call / WhatsApp / Form only? Recommended: keep it optional in data, shown when set; demo sets it.
-- A small marquee item or home teaser for the calendar ("Four Saturdays left in June") — in this spec or later? Recommended: reuse the existing marquee items from data, no new component.
+- A small marquee item or home teaser for the calendar ("Three shoot days left in January") — in this spec or later? Recommended: reuse the existing marquee items from data, no new component.
 
 ## Log
 | Date | Slice | Result | Notes / files |

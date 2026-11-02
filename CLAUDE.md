@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-`photografer-portfolio` is **Still Hours**, a fictional wedding and family photographer in Pozna≈Ñ. It is a **sales demo**: the site shows real photographers what kind of website can be built for them. Every feature is judged by how clearly it shows its value to a photographer in a two-minute walkthrough, and every piece of content must be easy to swap for a real client's. Product and demo story: `docs/product.md`. Feature research: `docs/reference/`.
+`photografer-portfolio` is **Robin Hale**, a fictional brand and commercial photographer in London. It is a **sales demo**: the site shows real photographers what kind of website can be built for them. The design system is still called Still Hours internally (the `sh-*` classes and `still-hours.js`). Every feature is judged by how clearly it shows its value to a photographer in a two-minute walkthrough, and every piece of content must be easy to swap for a real client's. Product and demo story: `docs/product.md`. Feature research: `docs/reference/`.
 
 One static Astro site at the repo root (no backend, no database). Copy that repeats lives in `src/data/site.ts`; the design system is the `sh-*` classes in `src/styles/` plus the motion runtime `src/scripts/still-hours.js`.
 
@@ -36,7 +36,7 @@ npm run ui-check   # Playwright UI check (after spec 001), see docs/process.md ‚
 ## Architecture notes
 
 - **Static first.** Everything is prerendered. Interactivity is small TypeScript in `src/scripts/site.ts` (or a module it imports), wired on `astro:page-load` because the `ClientRouter` swaps pages without a reload. The header and drawer persist across navigations; anything inside `<main>` is wired again on every page load.
-- **Content is data.** Names, contacts, prices, days, frames, cities and niche copy live in `src/data/`. Components take props; pages compose components. Swapping a client means editing data and images, not components.
+- **Content is data.** Names, contacts, prices, projects, frames, areas and niche copy live in `src/data/`. Components take props; pages compose components. Swapping a client means editing data and images, not components.
 - **Demo-only features** (niche switcher, mocked client gallery, fake availability) sit behind `site.demo` and say plainly in the UI that they are a demo.
 - **Works without JavaScript.** Every page is readable and the enquiry form submits without JS; scripts add to it.
 - External services (form endpoint, WhatsApp, video hosts) are links or optional env vars with a working fallback when empty (the form falls back to `mailto:`).

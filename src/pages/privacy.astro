@@ -3,20 +3,34 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
 // Placeholder copy: have this reviewed before launch.
 ---
-<BaseLayout title="Privacy" description="What we do with the details you send us.">
+<BaseLayout title="What I do with the details you send" description="What I keep from a brief, why, how long, and your rights under UK GDPR.">
   <section class="sh-section">
     <div class="sh-container sh-container--narrow">
-      <p class="sh-meta" style="margin-bottom:20px;">Privacy</p>
-      <h1 class="sh-d-xl" style="margin:0 0 32px;">What we do with your details</h1>
+      <p class="sh-meta sh-privacy__eyebrow">Privacy</p>
+      <h1 class="sh-d-xl sh-privacy__title">What I do with the details you send</h1>
       <div class="sh-prose">
-        <p>When you send an enquiry we keep your names, email, date and message so we can answer it. Nothing else.</p>
-        <p>We do not sell or share them, and we do not add you to a mailing list.</p>
-        <p>
-          Photographs of your day are published only with your agreement. Ask us to take one down and we will.
-        </p>
-        <p>
-          To see or delete what we hold about you, write to <a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a>.
-        </p>
+        <p>This page covers what I keep when you send a brief through this site, why I keep it, how long, and what you can ask me to do about it.</p>
+
+        <h2 class="sh-d-s sh-privacy__h">What I keep</h2>
+        <p>From a brief I keep your name, your company, your email address, and the shoot details: the type of shoot, a preferred date, the budget range and the brief itself. If we talk by phone or WhatsApp, I keep a note of what we agreed in the same place.</p>
+
+        <h2 class="sh-d-s sh-privacy__h">Why I keep it</h2>
+        <p>To answer your brief, put together a quote and, if you book, run the shoot and send the files. I use it for nothing else.</p>
+
+        <h2 class="sh-d-s sh-privacy__h">Who sees it</h2>
+        <p>I do not sell or share your details, and I do not add you to a mailing list.</p>
+
+        <h2 class="sh-d-s sh-privacy__h">How long I keep it</h2>
+        <p>I keep a brief for 12 months from our last contact. If we book a shoot, the details stay on file for 12 months after the last job, and then they are deleted.</p>
+
+        <h2 class="sh-d-s sh-privacy__h">Photographs from shoots</h2>
+        <p>I publish photographs of people from a shoot only with the client's agreement, agreed before the day. If you change your mind, write to me and I will take the picture down from my site and my social channels.</p>
+
+        <h2 class="sh-d-s sh-privacy__h">Your rights under UK GDPR</h2>
+        <p>You can ask me to show you what I hold about you, to correct anything that is wrong, or to delete your details. Write to <a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a> and I will act on it.</p>
+
+        <h2 class="sh-d-s sh-privacy__h">Complaints</h2>
+        <p>If you think I have handled your details badly, you can complain to the Information Commissioner's Office (ICO) at <a class="sh-link" href="https://ico.org.uk" rel="noopener">ico.org.uk</a>.</p>
       </div>
     </div>
   </section>

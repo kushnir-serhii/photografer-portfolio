@@ -3,15 +3,15 @@
 **Status:** draft · **Depends on:** 002 · **Route(s):** `/rates/`, `/contact/`
 
 ## Goal
-A visitor builds their own quote on `/rates/` — package plus add-ons — sees the total change live, and sends it to the photographer in one click. In the demo: *"clients arrive already knowing the price."*
+A visitor builds their own quote on `/rates/` — package plus add-ons — sees the total change live, and sends it to me in one click. In the demo: *"clients arrive already knowing the price."*
 
 ## Scope
 - In: numeric prices for plans and add-ons, one price formatter, the calculator on `/rates/`, passing the selection to `/contact/` (`?plan=&addons=`) and showing it above the form and in the WhatsApp text.
-- Out: discounts, deposits and payments, distance-based travel pricing (a fixed note stays), currency switching.
+- Out: discounts, deposits and payments, distance-based travel pricing (a fixed note stays: travel within the M25 is included, further out is quoted at cost), VAT (every price is ex VAT and says so), currency switching.
 
 ## Data
 `src/data/site.ts`:
-- `site.currency` (`PLN`), `site.locale` (`pl-PL`; formatting matches the current "9 800 zł").
+- `site.currency` (`GBP`), `site.locale` (`en-GB`; formatting matches the current "£1,750").
 - `Plan.price: number` (was a string); `addOns` moved from `rates.astro` into data: `{ id, name, price: number, priceFrom?: boolean, note }`.
 - `formatPrice(amount)` helper in `src/data/format.ts` using `Intl.NumberFormat`.
 
@@ -43,7 +43,7 @@ A visitor builds their own quote on `/rates/` — package plus add-ons — sees 
   - [ ] the submitted data contains the package, add-ons and total
 
 ## External needs
-The client's real prices and add-ons.
+The client's real prices, add-ons and usage terms.
 
 ## Open questions
 - Should the calculator replace the add-ons block on `/rates/` or sit below the packages? Recommended: replace the add-ons block, keep the three package cards above as they are.

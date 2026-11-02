@@ -31,7 +31,7 @@ Astro 7 · TypeScript (strict, `astro/tsconfigs/strict`) · `@astrojs/check` · 
 
 ## TypeScript
 - No `any`. Use `unknown` and narrow; parse URL params and `localStorage` values defensively (unknown values are ignored, never thrown).
-- `import type` for type-only imports. No `enum`: use `as const` arrays or string unions (`type Category = 'weddings' | …`).
+- `import type` for type-only imports. No `enum`: use `as const` arrays or string unions (`type Category = 'brand' | …`).
 - Data shapes are interfaces in the same `src/data/` file as the data; components take those types as props instead of redeclaring them.
 - State as unions, not boolean flags, when there are more than two states. Exhaustive `switch` ends with a `never` check.
 - No `as` casts without a comment saying why (DOM queries use `querySelector<HTMLElement>` generics instead).
@@ -41,13 +41,13 @@ Astro 7 · TypeScript (strict, `astro/tsconfigs/strict`) · `@astrojs/check` · 
 - Scripts run once per full load; the `ClientRouter` swaps `<main>`. Wire page content in an `initX()` called from the `astro:page-load` listener in `site.ts`; wire persistent elements (header, drawer, dialogs outside `<main>`) once at module level.
 - After a swap, call `runtime.init(document)` so `data-*` motion attributes work on new content (already done in `site.ts`).
 - The page reads fully and the enquiry form submits without JS. Script-only controls render hidden or disabled until the script enables them, or are progressive enhancements of a link or form.
-- State that crosses pages goes in the URL (`/contact/?plan=whole-day&date=2027-06-12`). `localStorage` only for per-visitor conveniences (theme, favourites in the demo gallery), every read and write in `try/catch`.
+- State that crosses pages goes in the URL (`/contact/?plan=full-day&date=2027-06-12`). `localStorage` only for per-visitor conveniences (theme, selects in the demo gallery), every read and write in `try/catch`.
 - Native elements first: `<dialog>` for modals, `<details>` for disclosures, `<form>` and inputs with real validation attributes.
 
 ## Content and data
-- Anything a client would change (names, contacts, prices, add-ons, FAQ, projects, frames, cities, niche copy, video links) lives in `src/data/`, not in markup or scripts.
+- Anything a client would change (names, contacts, prices, add-ons, FAQ, projects, frames, areas, niche copy, video links) lives in `src/data/`, not in markup or scripts.
 - Prices are stored as numbers (`9800`) with one currency (`site.currency`), formatted through one helper (spec 003) using `Intl.NumberFormat`. Until then the existing strings stay as they are.
-- Copy is English, in the Still Hours voice: short, plain, honest, no hype, no emoji.
+- Copy is English, in the site's voice: first person singular ("I"), short, plain, honest, no hype, no emoji.
 - Image `alt` text describes the photograph. Decorative images get `alt=""`.
 
 ## Demo features
@@ -57,7 +57,7 @@ Astro 7 · TypeScript (strict, `astro/tsconfigs/strict`) · `@astrojs/check` · 
 ## SEO
 - Every page passes `title` and `description` to `BaseLayout`; canonical and Open Graph come from it.
 - Structured data is JSON-LD in a `<script type="application/ld+json">`, built from `src/data/`, one block per type per page.
-- Slugs (cities, projects) are stable once published.
+- Slugs (areas, projects) are stable once published.
 
 ## Styling
 - Only `sh-*` classes and CSS custom properties from `tokens.css`. No raw colors, fonts or shadows in components or pages. New tokens go into `tokens.css` first, for Night and Day.
