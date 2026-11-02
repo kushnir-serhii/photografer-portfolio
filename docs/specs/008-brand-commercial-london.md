@@ -1,6 +1,6 @@
 # 008 — Repositioning: brand & commercial photographer in London
 
-**Status:** in-progress · **Depends on:** 001 · **Route(s):** every page (`/`, `/work/`, `/studio/`, `/rates/`, `/contact/`, `/privacy/`, `404`)
+**Status:** done · **Depends on:** 001 · **Route(s):** every page (`/`, `/work/`, `/studio/`, `/rates/`, `/contact/`, `/privacy/`, `404`)
 
 ## Goal
 The demo becomes the site of a fictional **brand and commercial photographer in London**, branded under the photographer's own name. The dark, lime, high-motion design stays as it is: it reads as a creative studio, which fits brand work and did not fit weddings. A marketing manager or a founder landing on the site sees, within two seconds, who this is, what they shoot and for whom, and how to book a shoot. A photographer watching the demo sees a site that looks like a studio's, with their own name in the logo.
@@ -118,3 +118,4 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 | 2026-11-02 | 4 | done | `/work/`: new head, Projects cards with `id={slug}`, `?category=` preselect + `replaceState`, designed empty state with reset; `/studio/` rewritten in first person (principles, how a shoot runs, who I work with, what you get); copy in `site.ts` (`workPage`, `studioPage`) |
 | 2026-11-02 | 5 | done | `/rates/`: packages (unit · ex VAT, usage line), add-ons, commercial FAQ; `/contact/`: business brief form (company, shoot type, budget), steps; contacts before photo on phones; `::selection` tokens; copy in `site.ts` (`ratesPage`, `addOns`, `faq`, `contactPage`, `shootTypes`, `budgetRanges`, `enquiryForm`) |
 | 2026-11-02 | 6 | done | 404 and privacy (UK GDPR placeholder, ICO); `product.md`, `CLAUDE.md` overview, `README.md`, `docs/README.md`, `setup.md`, `roadmap.md`, `conventions.md`, `process.md`; specs 001 (one note), 002–007 reworded (004: London areas + UK cities, `/brand-photographer/[slug]/`; 007: brand base, wedding/events variants) |
+| 2026-11-02 | UI check | pass | all 7 routes × 375/1280 × Night/Day: 28/28; screenshots reviewed |
