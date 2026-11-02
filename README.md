@@ -34,3 +34,7 @@ public/images/          PLACEHOLDER photographs — replace before launch
 - Set the real phone number, Instagram and client-gallery links in `src/data/site.ts`, and `site` in `astro.config.mjs`.
 - Enquiry form: set `PUBLIC_FORM_ENDPOINT` in `.env` (e.g. a Formspree URL). Without it the form falls back to `mailto:`.
 - Have the privacy page copy reviewed.
+
+## Process
+
+Specs, roadmap and the agent workflow (`/run-implement`) live in [`docs/`](docs/README.md); agent setup in `CLAUDE.md` and `.claude/`.
