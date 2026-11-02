@@ -19,7 +19,7 @@ Everything runs locally and needs no accounts. This file collects what changes w
 
 ## Content to swap
 
-1. **Photographs:** replace every file in `public/images/` with the client's work. Keep the file names or update `src/data/site.ts`. Ratios: 4:5 for people, 3:2 for rooms, 16:9 for slides.
+1. **Photographs:** replace every file in `public/images/` with the client's work. Keep the file names or update `src/data/site.ts`. Ratios: 4:5 for people, 3:2 for rooms, 16:9 for slides. The `/work/` gallery packs without holes only for the current mix and order of frame sizes (default, tall, wide, half); when the frame list changes, run `npm run ui-check` and look at the work screenshots.
 2. **`src/data/site.ts`:** name, description, email, phone, Instagram, client-galleries link, days, frames, plans. Set `demo: false` (once spec 002 adds the flag) so demo-only features disappear.
 3. **Copy in pages:** home, studio, rates (add-ons, FAQ) and contact still hold some copy in markup; specs move it into `src/data/` as they touch it.
 4. **Privacy page:** have the text reviewed for the client's country (GDPR for Poland / EU).

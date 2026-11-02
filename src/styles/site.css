@@ -48,6 +48,11 @@ body.has-drawer { overflow: hidden; }
 
 .sh-filters { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .sh-gallery__item[hidden] { display: none; }
+/* A filtered set is small and its sizes no longer pack together: show it as an even grid
+   (two up on desktop, one up on a phone) so it never leaves holes. */
+[data-gallery]:has([data-filter]:not([data-filter="all"])[aria-pressed="true"]) .sh-gallery__item {
+  grid-column: span 6; grid-row: span 4;
+}
 
 /* ---------- FAQ ---------- */
 

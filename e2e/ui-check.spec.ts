@@ -40,6 +40,8 @@ async function settle(page: Page): Promise<void> {
     for (const img of document.images) img.loading = 'eager';
   });
   await page.waitForLoadState('networkidle');
+  // Web fonts change the page height; measure and capture only after they have swapped in.
+  await page.evaluate(() => document.fonts.ready);
   await page.evaluate(() =>
     Promise.all(
       Array.from(document.images).map(

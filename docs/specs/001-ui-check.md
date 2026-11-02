@@ -1,6 +1,6 @@
 # 001 — Playwright UI check
 
-**Status:** in-progress · **Depends on:** — · **Route(s):** all existing (`root`, `work`, `studio`, `rates`, `contact`, `privacy`, `404`)
+**Status:** done · **Depends on:** — · **Route(s):** all existing (`root`, `work`, `studio`, `rates`, `contact`, `privacy`, `404`)
 
 ## Goal
 Every spec ends with an automatic check that each of its pages opens at phone and desktop width, in both themes, without console errors or horizontal scroll, and leaves screenshots to review. The demo is judged on a phone in a meeting, so layout breaks must be caught before the photographer sees them.
@@ -30,18 +30,23 @@ None. New files: `playwright.config.ts`, `e2e/ui-check.spec.ts`. `package.json` 
   - [x] a page with a forced `console.error` or a 2000px-wide element fails the check (tried locally, not committed)
   - [x] screenshots and reports are git-ignored; `npm run build` still green
 
-### [ ] 2. First run over the existing site
+### [x] 2. First run over the existing site
 - **Build:** run the check over every existing route, review all screenshots, fix layout problems it finds (overflow, contrast, cut-off text, broken Day theme) within the existing design system.
 - **Files:** whatever the fixes touch (`src/styles/*`, `src/components/*`, `src/pages/*`)
 - **Agent:** designer
 - **Accept:**
-  - [ ] the full check passes for all routes at 375 and 1280, Night and Day
-  - [ ] every screenshot reviewed; fixes listed in the log
+  - [x] the full check passes for all routes at 375 and 1280, Night and Day
+  - [x] every screenshot reviewed; fixes listed in the log
 
 ## External needs
 None.
 
 ## Open questions
+- The `/work/` gallery packs without holes only for the current mix of frame sizes; a client's different list can leave holes again (noted in `docs/setup.md`). A masonry layout would remove the dependency; not done.
+- The custom cursor dot stays lime in Day (it sits behind a dark "View" label). Acceptable?
+- Home: packages → testimonial keeps its full gap (a background change, same as every band edge). Tighten band edges site-wide?
+- Placeholder photos are tiny, blurred JPEGs and the copy still says weddings / Poznań / 2026: both are replaced by spec 008, not fixed here.
+- A full-page screenshot of `/` at 1280 Night is sometimes 173px taller than the page, with an empty band under the footer. Measured in the browser the page is the same height in both themes (6057px), so it is a capture artifact, not a page bug.
 - **Decided (2026-11-02):** Chromium only; WebKit stays a later option (large download).
 - **Decided:** slice 2 fixes everything the run finds (layout breaks and smaller visual flaws), within the existing design system, even if 008 may rework it later.
 - **Decided:** branch `spec/001-ui-check` is created from `rebranding` (it has the specs and process; `main` does not).
@@ -54,3 +59,4 @@ None.
 | --- | --- | --- | --- |
 | 2026-11-02 | 1 | done: 8 checks for root,contact, 28 for all routes, all pass; forced console.error and 2000px element fail as expected | `playwright.config.ts`, `e2e/ui-check.spec.ts`, `package.json` (`@playwright/test`, `@types/node`, `ui-check`), `package-lock.json`, `.gitignore` |
 | 2026-11-02 | 1 (fix) | the first runs hit the running `astro dev` on 4321 and later a detached stale preview; overflow could never trip because `.sh-page` clips. Fixed: port 4322, foreground preview, phone emulation at 375, cut-off element check; forced 2000px div and console.error fail, real site passes 28/28 | `playwright.config.ts`, `e2e/ui-check.spec.ts`, `package.json` |
+| 2026-11-02 | 2 | done: 28/28 pass; all screenshots reviewed. Fixed: gallery holes at 375/1280 and in filtered sets; contact select/date alignment and select indent; system-styled consent checkbox (44px row); stacked padding between same-background sections and the overridden `--flush` on desktop; Day accents via new `--accent-mark` token; package card margins and the "Most booked" tag moved into a header row. UI check waits for `document.fonts.ready` | `src/styles/tokens.css`, `components.css`, `site.css`, `src/components/Packages.astro`, `e2e/ui-check.spec.ts`, `docs/setup.md` |
