@@ -1,6 +1,6 @@
 # 008 — Repositioning: brand & commercial photographer in London
 
-**Status:** draft · **Depends on:** 001 · **Route(s):** every page (`/`, `/work/`, `/studio/`, `/rates/`, `/contact/`, `/privacy/`, `404`)
+**Status:** ready · **Depends on:** 001 · **Route(s):** every page (`/`, `/work/`, `/studio/`, `/rates/`, `/contact/`, `/privacy/`, `404`)
 
 ## Goal
 The demo becomes the site of a fictional **brand and commercial photographer in London**, branded under the photographer's own name. The dark, lime, high-motion design stays as it is: it reads as a creative studio, which fits brand work and did not fit weddings. A marketing manager or a founder landing on the site sees, within two seconds, who this is, what they shoot and for whom, and how to book a shoot. A photographer watching the demo sees a site that looks like a studio's, with their own name in the logo.
@@ -95,11 +95,11 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 - A real client later supplies: name, descriptor, contacts, prices and usage terms, their own photos (the stock placeholders must be replaced before launch). Listed in `docs/setup.md`.
 
 ## Open questions
-- **Photographer's name.** Recommended: a short, gender-neutral, easy-to-say name that reads as a person, e.g. **Robin Hale**, Alex Mercer or Sam Ashby, with "Photography" only in the descriptor. Domain in examples: `robinhale.studio`.
-- **Hero headline.** Recommended: **"Pictures that do the selling."** Alternatives: "Your brand, on its best day." · "Make them stop scrolling."
-- **Prices (placeholders).** Recommended: Half day £950 · Full day £1,750 · Headshots £120 per person (min. 5); usage: 12 months, web and social, included.
-- **Photo source.** Recommended: Unsplash, picked by the agent for one consistent grade; you approve the set before slice 3.
-- **Order.** Recommended: after 001, before 002 and 004, because they build on this content.
+- **Decided (2026-11-02):** photographer's name **Robin Hale**; "Photography" only in the descriptor; example domain and email `robinhale.studio` / `hello@robinhale.studio`.
+- **Decided:** hero headline **"Your brand, on its best day."**
+- **Decided:** prices are placeholders; use Half day £950 · Full day £1,750 · Headshots £120 per person (min. 5); usage: 12 months, web and social, included.
+- **Decided:** photos from Unsplash, picked by the agent for one consistent grade; the user approves the set after slice 2, before slice 3 starts.
+- **Decided:** order: after 001, before 002 and 004.
 
 ## Log
 | Date | Slice | Result | Notes / files |
