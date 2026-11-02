@@ -1,6 +1,6 @@
 # 008 — Repositioning: brand & commercial photographer in London
 
-**Status:** ready · **Depends on:** 001 · **Route(s):** every page (`/`, `/work/`, `/studio/`, `/rates/`, `/contact/`, `/privacy/`, `404`)
+**Status:** in-progress · **Depends on:** 001 · **Route(s):** every page (`/`, `/work/`, `/studio/`, `/rates/`, `/contact/`, `/privacy/`, `404`)
 
 ## Goal
 The demo becomes the site of a fictional **brand and commercial photographer in London**, branded under the photographer's own name. The dark, lime, high-motion design stays as it is: it reads as a creative studio, which fits brand work and did not fit weddings. A marketing manager or a founder landing on the site sees, within two seconds, who this is, what they shoot and for whom, and how to book a shoot. A photographer watching the demo sees a site that looks like a studio's, with their own name in the logo.
@@ -35,15 +35,15 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 
 ## Slices
 
-### [ ] 1. Identity and data
+### [x] 1. Identity and data
 - **Build:** reshape `site.ts` as in **Data** with the new content (name, descriptor, London contacts, projects, categories, plans in £, marquee, testimonial, hero copy). Header, footer and `BaseLayout` meta read the new identity. Pages keep compiling with the renamed shapes; their prose is rewritten in later slices. The marquee no longer holds any hard-coded date ("Four days left in June").
 - **Files:** `src/data/site.ts`, `src/components/Header.astro`, `src/components/Footer.astro`, `src/layouts/BaseLayout.astro`, every page that imports `days`/`plans` (mechanical renames only)
 - **Agent:** frontend
 - **Accept:**
-  - [ ] no "Still Hours", "Poznań", "zł", "wedding" or Polish names left in `src/data/`, header, footer or `<head>`
-  - [ ] logo shows the photographer's name; descriptor visible next to it from 1280px, and in the drawer on phones
-  - [ ] the phone number is in the 020 7946 0xxx range and the `tel:` link works
-  - [ ] `npm run build` green
+  - [x] no "Still Hours", "Poznań", "zł", "wedding" or Polish names left in `src/data/`, header, footer or `<head>`
+  - [x] logo shows the photographer's name; descriptor visible next to it from 1280px, and in the drawer on phones
+  - [x] the phone number is in the 020 7946 0xxx range and the `tel:` link works
+  - [x] `npm run build` green
 
 ### [ ] 2. Placeholder photography
 - **Build:** pick free-licence photos (Unsplash or Pexels licence) that look like one photographer's brand and commercial work: about 6 project covers, 12 gallery frames, a hero, a studio portrait, a contact image. Consistent grade, people not identifiable as celebrities, no brand logos visible. Serve them through `astro:assets` (`<Image>` with widths and AVIF/WebP); delete the old blurs.
@@ -67,10 +67,11 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 
 ### [ ] 4. Work and studio
 - **Build:** `/work/` with the new categories and the projects' anchors; `/studio/` rewritten: who the photographer is, which clients and sectors, how a shoot runs, what a client gets (formats, usage rights, turnaround).
-- **Files:** `src/pages/work.astro`, `src/pages/studio.astro`, `src/components/GalleryGrid.astro`
+- **Files:** `src/pages/work.astro`, `src/pages/studio.astro`, `src/components/GalleryGrid.astro`, `src/scripts/site.ts`
 - **Agent:** designer · **Model:** sonnet
 - **Accept:**
   - [ ] every category filter has at least two frames; empty state still designed
+  - [ ] `/work/?category=food` opens with that filter pressed; an unknown value shows everything
   - [ ] `/work/#<slug>` from the home page lands on the right project
 
 ### [ ] 5. Rates and contact
@@ -100,7 +101,13 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 - **Decided:** prices are placeholders; use Half day £950 · Full day £1,750 · Headshots £120 per person (min. 5); usage: 12 months, web and social, included.
 - **Decided:** photos from Unsplash, picked by the agent for one consistent grade; the user approves the set after slice 2, before slice 3 starts.
 - **Decided:** order: after 001, before 002 and 004.
+- **Decided (2026-11-02):** voice is first person singular ("I"), since the brand is one person's name.
+- **Decided:** one main CTA label everywhere (header, hero, drawer, footer, closing CTA): **"Book a shoot"**, to `/contact/`.
+- **Decided:** no stop after slice 2; the user reviews the photo set with the final report, replacements go in as a `fix:` commit.
+- **Decided:** the home index lists the work categories (sectors), with client names in the meta line; each row links to `/work/?category=<id>`, and `/work/` reads that parameter to preselect the filter (unknown values ignored; without JS the full gallery shows). The param support is built in slice 4.
+- **Decided (defaults):** client names are fictional (no real companies); prices are shown ex VAT and say so; prices stay strings until spec 003; budget ranges: Under £1,000 · £1,000–2,500 · £2,500–5,000 · £5,000+; `astro.config.mjs` `site` becomes `https://robinhale.studio`; images move to `src/assets/work/` via `astro:assets` and the conventions' Images row is updated in slice 2.
 
 ## Log
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
+| 2026-11-02 | 1 | done | `site.ts` reshaped (Robin Hale, projects, categories, £ plans with usage, hero, marquee, testimonial); header descriptor (`.sh-brandline`), footer, BaseLayout, Packages, Slider, IndexList, Testimonial, ClosingCta, index, work, astro.config |

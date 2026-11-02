@@ -8,22 +8,22 @@ import StoryBlock from '../components/StoryBlock.astro';
 import Packages from '../components/Packages.astro';
 import Testimonial from '../components/Testimonial.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import { days, plans, site } from '../data/site';
+import { projects, plans, hero, marquee, testimonial, categories } from '../data/site';
 ---
 <BaseLayout>
   <Hero
     image="/images/two-people-at-the-end-of-the-night.jpg"
-    alt="Two people at the end of the night"
-    eyebrow={`Poznań — worldwide — ${site.year} dates open`}
-    title="Not the wedding. The day."
-    disciplines="Weddings · Families · Elopements · Editorial"
+    alt="Two figures in warm light at the end of the day"
+    eyebrow={hero.eyebrow}
+    title={hero.title}
+    disciplines={categories.filter((c) => c.id !== 'all').map((c) => c.label).join(' · ')}
   >
-    <a class="sh-btn sh-btn--primary" href="/contact/" data-magnetic="0.25">Check my date</a>
+    <a class="sh-btn sh-btn--primary" href="/contact/" data-magnetic="0.25">Book a shoot</a>
     <a class="sh-btn sh-btn--on-image" href="/work/">Selected work</a>
   </Hero>
 
   <div id="after-hero">
-    <Marquee accent speed={20} items={[`${site.year} dates open`, 'Four days left in June', `Now taking ${site.year + 1}`]} />
+    <Marquee accent speed={20} items={marquee} />
   </div>
 
   <section class="sh-section">
@@ -44,7 +44,7 @@ import { days, plans, site } from '../data/site';
         <h2 class="sh-d-l" data-split style="margin:0;">Selected days</h2>
         <p class="sh-meta" data-reveal>Drag · or use the arrows</p>
       </div>
-      <Slider days={days} label="Selected days" autoplay={5600} />
+      <Slider projects={projects} label="Selected days" autoplay={5600} />
     </div>
   </section>
 
@@ -54,7 +54,7 @@ import { days, plans, site } from '../data/site';
         <h2 class="sh-d-l" data-split style="margin:0;">The index</h2>
         <a class="sh-link" href="/work/">All work</a>
       </div>
-      <IndexList days={days} />
+      <IndexList projects={projects} />
     </div>
   </section>
 
@@ -90,8 +90,9 @@ import { days, plans, site } from '../data/site';
   <section class="sh-section sh-section--band">
     <div class="sh-container">
       <Testimonial
-        quote="We forgot he was there, and then the gallery arrived and we got the whole day back."
-        by="Marta & Jakub — September, Wielkopolska"
+        quote={testimonial.quote}
+        by={testimonial.by}
+        role={testimonial.role}
       />
     </div>
   </section>

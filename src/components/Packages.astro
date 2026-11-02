@@ -14,12 +14,13 @@ const { plans } = Astro.props;
           <p class="sh-meta">{plan.no} — {plan.name}</p>
           {plan.featured && <p class="sh-plan__tag">Most booked</p>}
         </div>
-        <p class="sh-plan__price">{plan.price}</p>
+        <p class="sh-plan__price">{plan.price}{plan.unit && <span class="sh-meta-s"> {plan.unit}</span>}</p>
+        <p class="sh-meta-s">Ex VAT · Usage: {plan.usage}</p>
         <ul class="sh-plan__list">
           {plan.items.map((item) => <li><span>{item}</span></li>)}
         </ul>
         {plan.featured
-          ? <a class="sh-btn sh-btn--primary" href="/contact/" data-magnetic="0.2">Check my date</a>
+          ? <a class="sh-btn sh-btn--primary" href="/contact/" data-magnetic="0.2">Book a shoot</a>
           : <a class="sh-btn sh-btn--outline" href="/contact/">Ask about this</a>}
       </article>
     ))}

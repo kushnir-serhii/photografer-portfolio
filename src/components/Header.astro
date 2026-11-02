@@ -8,7 +8,10 @@ const isCurrent = (href: string) => path === href;
 <header class="sh-header" transition:persist="site-header">
   <div class="sh-container">
     <nav class="sh-nav" aria-label="Primary">
-      <a class="sh-brand" href="/">{site.name}</a>
+      <div class="sh-brandline">
+        <a class="sh-brand" href="/">{site.name}</a>
+        <span class="sh-meta-s sh-brandline__desc">{site.descriptor}</span>
+      </div>
       <ul class="sh-nav__links">
         {nav.map((item) => (
           <li>
@@ -20,7 +23,7 @@ const isCurrent = (href: string) => path === href;
         <button class="sh-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch colour theme">
           <span data-theme-label>Day</span>
         </button>
-        <a class="sh-btn sh-btn--primary" href="/contact/">Enquire</a>
+        <a class="sh-btn sh-btn--primary" href="/contact/">Book a shoot</a>
         <button class="sh-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sh-drawer" data-drawer-open>
           <Icon name="burger" />
         </button>
@@ -47,7 +50,8 @@ const isCurrent = (href: string) => path === href;
     ))}
   </ul>
   <div class="sh-drawer__foot">
-    <a class="sh-btn sh-btn--primary sh-btn--block" href="/contact/">Check my date</a>
+    <a class="sh-btn sh-btn--primary sh-btn--block" href="/contact/">Book a shoot</a>
+    <p class="sh-meta-s">{site.descriptor}</p>
     <p class="sh-meta-s">{site.email} · {site.phone}</p>
   </div>
 </div>

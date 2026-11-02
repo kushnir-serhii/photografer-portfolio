@@ -2,15 +2,18 @@
 // replace them with the photographer's own work before launch.
 
 export const site = {
-  name: 'Still Hours',
+  name: 'Robin Hale',
+  descriptor: 'Brand & commercial photography, London',
+  city: 'London',
   description:
-    'Wedding and family photographer in Poznań. We photograph the parts of a day nobody thinks to ask for.',
-  email: 'hello@stillhours.co',
-  phone: '+48 000 000 000',
-  phoneHref: 'tel:+48000000000',
+    'Robin Hale photographs brands, food, products and teams in London, for websites, campaigns and social.',
+  email: 'hello@robinhale.studio',
+  phone: '020 7946 0321',
+  phoneHref: 'tel:+442079460321',
   instagram: 'https://instagram.com/',
   clientGalleries: '#',
-  year: 2026,
+  // The next bookable period; used in the hero, marquee and footer instead of a hard-coded date.
+  season: 'January 2027',
   // Where the enquiry form posts (e.g. a Formspree endpoint). Set PUBLIC_FORM_ENDPOINT in .env.
   formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined,
 };
@@ -22,43 +25,63 @@ export const nav = [
   { label: 'Contact', href: '/contact/' },
 ];
 
-export interface Day {
+export type Category = 'brand' | 'food' | 'product' | 'portraits' | 'film';
+
+export interface Project {
+  slug: string;
+  client: string;
   title: string;
-  kind: string;
+  sector: Category;
   month: string;
-  place: string;
-  venue: string;
   year: number;
+  area: string;
+  deliverables: string[];
   image: string;
   alt: string;
   cta: string;
 }
 
-export const days: Day[] = [
+// Images are placeholders until slice 2 replaces them.
+export const projects: Project[] = [
   {
-    title: 'Ola & Piotr', kind: 'Wedding', month: 'June', place: 'Wielkopolska',
-    venue: 'Barn · Poznań', year: 2026, cta: 'See the day',
-    image: '/images/a-barn-outside-poznan.jpg', alt: 'A barn outside Poznań',
+    slug: 'fold-coffee', client: 'Fold Coffee', title: 'A roastery at six in the morning',
+    sector: 'food', month: 'March', year: 2026, area: 'Hackney Wick',
+    deliverables: ['Website', 'Menu boards', 'Social'], cta: 'See the project',
+    image: '/images/morning-light.jpg', alt: 'Early light falling across a table',
   },
   {
-    title: 'The Nowaks at home', kind: 'Family', month: 'March', place: 'Wrocław',
-    venue: 'Family · Wrocław', year: 2026, cta: 'See the session',
-    image: '/images/a-sunday-at-home.jpg', alt: 'A Sunday at home',
+    slug: 'marlow-finch', client: 'Marlow & Finch', title: 'Spring collection, shot on the street',
+    sector: 'brand', month: 'April', year: 2026, area: 'Shoreditch',
+    deliverables: ['Lookbook', 'Campaign', 'E-commerce'], cta: 'See the project',
+    image: '/images/a-sunday-at-home.jpg', alt: 'A figure in a bright room',
   },
   {
-    title: 'Two people, one witness', kind: 'Elopement', month: 'October', place: 'Dolomites',
-    venue: 'Elopement · Dolomites', year: 2025, cta: 'See the day',
-    image: '/images/an-elopement-at-dusk.jpg', alt: 'An elopement at dusk',
+    slug: 'oriel-skincare', client: 'Oriel Skincare', title: 'Glass, water and one good window',
+    sector: 'product', month: 'February', year: 2026, area: 'Clerkenwell',
+    deliverables: ['Packshots', 'Launch campaign'], cta: 'See the project',
+    image: '/images/rings-on-linen.jpg', alt: 'Small objects arranged on linen',
   },
   {
-    title: 'One long table', kind: 'Wedding', month: 'August', place: 'Kraków',
-    venue: 'Wedding · Kraków', year: 2025, cta: 'See the day',
-    image: '/images/a-long-table-after-dark.jpg', alt: 'A long table after dark',
+    slug: 'northline-architects', client: 'Northline Architects', title: 'Twenty-four people, one afternoon',
+    sector: 'portraits', month: 'January', year: 2026, area: "King's Cross",
+    deliverables: ['Team headshots', 'About page'], cta: 'See the project',
+    image: '/images/grandmother-laughing.jpg', alt: 'A person laughing in natural light',
+  },
+  {
+    slug: 'saltroom', client: 'Saltroom', title: 'A new menu and a long table',
+    sector: 'food', month: 'November', year: 2025, area: 'Peckham',
+    deliverables: ['Menu', 'Press kit'], cta: 'See the project',
+    image: '/images/a-long-table-after-dark.jpg', alt: 'A long table lit after dark',
+  },
+  {
+    slug: 'kiln-ceramics', client: 'Kiln Ceramics', title: 'Hands, clay and the kiln opening',
+    sector: 'film', month: 'October', year: 2025, area: 'Walthamstow',
+    deliverables: ['30-second film', 'Stills'], cta: 'See the project',
+    image: '/images/an-elopement-at-dusk.jpg', alt: 'A figure walking at dusk',
   },
 ];
 
 export type GallerySize = 'default' | 'tall' | 'wide' | 'half';
-export type Category = 'weddings' | 'families' | 'elopements' | 'film';
 
 export interface Frame {
   src: string;
@@ -69,43 +92,78 @@ export interface Frame {
 
 export const categories: { id: Category | 'all'; label: string }[] = [
   { id: 'all', label: 'Everything' },
-  { id: 'weddings', label: 'Weddings' },
-  { id: 'families', label: 'Families' },
-  { id: 'elopements', label: 'Elopements' },
+  { id: 'brand', label: 'Brand' },
+  { id: 'food', label: 'Food & hospitality' },
+  { id: 'product', label: 'Product' },
+  { id: 'portraits', label: 'Portraits & teams' },
   { id: 'film', label: 'Film' },
 ];
 
+// Placeholder frames, remapped mechanically; slice 2 replaces them.
 export const frames: Frame[] = [
-  { src: '/images/morning-light.jpg', alt: 'Morning light', size: 'tall', category: 'weddings' },
-  { src: '/images/ceremony-under-the-trees.jpg', alt: 'Ceremony under the trees', size: 'wide', category: 'weddings' },
-  { src: '/images/rings-on-linen.jpg', alt: 'Rings on linen', size: 'default', category: 'film' },
-  { src: '/images/grandmother-laughing.jpg', alt: 'Grandmother laughing', size: 'default', category: 'families' },
-  { src: '/images/first-dance.jpg', alt: 'First dance', size: 'half', category: 'weddings' },
-  { src: '/images/the-table-after-dark.jpg', alt: 'The table after dark', size: 'half', category: 'weddings' },
-  { src: '/images/reading-a-letter.jpg', alt: 'Reading a letter', size: 'tall', category: 'elopements' },
-  { src: '/images/children-in-the-garden.jpg', alt: 'Children in the garden', size: 'default', category: 'families' },
-  { src: '/images/an-elopement-at-dusk.jpg', alt: 'Walking home', size: 'wide', category: 'elopements' },
+  { src: '/images/morning-light.jpg', alt: 'Early light falling across a table', size: 'tall', category: 'food' },
+  { src: '/images/ceremony-under-the-trees.jpg', alt: 'People gathered under tall trees', size: 'wide', category: 'brand' },
+  { src: '/images/rings-on-linen.jpg', alt: 'Small objects arranged on linen', size: 'default', category: 'product' },
+  { src: '/images/grandmother-laughing.jpg', alt: 'A person laughing in natural light', size: 'default', category: 'portraits' },
+  { src: '/images/first-dance.jpg', alt: 'Two figures in motion, softly blurred', size: 'half', category: 'film' },
+  { src: '/images/the-table-after-dark.jpg', alt: 'A table lit after dark', size: 'half', category: 'food' },
+  { src: '/images/reading-a-letter.jpg', alt: 'A person reading by a window', size: 'tall', category: 'portraits' },
+  { src: '/images/children-in-the-garden.jpg', alt: 'Figures in a green garden', size: 'default', category: 'brand' },
+  { src: '/images/an-elopement-at-dusk.jpg', alt: 'A figure walking at dusk', size: 'wide', category: 'film' },
 ];
 
 export interface Plan {
   no: string;
   name: string;
   price: string;
+  // Shown after the price, e.g. "per person, min. 5".
+  unit?: string;
   items: string[];
+  // Licence terms included in the price.
+  usage: string;
   featured?: boolean;
 }
 
+// Placeholder prices, ex VAT.
 export const plans: Plan[] = [
   {
-    no: '01', name: 'Half day', price: '6 400 zł',
-    items: ['Six hours of coverage', 'About 400 edited frames', 'Gallery in four weeks'],
+    no: '01', name: 'Half day', price: '£950',
+    items: ['Four hours on location or in studio', 'About 40 edited images', 'First edit in five working days'],
+    usage: '12 months, web and social',
   },
   {
-    no: '02', name: 'Whole day', price: '9 800 zł', featured: true,
-    items: ['Morning to the last song', 'About 800 edited frames', 'Engagement session included'],
+    no: '02', name: 'Full day', price: '£1,750', featured: true,
+    items: ['Eight hours, up to three set-ups', 'About 80 edited images', 'Shot list planned with you'],
+    usage: '12 months, web and social',
   },
   {
-    no: '03', name: 'Family', price: '1 200 zł',
-    items: ['Ninety minutes, anywhere', 'About 60 edited frames', 'Print file for every image'],
+    no: '03', name: 'Headshots', price: '£120', unit: 'per person, min. 5',
+    items: ['On site at your office', 'Two retouched images each', 'Matching light for the whole team'],
+    usage: '12 months, web and social',
   },
 ];
+
+export const hero = {
+  eyebrow: `${site.city} — brand & commercial — booking from ${site.season}`,
+  title: 'Your brand, on its best day.',
+  lead: "I'm Robin Hale. I photograph brands, food, products and teams for websites, campaigns and social — across London and wherever the work is.",
+};
+
+export const marquee: string[] = [
+  `Booking from ${site.season}`,
+  'Half day from £950',
+  'Usage rights included',
+  'First edit in five working days',
+];
+
+export interface TestimonialData {
+  quote: string;
+  by: string;
+  role: string;
+}
+
+export const testimonial: TestimonialData = {
+  quote: 'Robin understood the brief in one call and gave us a year of pictures in a single day.',
+  by: 'Priya Shah',
+  role: 'Head of Brand, Fold Coffee',
+};

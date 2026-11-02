@@ -5,9 +5,9 @@ import { nav, site } from '../data/site';
   <div class="sh-container">
     <div class="sh-footer__cols">
       <div>
-        <p class="sh-d-s" style="margin:0 0 12px;">Still open for {site.year}.</p>
-        <p class="sh-muted sh-body-s" style="max-width:32ch;margin:0 0 20px;">Weddings and families in Poznań, across Poland, and wherever the day happens to be.</p>
-        <a class="sh-btn sh-btn--outline" href="/contact/">Check my date</a>
+        <p class="sh-d-s" style="margin:0 0 12px;">Booking from {site.season}.</p>
+        <p class="sh-muted sh-body-s" style="max-width:32ch;margin:0 0 20px;">Brand, food, product and team photography in London, and wherever the work is.</p>
+        <a class="sh-btn sh-btn--outline" href="/contact/">Book a shoot</a>
       </div>
       <div>
         <p class="sh-meta" style="margin-bottom:16px;">Pages</p>
@@ -26,7 +26,7 @@ import { nav, site } from '../data/site';
       </div>
     </div>
     <div class="sh-footer__bottom">
-      <span class="sh-meta-s">© {site.year} {site.name}</span>
+      <span class="sh-meta-s">© {new Date().getFullYear()} {site.name}</span>
       <span class="sh-meta-s"><a class="sh-link" href="/privacy/">Privacy</a></span>
     </div>
     <p class="sh-footer__word" aria-hidden="true">{site.name}</p>

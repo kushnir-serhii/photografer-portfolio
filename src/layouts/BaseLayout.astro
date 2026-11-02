@@ -13,7 +13,7 @@ interface Props {
   image?: string;
 }
 const { title, description = site.description, image = '/images/two-people-at-the-end-of-the-night.jpg' } = Astro.props;
-const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — wedding and family photographer, Poznań`;
+const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — brand & commercial photographer, ${site.city}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
