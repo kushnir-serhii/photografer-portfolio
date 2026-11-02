@@ -14,9 +14,10 @@ None. New files: `playwright.config.ts`, `e2e/ui-check.spec.ts`. `package.json` 
 
 - **Routes:** `ROUTES` is a comma list without slashes; `root` → `/`; `404` → a route that doesn't exist (e.g. `/this-page-does-not-exist/`, expecting the 404 page). Empty `ROUTES` → every route listed in the spec file's default list (all existing pages).
 - **Matrix:** each route × width (375, 1280) × theme (`night`, `day`, set through `localStorage['sh-theme']` before load). Reduced motion emulated so `data-reveal` content is visible in screenshots.
-- **Fails on:** `console.error`, `pageerror`, failed same-origin requests, `document.documentElement.scrollWidth > window.innerWidth`.
+- **Fails on:** `console.error`, `pageerror`, failed same-origin requests, `document.documentElement.scrollWidth > window.innerWidth`, and visible elements cut off at the screen edge (`.sh-page` clips overflow-x, so overflow never scrolls; elements inside a container that clips on purpose, like the slider or marquee, are ignored).
+- **Phone:** the 375 run emulates a phone (`isMobile`, touch), so no desktop scrollbar eats the width.
 - **Screenshots:** full page, `e2e/screenshots/<SPEC or "all">/<route>-<width>-<theme>.png`.
-- **Server:** Playwright `webServer` runs `npm run build && npm run preview -- --port 4321` and reuses a running server locally.
+- **Server:** `npm run ui-check` builds, then Playwright `webServer` runs `astro preview --port 4322 --ignore-lock`. Port 4322, not 4321, so a running `astro dev` is never tested by mistake; `--ignore-lock` keeps preview in the foreground (run by an AI agent, Astro 7 detaches it into a background server that outlives the check and serves an old build); a server already on 4322 is never reused.
 
 ## Slices
 
@@ -46,10 +47,10 @@ None.
 - **Decided:** branch `spec/001-ui-check` is created from `rebranding` (it has the specs and process; `main` does not).
 - `@types/node` was added as a devDependency (types only) so `astro check` can type-check `process.env` in `playwright.config.ts` and `e2e/`; the alternative was excluding them from the type check.
 - One unreproduced failure of `root 375 day` on the first run (no message kept); 116 repeated runs after it passed. If it comes back, read `test-results/*/error-context.md`.
-- The overflow test reads `scrollWidth` only; content clipped by `overflow: hidden` is caught by the screenshot review, not the check.
 - **Decided:** the `404` route expects the 404 page with HTTP 404; that status is not counted as a failed request.
 
 ## Log
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
 | 2026-11-02 | 1 | done: 8 checks for root,contact, 28 for all routes, all pass; forced console.error and 2000px element fail as expected | `playwright.config.ts`, `e2e/ui-check.spec.ts`, `package.json` (`@playwright/test`, `@types/node`, `ui-check`), `package-lock.json`, `.gitignore` |
+| 2026-11-02 | 1 (fix) | the first runs hit the running `astro dev` on 4321 and later a detached stale preview; overflow could never trip because `.sh-page` clips. Fixed: port 4322, foreground preview, phone emulation at 375, cut-off element check; forced 2000px div and console.error fail, real site passes 28/28 | `playwright.config.ts`, `e2e/ui-check.spec.ts`, `package.json` |

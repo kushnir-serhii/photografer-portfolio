@@ -8,7 +8,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "ui-check": "playwright test"
+    "ui-check": "npm run build && playwright test"
   },
   "dependencies": {
     "astro": "^7.3.3"
