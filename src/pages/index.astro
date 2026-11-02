@@ -8,12 +8,12 @@ import StoryBlock from '../components/StoryBlock.astro';
 import Packages from '../components/Packages.astro';
 import Testimonial from '../components/Testimonial.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import { projects, plans, hero, marquee, testimonial, categories } from '../data/site';
+import { projects, plans, hero, marquee, testimonial, categories, pictures } from '../data/site';
 ---
 <BaseLayout>
   <Hero
-    image="/images/two-people-at-the-end-of-the-night.jpg"
-    alt="Two figures in warm light at the end of the day"
+    image={hero.image}
+    alt={hero.alt}
     eyebrow={hero.eyebrow}
     title={hero.title}
     disciplines={categories.filter((c) => c.id !== 'all').map((c) => c.label).join(' · ')}
@@ -60,7 +60,7 @@ import { projects, plans, hero, marquee, testimonial, categories } from '../data
 
   <section class="sh-section sh-section--band">
     <div class="sh-container">
-      <StoryBlock image="/images/getting-ready-in-the-morning.jpg" alt="Getting ready in the morning">
+      <StoryBlock image={pictures.howItWorks.src} alt={pictures.howItWorks.alt}>
         <p class="sh-meta" data-reveal>How it works</p>
         <h2 class="sh-d-l" data-split>We are there before anything starts</h2>
         <p class="sh-muted sh-measure" data-reveal data-reveal-delay="120" style="margin:0;">

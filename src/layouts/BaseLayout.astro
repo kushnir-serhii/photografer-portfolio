@@ -5,14 +5,18 @@ import '../styles/site.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
-import { site } from '../data/site';
+import { getImage } from 'astro:assets';
+import { site, hero } from '../data/site';
 
 interface Props {
   title?: string;
   description?: string;
+  // A built image URL (e.g. from getImage); defaults to the hero photo.
   image?: string;
 }
-const { title, description = site.description, image = '/images/two-people-at-the-end-of-the-night.jpg' } = Astro.props;
+// Default share image: the hero photo at 1200px as a JPG, the format social previews expect.
+const ogDefault = await getImage({ src: hero.image, width: 1200, format: 'jpg' });
+const { title, description = site.description, image = ogDefault.src } = Astro.props;
 const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — brand & commercial photographer, ${site.city}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---

@@ -1,5 +1,24 @@
-// Site content. Every photograph in public/images is a generated placeholder:
-// replace them with the photographer's own work before launch.
+// Site content. Every photograph in src/assets/work is an Unsplash placeholder (sources in
+// docs/setup.md): replace them with the photographer's own work before launch.
+import type { ImageMetadata } from 'astro';
+import heroTeamPortraitStudio from '../assets/work/hero-team-portrait-studio.jpg';
+import foldCoffeeRoaster from '../assets/work/fold-coffee-roaster.jpg';
+import marlowFinchStreetCoat from '../assets/work/marlow-finch-street-coat.jpg';
+import orielAmberBottleMarble from '../assets/work/oriel-amber-bottle-marble.jpg';
+import northlineHeadshotLaughing from '../assets/work/northline-headshot-laughing.jpg';
+import saltroomLongTable from '../assets/work/saltroom-long-table.jpg';
+import kilnHandsOnWheel from '../assets/work/kiln-hands-on-wheel.jpg';
+import trenchCoatEmptyStreet from '../assets/work/trench-coat-empty-street.jpg';
+import amberDropperWindowShadow from '../assets/work/amber-dropper-window-shadow.jpg';
+import portraitByTheWindow from '../assets/work/portrait-by-the-window.jpg';
+import cameraOperatorWarehouse from '../assets/work/camera-operator-warehouse.jpg';
+import coffeeBeansSampleScoop from '../assets/work/coffee-beans-sample-scoop.jpg';
+import filmSetFirelight from '../assets/work/film-set-firelight.jpg';
+import photographerInStudio from '../assets/work/photographer-in-studio.jpg';
+import onSetFashionShoot from '../assets/work/on-set-fashion-shoot.jpg';
+import reviewingTakesOnMonitor from '../assets/work/reviewing-takes-on-monitor.jpg';
+import studioSetArmchair from '../assets/work/studio-set-armchair.jpg';
+import choosingPrintsTable from '../assets/work/choosing-prints-table.jpg';
 
 export const site = {
   name: 'Robin Hale',
@@ -36,55 +55,54 @@ export interface Project {
   year: number;
   area: string;
   deliverables: string[];
-  image: string;
+  image: ImageMetadata;
   alt: string;
   cta: string;
 }
 
-// Images are placeholders until slice 2 replaces them.
 export const projects: Project[] = [
   {
     slug: 'fold-coffee', client: 'Fold Coffee', title: 'A roastery at six in the morning',
     sector: 'food', month: 'March', year: 2026, area: 'Hackney Wick',
     deliverables: ['Website', 'Menu boards', 'Social'], cta: 'See the project',
-    image: '/images/morning-light.jpg', alt: 'Early light falling across a table',
+    image: foldCoffeeRoaster, alt: 'Roasted coffee beans pouring from a drum roaster into the cooling tray under a wall lamp',
   },
   {
     slug: 'marlow-finch', client: 'Marlow & Finch', title: 'Spring collection, shot on the street',
     sector: 'brand', month: 'April', year: 2026, area: 'Shoreditch',
     deliverables: ['Lookbook', 'Campaign', 'E-commerce'], cta: 'See the project',
-    image: '/images/a-sunday-at-home.jpg', alt: 'A figure in a bright room',
+    image: marlowFinchStreetCoat, alt: 'A woman in a black coat and sunglasses standing in a cobbled street lined with parked cars',
   },
   {
     slug: 'oriel-skincare', client: 'Oriel Skincare', title: 'Glass, water and one good window',
     sector: 'product', month: 'February', year: 2026, area: 'Clerkenwell',
     deliverables: ['Packshots', 'Launch campaign'], cta: 'See the project',
-    image: '/images/rings-on-linen.jpg', alt: 'Small objects arranged on linen',
+    image: orielAmberBottleMarble, alt: 'An amber glass dropper bottle on a marble table against a plain grey wall',
   },
   {
     slug: 'northline-architects', client: 'Northline Architects', title: 'Twenty-four people, one afternoon',
     sector: 'portraits', month: 'January', year: 2026, area: "King's Cross",
     deliverables: ['Team headshots', 'About page'], cta: 'See the project',
-    image: '/images/grandmother-laughing.jpg', alt: 'A person laughing in natural light',
+    image: northlineHeadshotLaughing, alt: 'A woman in a checked shirt laughing towards the camera against a dark grey backdrop',
   },
   {
     slug: 'saltroom', client: 'Saltroom', title: 'A new menu and a long table',
     sector: 'food', month: 'November', year: 2025, area: 'Peckham',
     deliverables: ['Menu', 'Press kit'], cta: 'See the project',
-    image: '/images/a-long-table-after-dark.jpg', alt: 'A long table lit after dark',
+    image: saltroomLongTable, alt: 'A long restaurant table laid with glasses and napkins, running towards a bright front window',
   },
   {
     slug: 'kiln-ceramics', client: 'Kiln Ceramics', title: 'Hands, clay and the kiln opening',
     sector: 'film', month: 'October', year: 2025, area: 'Walthamstow',
     deliverables: ['30-second film', 'Stills'], cta: 'See the project',
-    image: '/images/an-elopement-at-dusk.jpg', alt: 'A figure walking at dusk',
+    image: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel',
   },
 ];
 
 export type GallerySize = 'default' | 'tall' | 'wide' | 'half';
 
 export interface Frame {
-  src: string;
+  src: ImageMetadata;
   alt: string;
   size: GallerySize;
   category: Category;
@@ -99,18 +117,37 @@ export const categories: { id: Category | 'all'; label: string }[] = [
   { id: 'film', label: 'Film' },
 ];
 
-// Placeholder frames, remapped mechanically; slice 2 replaces them.
+// Gallery on /work/. The grid packs without holes only for some orders of sizes (see docs/setup.md):
+// this one is tall+wide, three defaults, two halves, tall+wide, three defaults (checked at 375px and 1280px).
 export const frames: Frame[] = [
-  { src: '/images/morning-light.jpg', alt: 'Early light falling across a table', size: 'tall', category: 'food' },
-  { src: '/images/ceremony-under-the-trees.jpg', alt: 'People gathered under tall trees', size: 'wide', category: 'brand' },
-  { src: '/images/rings-on-linen.jpg', alt: 'Small objects arranged on linen', size: 'default', category: 'product' },
-  { src: '/images/grandmother-laughing.jpg', alt: 'A person laughing in natural light', size: 'default', category: 'portraits' },
-  { src: '/images/first-dance.jpg', alt: 'Two figures in motion, softly blurred', size: 'half', category: 'film' },
-  { src: '/images/the-table-after-dark.jpg', alt: 'A table lit after dark', size: 'half', category: 'food' },
-  { src: '/images/reading-a-letter.jpg', alt: 'A person reading by a window', size: 'tall', category: 'portraits' },
-  { src: '/images/children-in-the-garden.jpg', alt: 'Figures in a green garden', size: 'default', category: 'brand' },
-  { src: '/images/an-elopement-at-dusk.jpg', alt: 'A figure walking at dusk', size: 'wide', category: 'film' },
+  { src: trenchCoatEmptyStreet, alt: 'A woman in a beige trench coat standing in an empty city street at sunrise', size: 'tall', category: 'brand' },
+  { src: saltroomLongTable, alt: 'A long restaurant table laid with glasses and napkins, running towards a bright front window', size: 'wide', category: 'food' },
+  { src: orielAmberBottleMarble, alt: 'An amber glass dropper bottle on a marble table against a plain grey wall', size: 'default', category: 'product' },
+  { src: northlineHeadshotLaughing, alt: 'A woman in a checked shirt laughing towards the camera against a dark grey backdrop', size: 'default', category: 'portraits' },
+  { src: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel', size: 'default', category: 'film' },
+  { src: portraitByTheWindow, alt: 'A bearded man in a dark room, lit from the side by a tall window', size: 'half', category: 'portraits' },
+  { src: cameraOperatorWarehouse, alt: 'A camera operator checking the monitor of a cinema camera beside an actor in a warehouse', size: 'half', category: 'film' },
+  { src: amberDropperWindowShadow, alt: 'An amber dropper bottle on a wooden stand, striped by shadows from a window', size: 'tall', category: 'product' },
+  { src: foldCoffeeRoaster, alt: 'Roasted coffee beans pouring from a drum roaster into the cooling tray under a wall lamp', size: 'wide', category: 'food' },
+  { src: marlowFinchStreetCoat, alt: 'A woman in a black coat and sunglasses standing in a cobbled street lined with parked cars', size: 'default', category: 'brand' },
+  { src: coffeeBeansSampleScoop, alt: "A hand holding a roaster's sample scoop full of coffee beans against a dark background", size: 'default', category: 'food' },
+  { src: filmSetFirelight, alt: 'A small film crew around a cinema camera in a firelit wooden room', size: 'default', category: 'film' },
 ];
+
+export interface Picture {
+  src: ImageMetadata;
+  alt: string;
+}
+
+// Photographs used by pages outside the work lists.
+export const pictures = {
+  howItWorks: { src: onSetFashionShoot, alt: 'A photographer crouching to shoot a model against a white backdrop in a loft studio, a camera operator beside him' },
+  studioPortrait: { src: photographerInStudio, alt: 'A photographer in black raising a camera to his eye against a dark grey backdrop' },
+  studioOnSet: { src: reviewingTakesOnMonitor, alt: 'Two crew members in caps reviewing a take on a camera monitor on set' },
+  contact: { src: studioSetArmchair, alt: 'An empty studio set: a white armchair and a plant between two lamps on a grey backdrop' },
+  rates: { src: choosingPrintsTable, alt: 'Two people laying out printed photographs and colour swatches on a dark table' },
+} satisfies Record<string, Picture>;
+
 
 export interface Plan {
   no: string;
@@ -144,6 +181,8 @@ export const plans: Plan[] = [
 ];
 
 export const hero = {
+  image: heroTeamPortraitStudio,
+  alt: 'Five people in black posing together on a bench in a photo studio, lit by a warm lamp, light stands around them',
   eyebrow: `${site.city} — brand & commercial — booking from ${site.season}`,
   title: 'Your brand, on its best day.',
   lead: "I'm Robin Hale. I photograph brands, food, products and teams for websites, campaigns and social — across London and wherever the work is.",

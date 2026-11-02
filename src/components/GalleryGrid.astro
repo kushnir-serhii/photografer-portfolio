@@ -1,11 +1,19 @@
 ---
-import { categories, type Frame } from '../data/site';
+import { Picture } from 'astro:assets';
+import { categories, type Frame, type GallerySize } from '../data/site';
 
 interface Props {
   frames: Frame[];
 }
 const { frames } = Astro.props;
 const delays = [0, 90, 150];
+// Rendered width of each size: 12 grid columns above 860px, 6 below.
+const sizes: Record<GallerySize, string> = {
+  default: '(min-width: 861px) 33vw, 50vw',
+  tall: '(min-width: 861px) 33vw, 50vw',
+  wide: '(min-width: 861px) 66vw, 100vw',
+  half: '50vw',
+};
 ---
 <div data-gallery>
   <div class="sh-container" style="margin-bottom:24px;">
@@ -26,7 +34,16 @@ const delays = [0, 90, 150];
           data-reveal-delay={delays[i % 3] || undefined}
           data-cursor-label="View"
         >
-          <img class="sh-img" alt={frame.alt} src={frame.src} loading="lazy" />
+          <Picture
+            class="sh-img"
+            pictureAttributes={{ class: 'sh-pic' }}
+            src={frame.src}
+            alt={frame.alt}
+            formats={['avif', 'webp']}
+            widths={[400, 640, 960, 1280, 1600]}
+            sizes={sizes[frame.size]}
+            loading="lazy"
+          />
         </figure>
       ))}
     </div>

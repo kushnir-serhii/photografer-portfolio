@@ -56,6 +56,8 @@
 
 /* ---------- media ---------- */
 
+/* <picture> from astro:assets: drop its box so the inner .sh-img sizes against the frame. */
+.sh-pic { display: contents; }
 .sh-img { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--surface-300); }
 .sh-frame { position: relative; overflow: hidden; background: var(--surface-300); }
 .sh-frame .sh-img { transition: transform 1.1s var(--ease-out-expo); }

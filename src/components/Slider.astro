@@ -1,4 +1,5 @@
 ---
+import { Picture } from 'astro:assets';
 import type { Project } from '../data/site';
 import Icon from './Icon.astro';
 
@@ -16,7 +17,17 @@ const total = String(projects.length).padStart(2, '0');
       {projects.map((project, i) => (
         <article class="sh-slide" aria-label={`${i + 1} of ${projects.length}`}>
           <div class="sh-slide__media" data-cursor-label="Drag">
-            <img class="sh-img" alt={project.alt} src={project.image} loading={i === 0 ? 'eager' : 'lazy'} draggable="false" />
+            <Picture
+              class="sh-img"
+              pictureAttributes={{ class: 'sh-pic' }}
+              src={project.image}
+              alt={project.alt}
+              formats={['avif', 'webp']}
+              widths={[480, 800, 1200, 1600, 2400]}
+              sizes="(min-width: 1440px) 1344px, (min-width: 721px) calc(100vw - 96px), calc(100vw - 48px)"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              draggable="false"
+            />
           </div>
           <div class="sh-slide__cap">
             <div>

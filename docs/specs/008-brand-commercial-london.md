@@ -45,15 +45,15 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
   - [x] the phone number is in the 020 7946 0xxx range and the `tel:` link works
   - [x] `npm run build` green
 
-### [ ] 2. Placeholder photography
+### [x] 2. Placeholder photography
 - **Build:** pick free-licence photos (Unsplash or Pexels licence) that look like one photographer's brand and commercial work: about 6 project covers, 12 gallery frames, a hero, a studio portrait, a contact image. Consistent grade, people not identifiable as celebrities, no brand logos visible. Serve them through `astro:assets` (`<Image>` with widths and AVIF/WebP); delete the old blurs.
 - **Files:** `src/assets/work/*`, components that render images (`Hero`, `Slider`, `IndexList`, `GalleryGrid`, `StoryBlock`), `src/data/site.ts`, `docs/setup.md` (sources, licences, "replace with the client's own work")
 - **Agent:** designer
 - **Accept:**
-  - [ ] every image has its source URL and licence in `docs/setup.md`
-  - [ ] hero image under 300 KB at 1440px; no layout shift on load
-  - [ ] eyebrow and heading on the hero photo pass AA contrast over the actual image (scrim adjusted if needed)
-  - [ ] alt texts describe the picture, not the file name
+  - [x] every image has its source URL and licence in `docs/setup.md`
+  - [x] hero image under 300 KB at 1440px; no layout shift on load
+  - [x] eyebrow and heading on the hero photo pass AA contrast over the actual image (scrim adjusted if needed)
+  - [x] alt texts describe the picture, not the file name
 
 ### [ ] 3. Home page
 - **Build:** hero with eyebrow, a new headline and the `lead` line (who, what, where), CTA pair; intro; selected projects slider; replace the duplicate index list with a clients/sectors index (different data from the slider); how it works rewritten for a commercial shoot (brief → call → shoot → delivery); packages; testimonial from a client's marketing lead; closing CTA. Header CTA and hero CTA share one label.
@@ -107,7 +107,10 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 - **Decided:** the home index lists the work categories (sectors), with client names in the meta line; each row links to `/work/?category=<id>`, and `/work/` reads that parameter to preselect the filter (unknown values ignored; without JS the full gallery shows). The param support is built in slice 4.
 - **Decided (defaults):** client names are fictional (no real companies); prices are shown ex VAT and say so; prices stay strings until spec 003; budget ranges: Under £1,000 · £1,000–2,500 · £2,500–5,000 · £5,000+; `astro.config.mjs` `site` becomes `https://robinhale.studio`; images move to `src/assets/work/` via `astro:assets` and the conventions' Images row is updated in slice 2.
 
+- **Open (photos):** `on-set-fashion-shoot.jpg` has a small light-maker mark on a softbox, cropped out at 4:5 but in the source file; on phones the hero group's faces sit behind the headline (contrast passes). Review with the photo set.
+
 ## Log
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
 | 2026-11-02 | 1 | done | `site.ts` reshaped (Robin Hale, projects, categories, £ plans with usage, hero, marquee, testimonial); header descriptor (`.sh-brandline`), footer, BaseLayout, Packages, Slider, IndexList, Testimonial, ClosingCta, index, work, astro.config |
+| 2026-11-02 | 2 | done | 18 Unsplash photos in `src/assets/work/` via `<Picture>` (AVIF/WebP); hero 43 KB AVIF at 1440px, contrast measured ≥5.2:1; old `public/images/` deleted; credits in `setup.md`; conventions Images row; `.sh-pic` |

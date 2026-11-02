@@ -25,12 +25,12 @@ src/
   styles/site.css       site additions: mobile drawer, filters, FAQ, skip link
   scripts/still-hours.js the design system motion runtime (data-split, data-reveal, slider…)
   scripts/site.ts       drawer, gallery filters, enquiry form
-public/images/          PLACEHOLDER photographs — replace before launch
+  assets/work/          PLACEHOLDER photographs (Unsplash) — replace before launch
 ```
 
 ## Before launch
 
-- Replace every image in `public/images/` with real work (keep the file names, or update `src/data/site.ts`). The layouts expect 4:5 for people, 3:2 for rooms, 16:9 for slides.
+- Replace every image in `src/assets/work/` with real work and update the imports in `src/data/site.ts` (sources of the placeholders: `docs/setup.md`). The layouts expect 4:5 for people, 3:2 for rooms, 16:9 for slides.
 - Set the real phone number, Instagram and client-gallery links in `src/data/site.ts`, and `site` in `astro.config.mjs`.
 - Enquiry form: set `PUBLIC_FORM_ENDPOINT` in `.env` (e.g. a Formspree URL). Without it the form falls back to `mailto:`.
 - Have the privacy page copy reviewed.

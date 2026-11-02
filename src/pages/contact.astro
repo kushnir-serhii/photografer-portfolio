@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactForm from '../components/ContactForm.astro';
-import { site } from '../data/site';
+import { Picture } from 'astro:assets';
+import { site, pictures } from '../data/site';
 
 const steps = [
   { no: '01', title: 'A reply', body: 'Within two days, with availability and the full price list.' },
@@ -23,7 +24,16 @@ const steps = [
         </div>
         <div class="sh-story__media" style="display:grid;gap:28px;">
           <div class="sh-frame" data-reveal="clip" data-cursor-label="View">
-            <img class="sh-img sh-ratio-4x5" alt="Late in the evening" src="/images/late-in-the-evening.jpg" loading="lazy" />
+            <Picture
+              class="sh-img sh-ratio-4x5"
+              pictureAttributes={{ class: 'sh-pic' }}
+              src={pictures.contact.src}
+              alt={pictures.contact.alt}
+              formats={['avif', 'webp']}
+              widths={[480, 720, 960, 1280]}
+              sizes="(min-width: 1440px) 640px, (min-width: 900px) 45vw, 100vw"
+              loading="lazy"
+            />
           </div>
           <div>
             <p class="sh-meta" style="margin-bottom:14px;">Directly</p>

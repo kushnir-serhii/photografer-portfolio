@@ -22,11 +22,11 @@ Astro 7 · TypeScript (strict, `astro/tsconfigs/strict`) · `@astrojs/check` · 
 | Tokens | `src/styles/tokens.css` | Night (default) and Day for every token |
 | Design system | `src/styles/components.css` | `sh-*` classes; change only to extend the system |
 | Site additions | `src/styles/site.css` | `sh-*` classes for site-only pieces |
-| Images | `public/images/kebab-case.jpg` | placeholders until a client's photos arrive |
+| Images | `src/assets/work/kebab-case.jpg`, imported in `src/data/site.ts`, rendered with `astro:assets` (`<Picture>`/`getImage`) | placeholders until a client's photos arrive; sources in `docs/setup.md` |
 | UI check | `e2e/`, `playwright.config.ts` | spec 001 |
 
 - Components are `PascalCase.astro` (Astro's convention); data, scripts and image files are `kebab-case`.
-- Identifiers: types and interfaces `PascalCase`; variables and functions `camelCase`. Data exports follow the existing `site.ts` style (`site`, `nav`, `days`, `plans`).
+- Identifiers: types and interfaces `PascalCase`; variables and functions `camelCase`. Data exports follow the existing `site.ts` style (`site`, `nav`, `projects`, `plans`).
 - Import with relative paths, as the existing code does.
 
 ## TypeScript
@@ -45,7 +45,7 @@ Astro 7 · TypeScript (strict, `astro/tsconfigs/strict`) · `@astrojs/check` · 
 - Native elements first: `<dialog>` for modals, `<details>` for disclosures, `<form>` and inputs with real validation attributes.
 
 ## Content and data
-- Anything a client would change (names, contacts, prices, add-ons, FAQ, days, frames, cities, niche copy, video links) lives in `src/data/`, not in markup or scripts.
+- Anything a client would change (names, contacts, prices, add-ons, FAQ, projects, frames, cities, niche copy, video links) lives in `src/data/`, not in markup or scripts.
 - Prices are stored as numbers (`9800`) with one currency (`site.currency`), formatted through one helper (spec 003) using `Intl.NumberFormat`. Until then the existing strings stay as they are.
 - Copy is English, in the Still Hours voice: short, plain, honest, no hype, no emoji.
 - Image `alt` text describes the photograph. Decorative images get `alt=""`.
@@ -57,7 +57,7 @@ Astro 7 · TypeScript (strict, `astro/tsconfigs/strict`) · `@astrojs/check` · 
 ## SEO
 - Every page passes `title` and `description` to `BaseLayout`; canonical and Open Graph come from it.
 - Structured data is JSON-LD in a `<script type="application/ld+json">`, built from `src/data/`, one block per type per page.
-- Slugs (cities, days) are stable once published.
+- Slugs (cities, projects) are stable once published.
 
 ## Styling
 - Only `sh-*` classes and CSS custom properties from `tokens.css`. No raw colors, fonts or shadows in components or pages. New tokens go into `tokens.css` first, for Night and Day.

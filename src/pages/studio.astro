@@ -4,6 +4,7 @@ import StoryBlock from '../components/StoryBlock.astro';
 import Marquee from '../components/Marquee.astro';
 import Testimonial from '../components/Testimonial.astro';
 import ClosingCta from '../components/ClosingCta.astro';
+import { pictures } from '../data/site';
 
 const principles = [
   {
@@ -26,7 +27,7 @@ const principles = [
 <BaseLayout title="Studio" description="Tomasz, a second camera, and twelve years of other people's best days.">
   <section class="sh-section">
     <div class="sh-container">
-      <StoryBlock image="/images/portrait-of-the-photographer.jpg" alt="Portrait of the photographer" cursorLabel="Hello">
+      <StoryBlock image={pictures.studioPortrait.src} alt={pictures.studioPortrait.alt} cursorLabel="Hello">
         <p class="sh-meta" data-reveal>Studio</p>
         <h1 class="sh-d-xl" data-split style="margin:0;">Tomasz, and a second camera called Ada</h1>
         <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
@@ -59,7 +60,7 @@ const principles = [
 
   <section class="sh-section sh-section--band">
     <div class="sh-container">
-      <StoryBlock image="/images/the-table-after-dark.jpg" alt="Working at the edge of the room" reverse>
+      <StoryBlock image={pictures.studioOnSet.src} alt={pictures.studioOnSet.alt} reverse>
         <h2 class="sh-d-l" data-split style="margin:0;">A day with us, hour by hour</h2>
         <p class="sh-muted sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
           We arrive while the room is still a mess, photograph the getting ready without asking anyone to repeat
