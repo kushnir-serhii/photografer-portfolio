@@ -1,0 +1,106 @@
+# 008 — Repositioning: brand & commercial photographer in London
+
+**Status:** draft · **Depends on:** 001 · **Route(s):** every page (`/`, `/work/`, `/studio/`, `/rates/`, `/contact/`, `/privacy/`, `404`)
+
+## Goal
+The demo becomes the site of a fictional **brand and commercial photographer in London**, branded under the photographer's own name. The dark, lime, high-motion design stays as it is: it reads as a creative studio, which fits brand work and did not fit weddings. A marketing manager or a founder landing on the site sees, within two seconds, who this is, what they shoot and for whom, and how to book a shoot. A photographer watching the demo sees a site that looks like a studio's, with their own name in the logo.
+
+Why: in review the design read as "not a wedding photographer", the name "Still Hours" said nothing about photography, and an English site with Polish couples and złoty read as a mix. One coherent story (one city, one currency, one niche, one person) fixes all three.
+
+## Scope
+- In:
+  - Identity: the photographer's name as the brand, with a one-line descriptor ("Brand & commercial photography, London") in the header area, hero, `<title>` and meta.
+  - All visible copy rewritten for brand & commercial work: hero, intro, how it works, packages, FAQ, testimonial, closing CTA, studio page, contact page, 404, privacy wording.
+  - Data reshaped for the niche: `days` → `projects` (client, sector, deliverables), new work categories, packages in £ with usage (licensing) terms, marquee and testimonial moved into data.
+  - London details: £ prices, UK phone format (Ofcom drama range), London areas in project captions.
+  - Placeholder photography that looks like real brand work (free-licence stock), replacing the 2–3 KB generated blurs, served through `astro:assets`.
+  - Fixes found in review that sit on the same pages: the contact form `<select>` misalignment, direct contacts placed before the photo on phones, a branded `::selection`, no horizontal scroll at 375px, one label for the main CTA across header and hero.
+  - Docs brought in line: `product.md`, `CLAUDE.md` overview, `README.md`, `setup.md`, and the wording of specs 002–007.
+- Out:
+  - Visual redesign: tokens, colours, type and motion stay as they are.
+  - Renaming the `sh-*` class prefix, the `still-hours.js` runtime or the design system's internal name (code-level names, invisible to visitors).
+  - Keeping the wedding content as a live variant. It stays in git history; spec 007 may bring it back as a niche variant.
+  - Multilingual pages.
+
+## Data
+- `src/data/site.ts`:
+  - `site`: `name` (photographer's name), `descriptor`, `city: 'London'`, `email`, `phone`, `phoneHref`, `season` (the next bookable period, replacing the hard-coded `year` in copy), `formEndpoint` unchanged.
+  - `Day` → `Project`: `{ slug, client, title, sector, month, year, area, deliverables: string[], image, alt, cta }`.
+  - `Category`: `brand`, `food`, `product`, `portraits`, `film` (labels: Brand, Food & hospitality, Product, Portraits & teams, Film).
+  - `plans`: in £, each with `usage` (licence terms, e.g. "12 months, web and social").
+  - New: `marquee: string[]`, `testimonial: { quote, by, role }`, `hero: { eyebrow, title, lead }`.
+- `src/components/Hero.astro`: optional `lead` prop.
+- `src/components/ContactForm.astro`: fields for a business brief (see slice 5).
+- Images: `src/assets/work/*` (through `astro:assets`), sources and licences listed in `docs/setup.md`.
+
+## Slices
+
+### [ ] 1. Identity and data
+- **Build:** reshape `site.ts` as in **Data** with the new content (name, descriptor, London contacts, projects, categories, plans in £, marquee, testimonial, hero copy). Header, footer and `BaseLayout` meta read the new identity. Pages keep compiling with the renamed shapes; their prose is rewritten in later slices. The marquee no longer holds any hard-coded date ("Four days left in June").
+- **Files:** `src/data/site.ts`, `src/components/Header.astro`, `src/components/Footer.astro`, `src/layouts/BaseLayout.astro`, every page that imports `days`/`plans` (mechanical renames only)
+- **Agent:** frontend
+- **Accept:**
+  - [ ] no "Still Hours", "Poznań", "zł", "wedding" or Polish names left in `src/data/`, header, footer or `<head>`
+  - [ ] logo shows the photographer's name; descriptor visible next to it from 1280px, and in the drawer on phones
+  - [ ] the phone number is in the 020 7946 0xxx range and the `tel:` link works
+  - [ ] `npm run build` green
+
+### [ ] 2. Placeholder photography
+- **Build:** pick free-licence photos (Unsplash or Pexels licence) that look like one photographer's brand and commercial work: about 6 project covers, 12 gallery frames, a hero, a studio portrait, a contact image. Consistent grade, people not identifiable as celebrities, no brand logos visible. Serve them through `astro:assets` (`<Image>` with widths and AVIF/WebP); delete the old blurs.
+- **Files:** `src/assets/work/*`, components that render images (`Hero`, `Slider`, `IndexList`, `GalleryGrid`, `StoryBlock`), `src/data/site.ts`, `docs/setup.md` (sources, licences, "replace with the client's own work")
+- **Agent:** designer
+- **Accept:**
+  - [ ] every image has its source URL and licence in `docs/setup.md`
+  - [ ] hero image under 300 KB at 1440px; no layout shift on load
+  - [ ] eyebrow and heading on the hero photo pass AA contrast over the actual image (scrim adjusted if needed)
+  - [ ] alt texts describe the picture, not the file name
+
+### [ ] 3. Home page
+- **Build:** hero with eyebrow, a new headline and the `lead` line (who, what, where), CTA pair; intro; selected projects slider; replace the duplicate index list with a clients/sectors index (different data from the slider); how it works rewritten for a commercial shoot (brief → call → shoot → delivery); packages; testimonial from a client's marketing lead; closing CTA. Header CTA and hero CTA share one label.
+- **Files:** `src/pages/index.astro`, `src/components/Hero.astro`, `src/components/IndexList.astro`, `src/components/Testimonial.astro`, `src/components/ClosingCta.astro`
+- **Agent:** designer
+- **Accept:**
+  - [ ] a first-time reader can say who, what and where from the first screen alone (no scroll) at 375px and 1280px
+  - [ ] slider and index show different content; each item links to something specific (project anchor or filtered category), not just `/work/`
+  - [ ] no inline `style=` layout values added; new spacing goes through `sh-*` classes and tokens
+  - [ ] Night and Day, reduced motion checked
+
+### [ ] 4. Work and studio
+- **Build:** `/work/` with the new categories and the projects' anchors; `/studio/` rewritten: who the photographer is, which clients and sectors, how a shoot runs, what a client gets (formats, usage rights, turnaround).
+- **Files:** `src/pages/work.astro`, `src/pages/studio.astro`, `src/components/GalleryGrid.astro`
+- **Agent:** designer · **Model:** sonnet
+- **Accept:**
+  - [ ] every category filter has at least two frames; empty state still designed
+  - [ ] `/work/#<slug>` from the home page lands on the right project
+
+### [ ] 5. Rates and contact
+- **Build:** `/rates/` with packages in £ (e.g. half day, full day, headshots per person), add-ons (extra usage, retouching, short video), FAQ for commercial clients (usage rights, VAT, deposits, travel within the M25). `/contact/` with a business brief: name, company, email, shoot type, preferred date, budget range, brief. Fix the `<select>` misalignment (`.sh-field { align-content: start; }`, native padding removed with a custom chevron). On phones the direct contacts come before the photo. Branded `::selection` site-wide.
+- **Files:** `src/pages/rates.astro`, `src/pages/contact.astro`, `src/components/ContactForm.astro`, `src/components/Packages.astro`, `src/styles/components.css`, `src/data/site.ts`
+- **Agent:** designer
+- **Accept:**
+  - [ ] in a two-column row the fields' bottom lines align, with or without help text, at 1280px
+  - [ ] select text starts at the same x as the other inputs
+  - [ ] the form still submits without JS (mailto fallback) with the new fields in the body
+  - [ ] on a 375px screen, email and phone are visible before the contact photo
+
+### [ ] 6. Remaining pages and docs
+- **Build:** 404 and privacy wording for a UK business (UK GDPR wording, no legal claims beyond a placeholder); `product.md` (what it is, audiences, demo story, pages), `CLAUDE.md` overview, `README.md`, `setup.md`; specs 002–007 reworded for the new niche (004: London areas and UK cities instead of Polish cities; 007: brand & commercial as the base niche, wedding as a possible variant).
+- **Files:** `src/pages/404.astro`, `src/pages/privacy.astro`, `docs/*.md`, `docs/specs/00{2..7}-*.md`, `CLAUDE.md`, `README.md`
+- **Model:** haiku
+- **Accept:**
+  - [ ] `grep -ri "wedding\|poznań\|zł\|couple"` over `src/` returns nothing
+  - [ ] docs describe one product: a London brand & commercial photographer
+
+## External needs
+- A real client later supplies: name, descriptor, contacts, prices and usage terms, their own photos (the stock placeholders must be replaced before launch). Listed in `docs/setup.md`.
+
+## Open questions
+- **Photographer's name.** Recommended: a short, gender-neutral, easy-to-say name that reads as a person, e.g. **Robin Hale**, Alex Mercer or Sam Ashby, with "Photography" only in the descriptor. Domain in examples: `robinhale.studio`.
+- **Hero headline.** Recommended: **"Pictures that do the selling."** Alternatives: "Your brand, on its best day." · "Make them stop scrolling."
+- **Prices (placeholders).** Recommended: Half day £950 · Full day £1,750 · Headshots £120 per person (min. 5); usage: 12 months, web and social, included.
+- **Photo source.** Recommended: Unsplash, picked by the agent for one consistent grade; you approve the set before slice 3.
+- **Order.** Recommended: after 001, before 002 and 004, because they build on this content.
+
+## Log
+| Date | Slice | Result | Notes / files |
+| --- | --- | --- | --- |
