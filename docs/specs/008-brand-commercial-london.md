@@ -55,15 +55,15 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
   - [x] eyebrow and heading on the hero photo pass AA contrast over the actual image (scrim adjusted if needed)
   - [x] alt texts describe the picture, not the file name
 
-### [ ] 3. Home page
+### [x] 3. Home page
 - **Build:** hero with eyebrow, a new headline and the `lead` line (who, what, where), CTA pair; intro; selected projects slider; replace the duplicate index list with a clients/sectors index (different data from the slider); how it works rewritten for a commercial shoot (brief → call → shoot → delivery); packages; testimonial from a client's marketing lead; closing CTA. Header CTA and hero CTA share one label.
 - **Files:** `src/pages/index.astro`, `src/components/Hero.astro`, `src/components/IndexList.astro`, `src/components/Testimonial.astro`, `src/components/ClosingCta.astro`
 - **Agent:** designer
 - **Accept:**
-  - [ ] a first-time reader can say who, what and where from the first screen alone (no scroll) at 375px and 1280px
-  - [ ] slider and index show different content; each item links to something specific (project anchor or filtered category), not just `/work/`
-  - [ ] no inline `style=` layout values added; new spacing goes through `sh-*` classes and tokens
-  - [ ] Night and Day, reduced motion checked
+  - [x] a first-time reader can say who, what and where from the first screen alone (no scroll) at 375px and 1280px
+  - [x] slider and index show different content; each item links to something specific (project anchor or filtered category), not just `/work/`
+  - [x] no inline `style=` layout values added; new spacing goes through `sh-*` classes and tokens
+  - [x] Night and Day, reduced motion checked
 
 ### [ ] 4. Work and studio
 - **Build:** `/work/` with the new categories and the projects' anchors; `/studio/` rewritten: who the photographer is, which clients and sectors, how a shoot runs, what a client gets (formats, usage rights, turnaround).
@@ -114,3 +114,4 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 | --- | --- | --- | --- |
 | 2026-11-02 | 1 | done | `site.ts` reshaped (Robin Hale, projects, categories, £ plans with usage, hero, marquee, testimonial); header descriptor (`.sh-brandline`), footer, BaseLayout, Packages, Slider, IndexList, Testimonial, ClosingCta, index, work, astro.config |
 | 2026-11-02 | 2 | done | 18 Unsplash photos in `src/assets/work/` via `<Picture>` (AVIF/WebP); hero 43 KB AVIF at 1440px, contrast measured ≥5.2:1; old `public/images/` deleted; credits in `setup.md`; conventions Images row; `.sh-pic` |
+| 2026-11-02 | 3 | done | Home: hero `lead`, intro, Selected projects, sectors index → `/work/?category=`, how it works (brief→call→shoot→delivery), packages head, testimonial, closing CTA; copy in `site.ts` (`intro`, `howItWorks`, `packagesIntro`, `closingCta`, `IndexRow`); inline styles moved to `site.css` |

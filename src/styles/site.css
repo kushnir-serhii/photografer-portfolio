@@ -72,3 +72,37 @@ body.has-drawer { overflow: hidden; }
 /* The descriptor sits next to the name from 1280px; below that it lives in the drawer. */
 .sh-brandline__desc { display: none; color: var(--ink-muted); white-space: nowrap; }
 @media (min-width: 1280px) { .sh-brandline__desc { display: inline; } }
+
+/* ---------- hero copy ---------- */
+
+.sh-hero__title { margin-top: var(--space-4); }
+.sh-hero__lead { margin: var(--space-4) 0 0; max-width: 46ch; }
+.sh-hero__disciplines, .sh-hero__scroll { color: inherit; }
+.sh-hero__scroll { text-decoration: none; }
+
+/* ---------- home blocks ---------- */
+
+.sh-intro { display: grid; gap: var(--space-6); max-width: 960px; }
+.sh-intro p { margin: 0; }
+
+/* Eyebrow, heading and one line above a full-width block (packages). */
+.sh-block-head { display: grid; gap: var(--space-4); max-width: 720px; margin-bottom: var(--space-6); }
+.sh-block-head p { margin: 0; }
+
+.sh-story__body > p { margin: 0; }
+
+/* Numbered process steps (how it works). */
+.sh-steps { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--line); }
+.sh-steps__item {
+  display: grid; grid-template-columns: 36px 1fr; gap: var(--space-4);
+  padding-block: var(--space-4); border-bottom: 1px solid var(--line);
+}
+.sh-steps__no { font-family: var(--font-mono); font-size: 12px; line-height: 24px; letter-spacing: 0.14em; color: var(--accent-text); }
+.sh-steps__text { margin: var(--space-1) 0 0; }
+
+/* ---------- closing call to action ---------- */
+
+.sh-closing { text-align: center; }
+.sh-closing .sh-meta { margin-bottom: var(--space-4); }
+.sh-closing__title { margin: 0 auto var(--space-5); max-width: 16ch; }
+.sh-closing__meta { margin-top: var(--space-5); }

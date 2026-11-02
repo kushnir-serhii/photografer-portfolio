@@ -206,3 +206,74 @@ export const testimonial: TestimonialData = {
   by: 'Priya Shah',
   role: 'Head of Brand, Fold Coffee',
 };
+
+// ---------- home page copy ----------
+
+export const intro = {
+  title: 'Pictures your team will actually use.',
+  lead:
+    'For websites, menus, launches and the About page nobody has updated in years. I work with small brands and busy marketing teams: every shoot is planned around your brief, delivered in a week and licensed in plain English.',
+};
+
+export interface Step {
+  title: string;
+  text: string;
+}
+
+export const howItWorks: { eyebrow: string; title: string; steps: Step[] } = {
+  eyebrow: 'How it works',
+  title: 'From brief to files in two weeks',
+  steps: [
+    { title: 'The brief', text: 'You send what the pictures are for: a launch, a new menu, a website, a team page.' },
+    { title: 'A 30-minute call', text: 'We agree the shot list, the locations and where the pictures will be used.' },
+    { title: 'The shoot', text: 'Half a day or a full one, at your place or in a studio. I bring the light.' },
+    { title: 'Delivery', text: 'First edit in five working days. Final files licensed for 12 months, web and social.' },
+  ],
+};
+
+export const packagesIntro = {
+  eyebrow: 'Rates',
+  title: 'Prices in the open',
+  lead: 'Ex VAT, usage included — so you can get sign-off before you write.',
+};
+
+export const closingCta = {
+  eyebrow: 'Next',
+  title: "Tell me what you're launching",
+  cta: 'Book a shoot',
+  meta: 'Every brief answered within two working days',
+};
+
+// ---------- index lists ----------
+
+// One row of an IndexList: the home page maps sectors to it, /work/ maps projects.
+export interface IndexRow {
+  title: string;
+  meta: string;
+  href: string;
+  image: ImageMetadata;
+}
+
+// Home page index: one row per work category, client names from its projects,
+// preview from the first gallery frame in that category (falls back to a project cover).
+export const sectorRows: IndexRow[] = categories.flatMap((c) => {
+  if (c.id === 'all') return [];
+  const id = c.id;
+  const inSector = projects.filter((p) => p.sector === id);
+  const image = frames.find((f) => f.category === id)?.src ?? inSector[0]?.image;
+  if (!image) return [];
+  return [{
+    title: c.label,
+    meta: inSector.length > 0 ? inSector.map((p) => p.client).join(' · ') : 'New work coming',
+    href: `/work/?category=${id}`,
+    image,
+  }];
+});
+
+// /work/ index: every project, linking to its anchor in the gallery.
+export const projectRows: IndexRow[] = projects.map((p) => ({
+  title: p.title,
+  meta: `${p.client} · ${p.area} · ${p.year}`,
+  href: `/work/#${p.slug}`,
+  image: p.image,
+}));

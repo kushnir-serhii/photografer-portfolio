@@ -1,26 +1,26 @@
 ---
 import { getImage } from 'astro:assets';
-import type { Project } from '../data/site';
+import type { IndexRow } from '../data/site';
 import Icon from './Icon.astro';
 
 interface Props {
-  projects: Project[];
+  rows: IndexRow[];
 }
-const { projects } = Astro.props;
+const { rows } = Astro.props;
 // The hover preview swaps one <img> src from data-index-img, so every row needs a plain built URL.
 const previews = await Promise.all(
-  projects.map((p) => getImage({ src: p.image, width: 560, height: 700, fit: 'cover', format: 'webp' })),
+  rows.map((r) => getImage({ src: r.image, width: 560, height: 700, fit: 'cover', format: 'webp' })),
 );
 ---
 <div class="sh-index" data-index-list>
   <div class="sh-index__preview" data-index-preview aria-hidden="true">
     <img class="sh-img" alt="" src={previews[0]?.src} width="560" height="700" loading="lazy" decoding="async" />
   </div>
-  {projects.map((project, i) => (
-    <a class="sh-index__row" href={`/work/#${project.slug}`} data-index-item data-index-img={previews[i]?.src}>
+  {rows.map((row, i) => (
+    <a class="sh-index__row" href={row.href} data-index-item data-index-img={previews[i]?.src}>
       <span class="sh-index__no">{String(i + 1).padStart(2, '0')}</span>
-      <span class="sh-d-m">{project.title}</span>
-      <span class="sh-index__meta">{project.client} · {project.area} · {project.year}</span>
+      <span class="sh-d-m">{row.title}</span>
+      <span class="sh-index__meta">{row.meta}</span>
       <span class="sh-index__arrow" aria-hidden="true"><Icon name="arrow-right" /></span>
     </a>
   ))}
