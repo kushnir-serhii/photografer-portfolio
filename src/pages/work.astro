@@ -1,29 +1,55 @@
 ---
+import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GalleryGrid from '../components/GalleryGrid.astro';
-import IndexList from '../components/IndexList.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import { frames, projectRows } from '../data/site';
+import { frames, projects, categories, workPage } from '../data/site';
+
+const sectorLabel = (id: string) => categories.find((c) => c.id === id)?.label ?? id;
 ---
-<BaseLayout title="Work" description="Weddings, families and two elopements, in the order they happened.">
+<BaseLayout title="Work" description="Brand, food, product, team and film work for small brands and marketing teams in London.">
   <section class="sh-section">
     <div class="sh-container">
-      <p class="sh-meta" data-reveal style="margin-bottom:20px;">Work — 2024 / 2026</p>
-      <h1 class="sh-d-xl" data-split style="margin:0 0 24px;max-width:15ch;">Twelve days worth showing</h1>
-      <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
-        Weddings, families and two elopements, in the order they happened.
-      </p>
+      <p class="sh-meta sh-head__eyebrow" data-reveal>{workPage.eyebrow}</p>
+      <h1 class="sh-d-xl sh-head__title" data-split>{workPage.title}</h1>
+      <p class="sh-lead sh-measure sh-head__lead" data-reveal data-reveal-delay="140">{workPage.lead}</p>
     </div>
   </section>
 
-  <section class="sh-section" style="padding-top:0;">
+  <section class="sh-section sh-section--flush">
     <GalleryGrid frames={frames} />
   </section>
 
   <section class="sh-section sh-section--band">
     <div class="sh-container">
-      <h2 class="sh-d-l" data-split style="margin:0 0 28px;">Whole days, start to finish</h2>
-      <IndexList rows={projectRows} />
+      <div class="sh-block-head">
+        <h2 class="sh-d-l" data-split>{workPage.projectsTitle}</h2>
+        <p class="sh-muted" data-reveal>{workPage.projectsLead}</p>
+      </div>
+      <div class="sh-projects">
+        {projects.map((p) => (
+          <article class="sh-project" id={p.slug} data-reveal>
+            <div class="sh-frame sh-project__media" data-cursor-label="View">
+              <Picture
+                class="sh-img sh-ratio-3x2"
+                pictureAttributes={{ class: 'sh-pic' }}
+                src={p.image}
+                alt={p.alt}
+                formats={['avif', 'webp']}
+                widths={[480, 720, 960, 1280]}
+                sizes="(min-width: 1100px) 380px, (min-width: 640px) 45vw, 100vw"
+                loading="lazy"
+              />
+            </div>
+            <p class="sh-meta">{sectorLabel(p.sector)} · {p.area} · {p.month} {p.year}</p>
+            <h3 class="sh-d-s sh-project__title">{p.client}</h3>
+            <p class="sh-muted sh-body-s sh-project__text">{p.title}</p>
+            <ul class="sh-tags" aria-label="Deliverables">
+              {p.deliverables.map((d) => <li class="sh-tags__item">{d}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 

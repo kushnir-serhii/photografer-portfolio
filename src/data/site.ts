@@ -277,3 +277,58 @@ export const projectRows: IndexRow[] = projects.map((p) => ({
   href: `/work/#${p.slug}`,
   image: p.image,
 }));
+
+// ---------- /work/ copy ----------
+
+export const workPage = {
+  eyebrow: 'Work — 2025 / 2026',
+  title: 'Recent work for London brands',
+  lead: 'Brand, food, product, team and film work for small brands and marketing teams. A selection of the last year; full sets on request.',
+  projectsTitle: 'Projects',
+  projectsLead: 'Who it was for, where we shot and what they got.',
+  galleryNote: `${frames.length} frames · ${projects.length} projects · full sets on request`,
+  galleryCta: 'Ask for a full set',
+  emptyText: 'Nothing in this set yet.',
+  emptyAction: 'See everything',
+};
+
+// ---------- /studio/ copy ----------
+
+export const studioPage = {
+  title: 'Studio',
+  description: 'Robin Hale is a London brand and commercial photographer: one person with a camera and a small freelance crew when a job needs it.',
+  eyebrow: 'Studio',
+  heading: 'One person, one camera, a crew when the job needs it',
+  lead: "I'm Robin. For ten years I've photographed brands in London: food, products, teams and the odd film.",
+  about:
+    'I work with small brands, restaurants, product makers, studios and in-house marketing teams. When a shoot needs more hands, a stylist, assistant or sound recordist from my freelance crew joins. You always deal with me.',
+  principles: [
+    { no: '01 — Planned', title: 'A shot list before the day', body: 'We agree every picture and where it will be used in a 30-minute call, so the day is spent shooting, not guessing.' },
+    { no: '02 — Licensed', title: 'Usage in plain English', body: '12 months on web and social are included. Print, paid ads, out-of-home and longer terms are quoted as extra usage, before you commit.' },
+    { no: '03 — Quick', title: 'First edit in five working days', body: 'Final files within ten. Web-sized and full-resolution JPG, with crops for social.' },
+  ],
+  marquee: ['No stock-looking smiles', 'No surprise licence fees', 'No three-week wait'],
+  clients: {
+    title: 'Who I work with',
+    text: 'Small brands launching a range, restaurants with a new menu, makers who need packshots, studios and teams who need a website that looks like them.',
+  },
+  run: {
+    title: 'How a shoot runs',
+    steps: [
+      { title: 'Brief', text: 'You tell me what the pictures are for and who will see them.' },
+      { title: 'Call', text: 'Thirty minutes to agree the shot list, locations and usage.' },
+      { title: 'Shot list', text: 'I send it in writing, with references, a few days ahead.' },
+      { title: 'The day', text: 'I bring the light and keep to the list. You approve on a monitor as we go.' },
+      { title: 'Edit', text: 'First edit in five working days, final files within ten.' },
+    ],
+    cta: 'See the rates',
+  },
+  gets: {
+    title: 'What you get',
+    items: [
+      { label: 'Formats', text: 'Web-sized and full-resolution JPG, plus crops for social: 4:5 and 9:16.' },
+      { label: 'Usage rights', text: '12 months, web and social, included. Print, paid ads, out-of-home and longer terms are quoted as extra usage.' },
+      { label: 'Turnaround', text: 'First edit in five working days, final files within ten.' },
+    ],
+  },
+};

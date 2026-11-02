@@ -65,14 +65,14 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
   - [x] no inline `style=` layout values added; new spacing goes through `sh-*` classes and tokens
   - [x] Night and Day, reduced motion checked
 
-### [ ] 4. Work and studio
+### [x] 4. Work and studio
 - **Build:** `/work/` with the new categories and the projects' anchors; `/studio/` rewritten: who the photographer is, which clients and sectors, how a shoot runs, what a client gets (formats, usage rights, turnaround).
 - **Files:** `src/pages/work.astro`, `src/pages/studio.astro`, `src/components/GalleryGrid.astro`, `src/scripts/site.ts`
 - **Agent:** designer · **Model:** sonnet
 - **Accept:**
-  - [ ] every category filter has at least two frames; empty state still designed
-  - [ ] `/work/?category=food` opens with that filter pressed; an unknown value shows everything
-  - [ ] `/work/#<slug>` from the home page lands on the right project
+  - [x] every category filter has at least two frames; empty state still designed
+  - [x] `/work/?category=food` opens with that filter pressed; an unknown value shows everything
+  - [x] `/work/#<slug>` from the home page lands on the right project
 
 ### [ ] 5. Rates and contact
 - **Build:** `/rates/` with packages in £ (e.g. half day, full day, headshots per person), add-ons (extra usage, retouching, short video), FAQ for commercial clients (usage rights, VAT, deposits, travel within the M25). `/contact/` with a business brief: name, company, email, shoot type, preferred date, budget range, brief. Fix the `<select>` misalignment (`.sh-field { align-content: start; }`, native padding removed with a custom chevron). On phones the direct contacts come before the photo. Branded `::selection` site-wide.
@@ -115,3 +115,4 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 | 2026-11-02 | 1 | done | `site.ts` reshaped (Robin Hale, projects, categories, £ plans with usage, hero, marquee, testimonial); header descriptor (`.sh-brandline`), footer, BaseLayout, Packages, Slider, IndexList, Testimonial, ClosingCta, index, work, astro.config |
 | 2026-11-02 | 2 | done | 18 Unsplash photos in `src/assets/work/` via `<Picture>` (AVIF/WebP); hero 43 KB AVIF at 1440px, contrast measured ≥5.2:1; old `public/images/` deleted; credits in `setup.md`; conventions Images row; `.sh-pic` |
 | 2026-11-02 | 3 | done | Home: hero `lead`, intro, Selected projects, sectors index → `/work/?category=`, how it works (brief→call→shoot→delivery), packages head, testimonial, closing CTA; copy in `site.ts` (`intro`, `howItWorks`, `packagesIntro`, `closingCta`, `IndexRow`); inline styles moved to `site.css` |
+| 2026-11-02 | 4 | done | `/work/`: new head, Projects cards with `id={slug}`, `?category=` preselect + `replaceState`, designed empty state with reset; `/studio/` rewritten in first person (principles, how a shoot runs, who I work with, what you get); copy in `site.ts` (`workPage`, `studioPage`) |
