@@ -121,3 +121,4 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 | 2026-11-02 | UI check | pass | all 7 routes × 375/1280 × Night/Day: 28/28; screenshots reviewed |
 | 2026-11-03 | fix | done | contact: direct contacts right after the intro on phones (`display: contents` + `order`, no duplicate DOM); rates: FAQ as native `<details>` with +/− indicator; UI check rates, contact 8/8 |
 | 2026-11-03 | fix | done | new covers for Oriel, Fold Coffee, Northline (headshot kept as a gallery frame); `Project.focus` → `object-position` in `Slider`; titles fitted to the photos (Oriel, Northline, Marlow & Finch, Kiln); setup.md credits; UI check root, work 8/8 |
+| 2026-11-03 | fix | done | selects: customizable picker (`appearance: base-select`, behind `@supports`) in system tokens (`--surface-pop`, `--shadow-pop`, `--accent-wash`), native fallback follows `color-scheme`; preferred date is a text field (locale-free placeholder) |

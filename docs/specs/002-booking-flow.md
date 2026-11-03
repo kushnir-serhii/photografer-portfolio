@@ -55,6 +55,7 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
 - Later: the client's calendar source if availability should be real (Google Calendar public iCal), see [setup.md](../setup.md).
 
 ## Open questions
+- **Note (2026-11-03):** the contact form's preferred date is a text field now (`type="text"`, `name="preferred_date"`), so the browser's locale never shows. `?date=` and a picked calendar day should fill it with a readable English date (`Intl.DateTimeFormat('en-GB')`, e.g. "12 June 2027"), not the ISO value.
 - Show Messenger at all, or Call / WhatsApp / Form only? Recommended: keep it optional in data, shown when set; demo sets it.
 - A small marquee item or home teaser for the calendar ("Three shoot days left in January") — in this spec or later? Recommended: reuse the existing marquee items from data, no new component.
 

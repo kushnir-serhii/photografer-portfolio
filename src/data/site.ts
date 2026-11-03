@@ -289,6 +289,7 @@ export const enquiryForm = {
   namePlaceholder: 'Alex Morgan',
   companyPlaceholder: 'Saltroom',
   emailPlaceholder: 'alex@saltroom.co.uk',
+  datePlaceholder: 'Week of 12 March',
   dateHelp: 'A rough week is fine. Not fixed yet? Leave it empty.',
   briefPlaceholder: 'A spring menu launch, 12 dishes, at our place in Peckham. Pictures for the website and Instagram.',
   briefHelp: 'What the pictures are for, where, and roughly how many.',

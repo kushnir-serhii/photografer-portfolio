@@ -40,7 +40,7 @@ const action = site.formEndpoint || `mailto:${site.email}`;
   <div class="sh-row sh-row--2">
     <div class="sh-field">
       <label class="sh-label" for="c-date">Preferred date <span class="sh-label__opt">(optional)</span></label>
-      <input class="sh-input" id="c-date" name="preferred_date" type="date" aria-describedby="c-date-help" />
+      <input class="sh-input" id="c-date" name="preferred_date" type="text" placeholder={copy.datePlaceholder} autocomplete="off" aria-describedby="c-date-help" />
       <p class="sh-help" id="c-date-help">{copy.dateHelp}</p>
     </div>
     <div class="sh-field">

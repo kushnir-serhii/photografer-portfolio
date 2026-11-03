@@ -332,10 +332,54 @@
   background-position: calc(100% - 14px) 52%, calc(100% - 8px) 52%;
   background-size: 6px 6px; background-repeat: no-repeat;
 }
-.sh-select option { background-color: var(--surface-200); color: var(--ink); }
+/* Native option list: browsers that can't style the picker still get theme colours here; the popup itself
+   follows Night/Day through color-scheme on :root. */
+.sh-select option { background-color: var(--surface-pop); color: var(--ink); font-family: var(--font-sans); }
+
+/* Customizable select (Chrome, Edge): the option list is drawn by the page, so it can wear the system.
+   The closed field keeps the look above; only the picker changes. */
+@supports (appearance: base-select) {
+  .sh-select, .sh-select::picker(select) { appearance: base-select; }
+  .sh-select { display: block; min-block-size: 0; gap: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sh-select::picker-icon { display: none; }
+  .sh-select:open { border-bottom-color: var(--accent-mark); }
+
+  .sh-select::picker(select) {
+    box-sizing: border-box; min-inline-size: anchor-size(self-inline); max-block-size: min(320px, 60vh);
+    margin-block: var(--space-1); padding: var(--space-1) 0; overflow-y: auto;
+    background: var(--surface-pop); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius-xs);
+    box-shadow: var(--shadow-pop); scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent;
+    opacity: 1; translate: 0 0;
+    transition: opacity var(--dur-fast) linear, translate var(--dur-fast) var(--ease-out-expo),
+      display var(--dur-fast) allow-discrete, overlay var(--dur-fast) allow-discrete;
+  }
+  @starting-style { .sh-select:open::picker(select) { opacity: 0; translate: 0 -4px; } }
+  .sh-select:not(:open)::picker(select) { opacity: 0; }
+
+  .sh-select option {
+    display: flex; align-items: center; gap: var(--space-3); min-block-size: 44px; box-sizing: border-box;
+    padding: 10px var(--space-4); background: transparent; color: var(--ink-muted);
+    font-size: 16px; line-height: 24px; white-space: normal; cursor: pointer; outline: none;
+    transition: background-color var(--dur-fast) linear, color var(--dur-fast) linear;
+  }
+  /* Pointer hover: a wash. Keyboard highlight: the wash plus a focus bar, so the active row is never ambiguous. */
+  .sh-select option:hover { background: var(--accent-wash); color: var(--ink); }
+  .sh-select option:focus-visible { background: var(--accent-wash); color: var(--ink); outline: none;
+    box-shadow: inset 3px 0 0 var(--focus); }
+  .sh-select option:checked { color: var(--ink); }
+  .sh-select option::checkmark {
+    order: 1; margin-inline-start: auto; content: ""; flex: 0 0 auto; width: 10px; height: 5px; margin-top: -3px;
+    border-left: 2px solid var(--accent-mark); border-bottom: 2px solid var(--accent-mark); rotate: -45deg;
+  }
+  /* Forced colours: keep the highlight visible when the wash and inset mark are dropped. */
+  @media (forced-colors: active) {
+    .sh-select option:focus-visible { outline: 2px solid Highlight; outline-offset: -2px; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sh-select::picker(select), .sh-select option { transition: none; }
+}
 .sh-input::placeholder, .sh-textarea::placeholder { color: var(--ink-faint); }
-/* Chromium pads the date field inside; drop it so it lines up with the text inputs and select. */
-.sh-input::-webkit-datetime-edit, .sh-input::-webkit-datetime-edit-fields-wrapper { padding: 0; }
 .sh-input:hover, .sh-textarea:hover, .sh-select:hover { border-bottom-color: var(--ink); }
 .sh-input:focus, .sh-select:focus, .sh-textarea:focus { border-bottom-color: var(--accent-mark); outline-offset: 4px; }
 .sh-help { font-family: var(--font-mono); font-size: 11px; line-height: 16px; letter-spacing: 0.1em; color: var(--ink-faint); margin: 0; }
