@@ -1,6 +1,6 @@
 # 005 — Film reel
 
-**Status:** in-progress · **Depends on:** 001 · **Route(s):** `/`, `/work/`
+**Status:** done · **Depends on:** 001 · **Route(s):** `/`, `/work/`
 
 ## Goal
 Video has its own place: a short reel on the home page and film entries in the work gallery, loading only when played so the site stays fast. In the demo: *"my stills and my video both have a place"* — many brand and commercial clients need film as well as stills.
@@ -41,6 +41,7 @@ Demo: three Pexels clips in `public/films/` (listed in `docs/setup.md`). A place
 - Which frames play, and what the home reel shows? **Decided:** all three `film` frames get their own clip; the home reel is the Kiln Ceramics film, poster = the existing kiln photo.
 - Home copy? **Decided:** as written in slice 1. The poster shows the real clip length (0:23).
 - Hero and slider use raw colours for text on photos; switch them to the new `--on-image` tokens? (Raised in slice 1, outside this spec.)
+- The Kiln Ceramics project lists a "30-second film" while the demo clip runs 0:23. Change the deliverable to "Short film"?
 - Where the dialog lives? **Decided:** inside `GalleryGrid` (page content, wired on `astro:page-load`).
 
 ## Log
@@ -48,3 +49,4 @@ Demo: three Pexels clips in `public/films/` (listed in `docs/setup.md`). A place
 | --- | --- | --- | --- |
 | 2026-11-03 | 1 | done: FilmReel on home, click-to-load player, film data + URL helpers, `--on-image` tokens, 3 Pexels clips | `src/components/FilmReel.astro`, `src/data/film.ts`, `src/data/site.ts`, `src/scripts/film.ts`, `src/scripts/site.ts`, `src/pages/index.astro`, `src/styles/site.css`, `src/styles/tokens.css`, `public/films/*`, `docs/setup.md` |
 | 2026-11-03 | 2 | done: film frames on /work/ with play badge, native dialog player (removed on close), no-JS link to the file | `src/components/GalleryGrid.astro`, `src/scripts/film.ts`, `src/data/site.ts`, `src/styles/site.css` |
+| 2026-11-03 | UI check | passed: root, work at 375/1280, Night/Day; screenshots reviewed | `e2e/screenshots/005/` |
