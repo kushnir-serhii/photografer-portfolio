@@ -1,6 +1,7 @@
 // Site content. Every photograph in src/assets/work is an Unsplash placeholder (sources in
 // docs/setup.md): replace them with the photographer's own work before launch.
 import type { ImageMetadata } from 'astro';
+import type { AreaSlug } from './areas';
 import heroTeamPortraitStudio from '../assets/work/hero-team-portrait-studio.jpg';
 import foldDrumRoasterFloor from '../assets/work/fold-drum-roaster-floor.jpg';
 import marlowFinchStreetCoat from '../assets/work/marlow-finch-street-coat.jpg';
@@ -44,6 +45,14 @@ export const site = {
   demo: true,
 };
 
+// Details used only for schema.org structured data (src/data/schema.ts). No street address: fictional.
+export const business = {
+  region: 'Greater London',
+  country: 'GB',
+  // Ex VAT, from the cheapest to the dearest package. Per-package Offers with numeric prices come in spec 003.
+  priceRange: '£120–£1,750',
+};
+
 export const nav = [
   { label: 'Work', href: '/work/' },
   { label: 'Studio', href: '/studio/' },
@@ -61,6 +70,8 @@ export interface Project {
   month: string;
   year: number;
   area: string;
+  // The area page this project is listed on (/brand-photographer/<slug>/), when it was shot in one.
+  areaSlug?: AreaSlug;
   deliverables: string[];
   image: ImageMetadata;
   alt: string;
@@ -72,14 +83,14 @@ export interface Project {
 export const projects: Project[] = [
   {
     slug: 'fold-coffee', client: 'Fold Coffee', title: 'A roastery at six in the morning',
-    sector: 'food', month: 'March', year: 2026, area: 'Hackney Wick',
+    sector: 'food', month: 'March', year: 2026, area: 'Hackney Wick', areaSlug: 'hackney',
     deliverables: ['Website', 'Menu boards', 'Social'], cta: 'See the project',
     focus: '92% 50%',
     image: foldDrumRoasterFloor, alt: 'A large drum roaster turning freshly roasted beans in its cooling tray on a roastery floor under hanging lamps',
   },
   {
     slug: 'marlow-finch', client: 'Marlow & Finch', title: 'A new collection, shot on the street',
-    sector: 'brand', month: 'April', year: 2026, area: 'Shoreditch',
+    sector: 'brand', month: 'April', year: 2026, area: 'Shoreditch', areaSlug: 'shoreditch',
     deliverables: ['Lookbook', 'Campaign', 'E-commerce'], cta: 'See the project',
     image: marlowFinchStreetCoat, alt: 'A woman in a black coat and sunglasses standing in a cobbled street lined with parked cars',
   },
@@ -91,13 +102,13 @@ export const projects: Project[] = [
   },
   {
     slug: 'northline-architects', client: 'Northline Architects', title: 'A team, a table and one afternoon',
-    sector: 'portraits', month: 'January', year: 2026, area: "King's Cross",
+    sector: 'portraits', month: 'January', year: 2026, area: "King's Cross", areaSlug: 'kings-cross',
     deliverables: ['Team headshots', 'About page'], cta: 'See the project',
     image: northlineTeamReviewingPrints, alt: 'Four colleagues leaning over a wooden table, talking through a spread of printouts',
   },
   {
     slug: 'saltroom', client: 'Saltroom', title: 'A new menu and a long table',
-    sector: 'food', month: 'November', year: 2025, area: 'Peckham',
+    sector: 'food', month: 'November', year: 2025, area: 'Peckham', areaSlug: 'peckham',
     deliverables: ['Menu', 'Press kit'], cta: 'See the project',
     image: saltroomLongTable, alt: 'A long restaurant table laid with glasses and napkins, running towards a bright front window',
   },
@@ -220,6 +231,11 @@ export const quickContact = {
     plan: "Hi Robin, I'd like to ask about {plan}. Which dates are free?",
     date: 'Hi Robin, is {date} free for a shoot?',
     none: "Hi Robin, I'd like to ask about a shoot.",
+    // The same four with an area (from an area page or ?area=). {area}: Area.name, "Shoreditch" or "the Cotswolds".
+    bothArea: 'Hi Robin, is {date} free for {plan} in {area}?',
+    planArea: "Hi Robin, I'd like to ask about {plan} in {area}. Which dates are free?",
+    dateArea: 'Hi Robin, is {date} free for a shoot in {area}?',
+    noneArea: "Hi Robin, I'd like to ask about a shoot in {area}. Which dates are free?",
   },
 };
 
@@ -391,6 +407,8 @@ export const enquiryForm = {
   packageChange: 'Change',
   dateHelp: 'A rough week is fine. Not fixed yet? Leave it empty.',
   briefPlaceholder: 'A spring menu launch, 12 dishes, at our place in Peckham. Pictures for the website and Instagram.',
+  // Starts an empty brief when the visitor arrives from an area page (?area=). {area}: Area.name.
+  briefArea: 'Shoot in {area}: ',
   briefHelp: 'What the pictures are for, where, and roughly how many.',
   consent: 'I agree that my details are used to answer this brief.',
   submit: 'Send the brief',

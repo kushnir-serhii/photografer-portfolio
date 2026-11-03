@@ -1,0 +1,37 @@
+---
+// One project as a card: /work/ (with an anchor) and the area pages (linking to the anchor).
+import { Picture } from 'astro:assets';
+import { categories, type Project } from '../data/site';
+
+interface Props {
+  project: Project;
+  // Sets the card's id to the project slug, so /work/#slug lands on it.
+  anchor?: boolean;
+  // Makes the whole card a link (the title carries it).
+  href?: string;
+}
+const { project: p, anchor = false, href } = Astro.props;
+const sector = categories.find((c) => c.id === p.sector)?.label ?? p.sector;
+---
+<article class:list={['sh-project', { 'sh-project--link': href }]} id={anchor ? p.slug : undefined} data-reveal>
+  <div class="sh-frame sh-project__media" data-cursor-label="View">
+    <Picture
+      class="sh-img sh-ratio-3x2"
+      pictureAttributes={{ class: 'sh-pic' }}
+      src={p.image}
+      alt={p.alt}
+      formats={['avif', 'webp']}
+      widths={[480, 720, 960, 1280]}
+      sizes="(min-width: 1100px) 380px, (min-width: 640px) 45vw, 100vw"
+      loading="lazy"
+    />
+  </div>
+  <p class="sh-meta">{sector} · {p.area} · {p.month} {p.year}</p>
+  <h3 class="sh-d-s sh-project__title">
+    {href ? <a class="sh-project__link" href={href}>{p.client}</a> : p.client}
+  </h3>
+  <p class="sh-muted sh-body-s sh-project__text">{p.title}</p>
+  <ul class="sh-tags" aria-label="Deliverables">
+    {p.deliverables.map((d) => <li class="sh-tags__item">{d}</li>)}
+  </ul>
+</article>

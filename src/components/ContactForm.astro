@@ -1,10 +1,13 @@
 ---
 import { site, plans, shootTypes, budgetRanges, enquiryForm as copy } from '../data/site';
 import type { Plan } from '../data/site';
+import { areas } from '../data/areas';
 import Icon from './Icon.astro';
 
 // Option text doubles as the submitted value, so the email reads "Full day — £1,750".
 const planText = (p: Plan) => `${p.name} — ${p.price}${p.unit === 'per shoot' ? '' : ` ${p.unit}`}`;
+// Slug -> name for ?area=; the script fills the brief from it.
+const areaData = JSON.stringify(Object.fromEntries(areas.map((a) => [a.slug, a.name])));
 const action = site.formEndpoint || `mailto:${site.email}`;
 ---
 <form
@@ -15,6 +18,8 @@ const action = site.formEndpoint || `mailto:${site.email}`;
   novalidate
   data-enquiry
   data-endpoint={site.formEndpoint}
+  data-areas={areaData}
+  data-area-brief={copy.briefArea}
 >
   <p class="sh-enquiry__choice sh-body-s" data-plan-choice aria-live="polite" hidden>
     <span data-plan-choice-text></span> · <button class="sh-enquiry__change" type="button" data-plan-change>{copy.packageChange}</button>

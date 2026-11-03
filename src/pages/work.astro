@@ -1,11 +1,9 @@
 ---
-import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import GalleryGrid from '../components/GalleryGrid.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import { frames, projects, categories, workPage } from '../data/site';
-
-const sectorLabel = (id: string) => categories.find((c) => c.id === id)?.label ?? id;
+import ProjectCard from '../components/ProjectCard.astro';
+import { frames, projects, workPage } from '../data/site';
 ---
 <BaseLayout title="Work" description="Brand, food, product, team and film work for small brands and marketing teams in London.">
   <section class="sh-section">
@@ -27,28 +25,7 @@ const sectorLabel = (id: string) => categories.find((c) => c.id === id)?.label ?
         <p class="sh-muted" data-reveal>{workPage.projectsLead}</p>
       </div>
       <div class="sh-projects">
-        {projects.map((p) => (
-          <article class="sh-project" id={p.slug} data-reveal>
-            <div class="sh-frame sh-project__media" data-cursor-label="View">
-              <Picture
-                class="sh-img sh-ratio-3x2"
-                pictureAttributes={{ class: 'sh-pic' }}
-                src={p.image}
-                alt={p.alt}
-                formats={['avif', 'webp']}
-                widths={[480, 720, 960, 1280]}
-                sizes="(min-width: 1100px) 380px, (min-width: 640px) 45vw, 100vw"
-                loading="lazy"
-              />
-            </div>
-            <p class="sh-meta">{sectorLabel(p.sector)} · {p.area} · {p.month} {p.year}</p>
-            <h3 class="sh-d-s sh-project__title">{p.client}</h3>
-            <p class="sh-muted sh-body-s sh-project__text">{p.title}</p>
-            <ul class="sh-tags" aria-label="Deliverables">
-              {p.deliverables.map((d) => <li class="sh-tags__item">{d}</li>)}
-            </ul>
-          </article>
-        ))}
+        {projects.map((p) => <ProjectCard project={p} anchor />)}
       </div>
     </div>
   </section>

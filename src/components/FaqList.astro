@@ -1,0 +1,20 @@
+---
+// Questions as native disclosures: /rates/ and the area pages.
+import type { FaqItem } from '../data/site';
+
+interface Props {
+  items: FaqItem[];
+}
+const { items } = Astro.props;
+---
+<div class="sh-faq" data-reveal>
+  {items.map((item) => (
+    <details class="sh-faq__item">
+      <summary class="sh-faq__q">
+        <h3 class="sh-d-s">{item.q}</h3>
+        <span class="sh-faq__icon" aria-hidden="true"></span>
+      </summary>
+      <p class="sh-muted sh-faq__a">{item.a}</p>
+    </details>
+  ))}
+</div>
