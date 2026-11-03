@@ -24,13 +24,13 @@ Video has its own place: a short reel on the home page and film entries in the w
   - [x] without JS the poster links to the video source
   - [x] 375px without horizontal scroll, Night and Day
 
-### [ ] 2. Film in the work gallery
+### [x] 2. Film in the work gallery
 - **Build:** all three `film` frames in `/work/` get a film (Kiln Ceramics, camera operator, crew on set) and show a play badge; without JS a film frame is a link to the video file; opening one plays it in a native `<dialog>` (focus trap, Escape, focus return); the `film` filter shows them.
 - **Files:** `src/components/GalleryGrid.astro`, `src/scripts/film.ts`, `src/data/site.ts`, `src/styles/site.css`
 - **Agent:** designer → frontend
 - **Accept:**
-  - [ ] the video stops when the dialog closes
-  - [ ] filters still work; the empty-filter state is unchanged
+  - [x] the video stops when the dialog closes
+  - [x] filters still work; the empty-filter state is unchanged
 
 ## External needs
 Demo: three Pexels clips in `public/films/` (listed in `docs/setup.md`). A placeholder reel for the demo (licence-free) and, for a client, their film work as video files or Vimeo/YouTube links.
@@ -47,3 +47,4 @@ Demo: three Pexels clips in `public/films/` (listed in `docs/setup.md`). A place
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
 | 2026-11-03 | 1 | done: FilmReel on home, click-to-load player, film data + URL helpers, `--on-image` tokens, 3 Pexels clips | `src/components/FilmReel.astro`, `src/data/film.ts`, `src/data/site.ts`, `src/scripts/film.ts`, `src/scripts/site.ts`, `src/pages/index.astro`, `src/styles/site.css`, `src/styles/tokens.css`, `public/films/*`, `docs/setup.md` |
+| 2026-11-03 | 2 | done: film frames on /work/ with play badge, native dialog player (removed on close), no-JS link to the file | `src/components/GalleryGrid.astro`, `src/scripts/film.ts`, `src/data/site.ts`, `src/styles/site.css` |

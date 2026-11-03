@@ -38,6 +38,7 @@ export function createFilmPlayer({ source, label }: FilmPlayerData): HTMLVideoEl
 }
 
 export function initFilms() {
+  initFilmDialogs();
   document.querySelectorAll<HTMLElement>('[data-film-reel]').forEach((reel) => {
     const stage = reel.querySelector<HTMLElement>('[data-film-stage]');
     const play = reel.querySelector<HTMLAnchorElement>('[data-film-play]');
@@ -60,5 +61,54 @@ export function initFilms() {
         player.play().catch(() => {});
       }
     });
+  });
+}
+
+// Film frames on /work/ (GalleryGrid): each [data-film-open] link plays its film in the gallery's
+// <dialog>. The player is built on open and removed on close, so a video or iframe stops and stops loading.
+function initFilmDialogs() {
+  document.querySelectorAll<HTMLDialogElement>('dialog[data-film-dialog]').forEach((dialog) => {
+    const scope = dialog.closest('[data-gallery]') ?? document;
+    const stage = dialog.querySelector<HTMLElement>('[data-film-dialog-stage]');
+    const title = dialog.querySelector<HTMLElement>('[data-film-dialog-title]');
+    if (!stage) return;
+    let opener: HTMLElement | null = null;
+
+    scope.querySelectorAll<HTMLAnchorElement>('a[data-film-open]').forEach((link) => {
+      const data = parseFilmPlayerData(link.dataset.film);
+      // Bad data: the plain link still opens the film.
+      if (!data) return;
+      link.addEventListener('click', (e) => {
+        // Let modified clicks (new tab, download) do what the link does.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        opener = link;
+        if (title) title.textContent = link.dataset.filmMeta ?? data.label;
+        const player = createFilmPlayer(data);
+        player.tabIndex = 0;
+        stage.replaceChildren(player);
+        dialog.showModal();
+        player.focus();
+        if (player instanceof HTMLVideoElement) player.play().catch(() => {});
+      });
+    });
+
+    dialog.addEventListener('close', () => {
+      // Stop a video and drop its download before it leaves the page; an iframe stops on removal.
+      stage.querySelectorAll('video').forEach((video) => {
+        video.pause();
+        video.replaceChildren();
+        video.removeAttribute('src');
+        video.load();
+      });
+      stage.replaceChildren();
+      opener?.focus();
+      opener = null;
+    });
+    // A click on the ::backdrop lands on the <dialog> itself; the panel fills the dialog's box.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    dialog.querySelector('[data-film-dialog-close]')?.addEventListener('click', () => dialog.close());
   });
 }

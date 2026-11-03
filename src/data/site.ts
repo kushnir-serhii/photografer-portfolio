@@ -198,6 +198,12 @@ export const filmReel = {
   play: 'Play film',
 };
 
+// Film frames in the /work/ gallery: the badge on the photograph and the dialog that plays them.
+export const filmDialog = {
+  badge: 'Film',
+  close: 'Close film',
+};
+
 export interface Picture {
   src: ImageMetadata;
   alt: string;

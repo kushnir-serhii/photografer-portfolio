@@ -727,3 +727,49 @@ html:has(.sh-quick[open]) { overflow: hidden; }
   .sh-film__poster:hover .sh-img, .sh-film__poster:hover .sh-film__btn,
   .sh-film__poster:focus-visible .sh-film__btn, .sh-film__stage:hover .sh-film__btn { transform: none; }
 }
+
+/* ---------- film frames and the film dialog on /work/ (GalleryGrid) ---------- */
+
+/* The link fills the grid item, so the gallery's packing is untouched. */
+.sh-gallery__film { position: absolute; inset: 0; display: block; color: var(--on-image); }
+.sh-gallery__film:focus-visible { outline: 2px solid var(--focus); outline-offset: -4px; }
+/* Lime pill on a dark halo: legible on light and dark photos alike. */
+.sh-film-badge {
+  position: absolute; left: var(--space-3); bottom: var(--space-3); z-index: 1;
+  display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-4);
+  border-radius: var(--radius-pill); background: var(--accent); color: var(--on-accent);
+  box-shadow: 0 0 0 4px var(--scrim);
+  font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap;
+  transition: box-shadow var(--dur-fast) linear, transform 320ms var(--ease-out-expo);
+}
+/* Phones: two frames a row leave ~150px, so the badge drops the length (it is in the name and the dialog). */
+@media (max-width: 600px) {
+  .sh-film-badge { left: var(--space-2); bottom: var(--space-2); padding: 0 var(--space-3); }
+  .sh-film-badge__time { display: none; }
+}
+.sh-gallery__film:hover .sh-film-badge, .sh-gallery__film:focus-visible .sh-film-badge { box-shadow: 0 0 0 4px var(--scrim), var(--glow-accent); transform: scale(1.04); }
+
+/* The <dialog> box itself has no padding: a click that lands on it (not the panel) is a backdrop click.
+   Width: the 16:9 player fits the viewport's height too (landscape phones); 136px = margins, panel padding, head. */
+.sh-film-dialog {
+  box-sizing: border-box; padding: 0; max-width: none; max-height: none; overflow: hidden;
+  width: min(1200px, calc(100% - 2 * var(--space-5)), calc((100dvh - 136px) * 16 / 9 + 2 * var(--space-4) + 2px));
+  background: var(--surface-pop); color: var(--ink); border: 1px solid var(--line);
+  border-radius: var(--radius-xs); box-shadow: var(--shadow-pop);
+}
+.sh-film-dialog::backdrop { background: var(--scrim-strong); }
+html:has(.sh-film-dialog[open]) { overflow: hidden; }
+.sh-film-dialog__panel { display: grid; gap: var(--space-3); padding: var(--space-4); }
+.sh-film-dialog__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); min-width: 0; }
+.sh-film-dialog__title { overflow-wrap: anywhere; }
+.sh-film-dialog__close { display: grid; flex: none; }
+.sh-film-dialog__close:hover { border-color: var(--ink); }
+.sh-film-dialog__stage { aspect-ratio: 16 / 9; background: var(--surface-300); }
+@media (prefers-reduced-motion: no-preference) {
+  .sh-film-dialog[open] { animation: sh-quick-in var(--dur-base) var(--ease-out-expo); }
+  .sh-film-dialog[open]::backdrop { animation: sh-quick-fade var(--dur-fast) linear; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sh-gallery__film:hover .sh-film-badge, .sh-gallery__film:focus-visible .sh-film-badge { transform: none; }
+}
