@@ -6,23 +6,67 @@ Everything runs locally and needs no accounts. This file collects what changes w
 
 | What | Status | Needed from |
 | --- | --- | --- |
-| Photographs | placeholders in `public/images/` | launch |
-| Studio name, copy, contacts | Still Hours placeholders in `src/data/site.ts` | launch |
+| Photographs | Unsplash placeholders in `src/assets/work/` (see [Placeholder photographs](#placeholder-photographs)) | launch |
+| Studio name, copy, contacts | Robin Hale placeholders in `src/data/site.ts` | launch |
 | Enquiry form endpoint | not set — falls back to `mailto:` | launch |
-| Site URL | `https://stillhours.co` placeholder in `astro.config.mjs` | launch |
+| Site URL | `https://robinhale.studio` placeholder in `astro.config.mjs` | launch |
 | Hosting | not chosen (any static host) | launch |
 | WhatsApp / Messenger | not set | 002 |
 | Availability dates | demo data | 002 |
-| City list | — | 004 |
+| Area and city list | — | 004 |
 | Video hosting | — | 005 |
 | Client gallery service | — (demo only) | 006 |
 
 ## Content to swap
 
-1. **Photographs:** replace every file in `public/images/` with the client's work. Keep the file names or update `src/data/site.ts`. Ratios: 4:5 for people, 3:2 for rooms, 16:9 for slides. The `/work/` gallery packs without holes only for the current mix and order of frame sizes (default, tall, wide, half); when the frame list changes, run `npm run ui-check` and look at the work screenshots.
-2. **`src/data/site.ts`:** name, description, email, phone, Instagram, client-galleries link, days, frames, plans. Set `demo: false` (once spec 002 adds the flag) so demo-only features disappear.
+1. **Photographs:** put the client's work into `src/assets/work/` (JPG, kebab-case names, about 2400px on the long edge) and point the imports at the top of `src/data/site.ts` to them: project covers (`projects`), the `/work/` gallery (`frames`), the hero (`hero.image`) and the page photos (`pictures`); each has an `alt` that describes what is in the picture. `astro:assets` builds the AVIF/WebP sizes; the default share image is the hero at 1200px. Delete the placeholders listed below. Ratios: 4:5 for people, 3:2 for rooms, 16:9 for slides; keep the subject near the centre, the slider crops to 4:5 on phones. The `/work/` gallery packs without holes only for certain mixes and orders of frame sizes (default, tall, wide, half); when the frame list changes, run `npm run ui-check` and look at the work screenshots at 375px and 1280px.
+2. **`src/data/site.ts`:** name, description, email, phone, Instagram, client-galleries link, projects, frames, pictures, plans. Set `demo: false` (once spec 002 adds the flag) so demo-only features disappear.
 3. **Copy in pages:** home, studio, rates (add-ons, FAQ) and contact still hold some copy in markup; specs move it into `src/data/` as they touch it.
-4. **Privacy page:** have the text reviewed for the client's country (GDPR for Poland / EU).
+4. **Privacy page:** have the text reviewed for the client's country (UK GDPR for the UK; the EU's GDPR elsewhere in the EU).
+
+## Placeholder photographs
+
+Every photograph in `src/assets/work/` is a stand-in from [Unsplash](https://unsplash.com), free to use under the [Unsplash License](https://unsplash.com/license). **Replace them all with the client's own work before launch**: the demo must never go live with stock photos presented as the photographer's.
+
+| File | Used on | Source | Photographer | Licence |
+| --- | --- | --- | --- | --- |
+| `hero-team-portrait-studio.jpg` | Home hero, default share image | https://unsplash.com/photos/a-group-of-people-sitting-on-a-stage-80sYJlDB9mM | [isaac macdonald](https://unsplash.com/@isaacmacdonald) | Unsplash License |
+
+| `fold-drum-roaster-floor.jpg` | Fold Coffee cover; /work/ | https://unsplash.com/photos/a-coffee-roaster-roasts-coffee-beans-in-a-large-factory-4DnLpTVy13s | [Zoshua Colah](https://unsplash.com/@zoshuacolah) | Unsplash License |
+
+| `marlow-finch-street-coat.jpg` | Marlow & Finch cover; /work/ | https://unsplash.com/photos/a-woman-in-a-black-coat-and-sunglasses-standing-in-the-middle-of-a-street-onp4bTOtQO8 | [Dawid Kalinowski](https://unsplash.com/@kalinoovsky) | Unsplash License |
+
+| `oriel-amber-droppers-window-light.jpg` | Oriel Skincare cover; /work/ | https://unsplash.com/photos/three-bottles-of-essential-oils-sitting-on-a-shelf-yoxlQMq-Sbk | [Cosmin Ursea](https://unsplash.com/@cosminursea) | Unsplash License |
+
+| `northline-headshot-laughing.jpg` | /work/ | https://unsplash.com/photos/smiling-woman-in-white-and-black-checkered-dress-shirt-MQ2xYBHImKM | [Compagnons](https://unsplash.com/@sigmund) | Unsplash License |
+
+| `northline-team-reviewing-prints.jpg` | Northline Architects cover | https://unsplash.com/photos/people-reviewing-documents-in-workspace-wR56AUlEsE4 | [Andreea Avramescu](https://unsplash.com/@minakko) | Unsplash License |
+
+| `saltroom-long-table.jpg` | Saltroom cover; /work/ | https://unsplash.com/photos/clear-glass-cup-on-brown-wooden-table-sQopSb2K0CU | [Andrew Seaman](https://unsplash.com/@amseaman) | Unsplash License |
+
+| `kiln-hands-on-wheel.jpg` | Kiln Ceramics cover; /work/ | https://unsplash.com/photos/person-making-clay-pot-with-clay-urvFvoiK1f4 | [Earl Wilcox](https://unsplash.com/@earl_plannerzone) | Unsplash License |
+
+| `trench-coat-empty-street.jpg` | /work/ | https://unsplash.com/photos/woman-in-brown-coat-standing-on-road-during-daytime-w-83h_clkvI | [weston m](https://unsplash.com/@shootnmatch) | Unsplash License |
+
+| `amber-dropper-window-shadow.jpg` | /work/ | https://unsplash.com/photos/brown-glass-bottle-on-white-table-b9KAwJRBXgw | [Kadarius Seegars](https://unsplash.com/@kseegars) | Unsplash License |
+
+| `portrait-by-the-window.jpg` | /work/ | https://unsplash.com/photos/a-man-sitting-in-a-chair-looking-at-a-laptop-LfHnDDULNBY | [Richard Stachmann](https://unsplash.com/@stachmann) | Unsplash License |
+
+| `camera-operator-warehouse.jpg` | /work/ | https://unsplash.com/photos/man-holding-camcorder-with-man-near-wall-9pRbuWJ6TvQ | [Jakob Owens](https://unsplash.com/@jakobowens1) | Unsplash License |
+
+| `coffee-beans-sample-scoop.jpg` | /work/ | https://unsplash.com/photos/hand-holding-a-scoop-of-roasted-coffee-beans-tnilk4TohRQ | [Navid Abedi](https://unsplash.com/@inaveed) | Unsplash License |
+
+| `film-set-firelight.jpg` | /work/ | https://unsplash.com/photos/a-couple-of-people-standing-in-front-of-a-camera-t5xk1J6zaH8 | [Oleg Brovchenko](https://unsplash.com/@olegbrovchenko) | Unsplash License |
+
+| `photographer-in-studio.jpg` | Studio, portrait | https://unsplash.com/photos/man-in-black-t-shirt-holding-black-dslr-camera-UOBgu1hEj0o | [Colin Lloyd](https://unsplash.com/@onthesearchforpineapples) | Unsplash License |
+
+| `on-set-fashion-shoot.jpg` | Home, how it works | https://unsplash.com/photos/a-photographer-taking-a-picture-of-a-woman-in-a-black-outfit-Qy-LgJuED0o | [Lana Mattice](https://unsplash.com/@lanamattice) | Unsplash License |
+
+| `reviewing-takes-on-monitor.jpg` | Studio, second block | https://unsplash.com/photos/man-in-white-crew-neck-t-shirt-wearing-black-sunglasses-JbcOtH0W6UQ | [Gordon Cowie](https://unsplash.com/@gcowie) | Unsplash License |
+
+| `studio-set-armchair.jpg` | Contact | https://unsplash.com/photos/a-white-chair-and-a-lamp-in-a-room-SIkG917dQ90 | [isaac macdonald](https://unsplash.com/@isaacmacdonald) | Unsplash License |
+
+| `choosing-prints-table.jpg` | Rates | https://unsplash.com/photos/people-are-arranging-photos-on-a-table-7Q31yspx1tQ | [Vitaly Gariev](https://unsplash.com/@silverkblack) | Unsplash License |
 
 ## Enquiry form
 

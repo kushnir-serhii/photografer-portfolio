@@ -45,7 +45,7 @@ None.
 - The `/work/` gallery packs without holes only for the current mix of frame sizes; a client's different list can leave holes again (noted in `docs/setup.md`). A masonry layout would remove the dependency; not done.
 - The custom cursor dot stays lime in Day (it sits behind a dark "View" label). Acceptable?
 - Home: packages → testimonial keeps its full gap (a background change, same as every band edge). Tighten band edges site-wide?
-- Placeholder photos are tiny, blurred JPEGs and the copy still says weddings / Poznań / 2026: both are replaced by spec 008, not fixed here.
+- Placeholder photos are tiny, blurred JPEGs and the copy still describes the earlier niche and city: both are replaced by spec 008, not fixed here.
 - A full-page screenshot of `/` at 1280 Night is sometimes 173px taller than the page, with an empty band under the footer. Measured in the browser the page is the same height in both themes (6057px), so it is a capture artifact, not a page bug.
 - **Decided (2026-11-02):** Chromium only; WebKit stays a later option (large download).
 - **Decided:** slice 2 fixes everything the run finds (layout breaks and smaller visual flaws), within the existing design system, even if 008 may rework it later.

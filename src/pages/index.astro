@@ -8,80 +8,84 @@ import StoryBlock from '../components/StoryBlock.astro';
 import Packages from '../components/Packages.astro';
 import Testimonial from '../components/Testimonial.astro';
 import ClosingCta from '../components/ClosingCta.astro';
-import { days, plans, site } from '../data/site';
+import {
+  projects, plans, hero, marquee, testimonial, categories, pictures,
+  intro, howItWorks, packagesIntro, sectorRows,
+} from '../data/site';
 ---
 <BaseLayout>
   <Hero
-    image="/images/two-people-at-the-end-of-the-night.jpg"
-    alt="Two people at the end of the night"
-    eyebrow={`Poznań — worldwide — ${site.year} dates open`}
-    title="Not the wedding. The day."
-    disciplines="Weddings · Families · Elopements · Editorial"
+    image={hero.image}
+    alt={hero.alt}
+    eyebrow={hero.eyebrow}
+    title={hero.title}
+    lead={hero.lead}
+    disciplines={categories.filter((c) => c.id !== 'all').map((c) => c.label).join(' · ')}
   >
-    <a class="sh-btn sh-btn--primary" href="/contact/" data-magnetic="0.25">Check my date</a>
+    <a class="sh-btn sh-btn--primary" href="/contact/" data-magnetic="0.25">Book a shoot</a>
     <a class="sh-btn sh-btn--on-image" href="/work/">Selected work</a>
   </Hero>
 
   <div id="after-hero">
-    <Marquee accent speed={20} items={[`${site.year} dates open`, 'Four days left in June', `Now taking ${site.year + 1}`]} />
+    <Marquee accent speed={20} items={marquee} />
   </div>
 
   <section class="sh-section">
     <div class="sh-container">
-      <div style="display:grid;gap:32px;max-width:960px;">
-        <h2 class="sh-d-l" data-split>We photograph the parts of a day nobody thinks to ask for.</h2>
-        <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140" style="margin:0;">
-          The kitchen at eight in the morning. Your mother's face during the vows. The twenty minutes when everyone
-          finally sits down. Two or three weddings a month, on purpose.
-        </p>
+      <div class="sh-intro">
+        <h2 class="sh-d-l" data-split>{intro.title}</h2>
+        <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140">{intro.lead}</p>
       </div>
     </div>
   </section>
 
   <section class="sh-section sh-section--flush">
     <div class="sh-container--wide">
-      <div class="sh-section-head" style="margin-bottom:24px;">
-        <h2 class="sh-d-l" data-split style="margin:0;">Selected days</h2>
+      <div class="sh-section-head">
+        <h2 class="sh-d-l" data-split>Selected projects</h2>
         <p class="sh-meta" data-reveal>Drag · or use the arrows</p>
       </div>
-      <Slider days={days} label="Selected days" autoplay={5600} />
+      <Slider projects={projects} label="Selected projects" autoplay={5600} />
     </div>
   </section>
 
   <section class="sh-section">
     <div class="sh-container">
       <div class="sh-section-head">
-        <h2 class="sh-d-l" data-split style="margin:0;">The index</h2>
+        <h2 class="sh-d-l" data-split>What I shoot</h2>
         <a class="sh-link" href="/work/">All work</a>
       </div>
-      <IndexList days={days} />
+      <IndexList rows={sectorRows} />
     </div>
   </section>
 
   <section class="sh-section sh-section--band">
     <div class="sh-container">
-      <StoryBlock image="/images/getting-ready-in-the-morning.jpg" alt="Getting ready in the morning">
-        <p class="sh-meta" data-reveal>How it works</p>
-        <h2 class="sh-d-l" data-split>We are there before anything starts</h2>
-        <p class="sh-muted sh-measure" data-reveal data-reveal-delay="120" style="margin:0;">
-          A walk through the day, a look at where the light lands, a plan for the twenty minutes that actually matter.
-          By the morning itself we are people you already know.
-        </p>
-        <p class="sh-muted sh-measure" data-reveal data-reveal-delay="180" style="margin:0;">
-          Then we disappear. You will mostly forget we are there — and four weeks later the gallery gives the whole
-          thing back.
-        </p>
-        <p style="margin:0;" data-reveal data-reveal-delay="240"><a class="sh-link" href="/studio/">Read the full approach</a></p>
+      <StoryBlock image={pictures.howItWorks.src} alt={pictures.howItWorks.alt}>
+        <p class="sh-meta" data-reveal>{howItWorks.eyebrow}</p>
+        <h2 class="sh-d-l" data-split>{howItWorks.title}</h2>
+        <ol class="sh-steps">
+          {howItWorks.steps.map((step, i) => (
+            <li class="sh-steps__item" data-reveal data-reveal-delay={String(120 + i * 60)}>
+              <span class="sh-steps__no">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="sh-d-s">{step.title}</h3>
+                <p class="sh-muted sh-body-s sh-steps__text">{step.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <p data-reveal data-reveal-delay="380"><a class="sh-link" href="/studio/">Read the full approach</a></p>
       </StoryBlock>
     </div>
   </section>
 
   <section class="sh-section">
     <div class="sh-container">
-      <div style="max-width:720px;margin-bottom:36px;">
-        <p class="sh-meta" data-reveal style="margin-bottom:18px;">Rates</p>
-        <h2 class="sh-d-l" data-split style="margin:0 0 16px;">Prices in the open</h2>
-        <p class="sh-muted" data-reveal data-reveal-delay="140" style="margin:0;">So you can decide in private, before writing to anyone.</p>
+      <div class="sh-block-head">
+        <p class="sh-meta" data-reveal>{packagesIntro.eyebrow}</p>
+        <h2 class="sh-d-l" data-split>{packagesIntro.title}</h2>
+        <p class="sh-muted" data-reveal data-reveal-delay="140">{packagesIntro.lead}</p>
       </div>
     </div>
     <Packages plans={plans} />
@@ -89,10 +93,7 @@ import { days, plans, site } from '../data/site';
 
   <section class="sh-section sh-section--band">
     <div class="sh-container">
-      <Testimonial
-        quote="We forgot he was there, and then the gallery arrived and we got the whole day back."
-        by="Marta & Jakub — September, Wielkopolska"
-      />
+      <Testimonial quote={testimonial.quote} by={testimonial.by} role={testimonial.role} />
     </div>
   </section>
 

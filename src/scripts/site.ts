@@ -63,25 +63,40 @@ document.addEventListener('astro:page-load', () => {
 
 function initGalleries() {
   document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
-    const chips = gallery.querySelectorAll<HTMLButtonElement>('[data-filter]');
+    const chips = Array.from(gallery.querySelectorAll<HTMLButtonElement>('[data-filter]'));
     const items = gallery.querySelectorAll<HTMLElement>('[data-category]');
     const empty = gallery.querySelector<HTMLElement>('[data-gallery-empty]');
-    chips.forEach((chip) => {
-      chip.addEventListener('click', () => {
-        const id = chip.dataset.filter;
-        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
-        let shown = 0;
-        items.forEach((item) => {
-          const match = id === 'all' || item.dataset.category === id;
-          item.hidden = !match;
-          if (match) {
-            item.classList.add('is-in');
-            shown++;
-          }
-        });
-        if (empty) empty.hidden = shown > 0;
+    const known = new Set(chips.map((c) => c.dataset.filter));
+
+    function apply(id: string) {
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === id)));
+      let shown = 0;
+      items.forEach((item) => {
+        const match = id === 'all' || item.dataset.category === id;
+        item.hidden = !match;
+        if (match) {
+          item.classList.add('is-in');
+          shown++;
+        }
       });
-    });
+      if (empty) empty.hidden = shown > 0;
+    }
+
+    function select(id: string) {
+      apply(id);
+      // Keep the address in step so a filtered view can be shared; "all" drops the parameter.
+      const url = new URL(location.href);
+      if (id === 'all') url.searchParams.delete('category');
+      else url.searchParams.set('category', id);
+      history.replaceState(history.state, '', url);
+    }
+
+    chips.forEach((chip) => chip.addEventListener('click', () => select(chip.dataset.filter ?? 'all')));
+    gallery.querySelector('[data-filter-reset]')?.addEventListener('click', () => select('all'));
+
+    // /work/?category=food opens with that filter on. Unknown values are ignored.
+    const wanted = new URLSearchParams(location.search).get('category');
+    if (wanted && wanted !== 'all' && known.has(wanted)) apply(wanted);
   });
 }
 

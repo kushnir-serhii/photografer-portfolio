@@ -1,12 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Not found">
+<BaseLayout title="Not found" description="This page isn't here. It may have moved; the work and the rates are a click away.">
   <section class="sh-section sh-section--huge">
-    <div class="sh-container" style="text-align:center;">
-      <p class="sh-meta" style="margin-bottom:18px;">404</p>
-      <h1 class="sh-d-xl" style="margin:0 auto 28px;max-width:14ch;">This page is not here</h1>
-      <a class="sh-btn sh-btn--primary sh-btn--lg" href="/">Back to the start</a>
+    <div class="sh-container sh-notfound">
+      <p class="sh-meta sh-notfound__code">404</p>
+      <h1 class="sh-d-xl sh-notfound__title">This page isn't here</h1>
+      <p class="sh-lead sh-notfound__lead">It may have moved. The work and the rates are a click away.</p>
+      <div class="sh-notfound__actions">
+        <a class="sh-btn sh-btn--primary sh-btn--lg" href="/">Back to the start</a>
+        <a class="sh-btn sh-btn--outline sh-btn--lg" href="/work/">See the work</a>
+      </div>
     </div>
   </section>
 </BaseLayout>

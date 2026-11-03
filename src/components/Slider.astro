@@ -1,29 +1,41 @@
 ---
-import type { Day } from '../data/site';
+import { Picture } from 'astro:assets';
+import type { Project } from '../data/site';
 import Icon from './Icon.astro';
 
 interface Props {
-  days: Day[];
+  projects: Project[];
   label: string;
   autoplay?: number;
 }
-const { days, label, autoplay } = Astro.props;
-const total = String(days.length).padStart(2, '0');
+const { projects, label, autoplay } = Astro.props;
+const total = String(projects.length).padStart(2, '0');
 ---
 <div class="sh-slider" data-slider data-slider-autoplay={autoplay} tabindex="0" aria-label={label}>
   <div class="sh-slider__viewport">
     <div class="sh-slider__track">
-      {days.map((day, i) => (
-        <article class="sh-slide" aria-label={`${i + 1} of ${days.length}`}>
+      {projects.map((project, i) => (
+        <article class="sh-slide" aria-label={`${i + 1} of ${projects.length}`}>
           <div class="sh-slide__media" data-cursor-label="Drag">
-            <img class="sh-img" alt={day.alt} src={day.image} loading={i === 0 ? 'eager' : 'lazy'} draggable="false" />
+            <Picture
+              class="sh-img"
+              pictureAttributes={{ class: 'sh-pic' }}
+              src={project.image}
+              alt={project.alt}
+              style={project.focus ? `object-position: ${project.focus}` : undefined}
+              formats={['avif', 'webp']}
+              widths={[480, 800, 1200, 1600, 2400]}
+              sizes="(min-width: 1440px) 1344px, (min-width: 721px) calc(100vw - 96px), calc(100vw - 48px)"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              draggable="false"
+            />
           </div>
           <div class="sh-slide__cap">
             <div>
-              <p class="sh-meta">{day.kind} — {day.month} — {day.place}</p>
-              <h3 class="sh-d-m" style="margin-top:8px;">{day.title}</h3>
+              <p class="sh-meta">{project.client} — {project.month} {project.year} — {project.area}</p>
+              <h3 class="sh-d-m" style="margin-top:8px;">{project.title}</h3>
             </div>
-            <a class="sh-btn sh-btn--on-image" href="/work/">{day.cta}</a>
+            <a class="sh-btn sh-btn--on-image" href={`/work/#${project.slug}`}>{project.cta}</a>
           </div>
         </article>
       ))}

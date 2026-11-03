@@ -23,6 +23,13 @@
   --success: #7ce0a0;
   --danger: #ff8a73;
   --glow-accent: 0 0 0 1px rgba(212, 255, 63, 0.4), 0 12px 40px rgba(212, 255, 63, 0.18);
+  /* Selected text: brand lime with dark ink. */
+  --selection-bg: #d4ff3f;
+  --selection-ink: #08080a;
+  /* Pop-up surfaces (the select's option list): raised panel, its shadow, and a lime wash for the highlighted row. */
+  --surface-pop: #1a1a1e;
+  --shadow-pop: 0 18px 48px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --accent-wash: rgba(212, 255, 63, 0.12);
 }
 
 :root[data-theme="day"] {
@@ -45,6 +52,11 @@
   --success: #1d6b3f;
   --danger: #b4291a;
   --glow-accent: 0 0 0 1px rgba(76, 99, 0, 0.3), 0 12px 32px rgba(76, 99, 0, 0.12);
+  --selection-bg: #bdf227;
+  --selection-ink: #0a0a0b;
+  --surface-pop: #f9f9f7;
+  --shadow-pop: 0 18px 40px rgba(10, 10, 11, 0.14), 0 2px 8px rgba(10, 10, 11, 0.08);
+  --accent-wash: rgba(95, 124, 0, 0.14);
 }
 
 :root {

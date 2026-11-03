@@ -1,14 +1,22 @@
 ---
-import { categories, type Frame } from '../data/site';
+import { Picture } from 'astro:assets';
+import { categories, workPage, type Frame, type GallerySize } from '../data/site';
 
 interface Props {
   frames: Frame[];
 }
 const { frames } = Astro.props;
 const delays = [0, 90, 150];
+// Rendered width of each size: 12 grid columns above 860px, 6 below.
+const sizes: Record<GallerySize, string> = {
+  default: '(min-width: 861px) 33vw, 50vw',
+  tall: '(min-width: 861px) 33vw, 50vw',
+  wide: '(min-width: 861px) 66vw, 100vw',
+  half: '50vw',
+};
 ---
 <div data-gallery>
-  <div class="sh-container" style="margin-bottom:24px;">
+  <div class="sh-container sh-gallery__bar">
     <div class="sh-filters" role="group" aria-label="Filter the work">
       {categories.map((c, i) => (
         <button class="sh-chip" type="button" data-filter={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>{c.label}</button>
@@ -20,20 +28,31 @@ const delays = [0, 90, 150];
       {frames.map((frame, i) => (
         <figure
           class:list={['sh-gallery__item', 'sh-frame', frame.size !== 'default' && `sh-gallery__item--${frame.size}`]}
-          style="margin:0;"
           data-category={frame.category}
           data-reveal="clip"
           data-reveal-delay={delays[i % 3] || undefined}
           data-cursor-label="View"
         >
-          <img class="sh-img" alt={frame.alt} src={frame.src} loading="lazy" />
+          <Picture
+            class="sh-img"
+            pictureAttributes={{ class: 'sh-pic' }}
+            src={frame.src}
+            alt={frame.alt}
+            formats={['avif', 'webp']}
+            widths={[400, 640, 960, 1280, 1600]}
+            sizes={sizes[frame.size]}
+            loading="lazy"
+          />
         </figure>
       ))}
     </div>
-    <p class="sh-meta" data-gallery-empty hidden style="margin-top:28px;">Nothing in this set yet.</p>
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:28px;">
-      <p class="sh-meta">98 frames · 12 days · full galleries sent privately</p>
-      <a class="sh-btn sh-btn--outline" href="/contact/">Ask for a full gallery</a>
+    <div class="sh-gallery__empty" data-gallery-empty hidden>
+      <p class="sh-meta">{workPage.emptyText}</p>
+      <button class="sh-btn sh-btn--outline" type="button" data-filter-reset>{workPage.emptyAction}</button>
+    </div>
+    <div class="sh-gallery__foot">
+      <p class="sh-meta">{workPage.galleryNote}</p>
+      <a class="sh-btn sh-btn--outline" href="/contact/">{workPage.galleryCta}</a>
     </div>
   </div>
 </div>

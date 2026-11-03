@@ -73,7 +73,7 @@ Arguments: none (next slice from the plan) · `002` (next open slice of that spe
    ```sh
    SPEC=<spec #> ROUTES=<route>,<route> npm run ui-check
    ```
-   (PowerShell: `$env:SPEC='002'; $env:ROUTES='root,contact'; npm run ui-check`.) Routes go without the leading or trailing slash (`rates,cities/wroclaw`; `root` is `/`). Every route is opened at 375px and 1280px, in Night and Day. It fails on console or page errors and on horizontal scroll, and saves full-page screenshots to `e2e/screenshots/<spec #>/` (git-ignored). Look at every screenshot against the spec and [conventions.md](conventions.md). Fix what's wrong like a slice (commit `fix: <spec #> — <summary>`), then run it again.
+   (PowerShell: `$env:SPEC='002'; $env:ROUTES='root,contact'; npm run ui-check`.) Routes go without the leading or trailing slash (`rates,brand-photographer/shoreditch`; `root` is `/`). Every route is opened at 375px and 1280px, in Night and Day. It fails on console or page errors and on horizontal scroll, and saves full-page screenshots to `e2e/screenshots/<spec #>/` (git-ignored). Look at every screenshot against the spec and [conventions.md](conventions.md). Fix what's wrong like a slice (commit `fix: <spec #> — <summary>`), then run it again.
 9. **Report once, when the spec is done** (or blocked): what was built per slice, the commits, open questions, external needs (client data, accounts), what to look at (and where it fits in the demo story), and what comes next. You merge the branch (PR) into `main`.
 
 Scope changes go into the spec first, then into the code.
