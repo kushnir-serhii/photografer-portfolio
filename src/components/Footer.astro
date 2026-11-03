@@ -1,9 +1,10 @@
 ---
 import { nav, site } from '../data/site';
+import { areas, areaLabel, serviceArea } from '../data/areas';
 ---
 <footer class="sh-footer">
   <div class="sh-container">
-    <div class="sh-footer__cols">
+    <div class="sh-footer__cols sh-footer__cols--4">
       <div>
         <p class="sh-d-s" style="margin:0 0 12px;">Booking from {site.season}.</p>
         <p class="sh-muted sh-body-s" style="max-width:32ch;margin:0 0 20px;">Brand, food, product and team photography in London, and wherever the work is.</p>
@@ -22,6 +23,12 @@ import { nav, site } from '../data/site';
           <li><a href={site.phoneHref}>{site.phone}</a></li>
           <li><a href={site.instagram} rel="noopener">Instagram</a></li>
           <li><a href={site.clientGalleries}>Client galleries</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="sh-meta" style="margin-bottom:16px;">{serviceArea.footerTitle}</p>
+        <ul class="sh-footer__list sh-footer__list--areas">
+          {areas.map((a) => <li><a href={`/brand-photographer/${a.slug}/`}>{areaLabel(a)}</a></li>)}
         </ul>
       </div>
     </div>

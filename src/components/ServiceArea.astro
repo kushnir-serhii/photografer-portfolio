@@ -1,0 +1,221 @@
+---
+// "Where I work": a schematic map built from the areas' coordinates, and the same links as a grouped list.
+// The list is the accessible path (headings, one tab stop per area); the map repeats it for the eye, so it is
+// aria-hidden and its links are out of the tab order (still clickable and tappable).
+// Both map panels fit themselves to the data: the country panel to the cities plus the home city,
+// the home inset (region 'london') to its areas. A client changes areas.ts only.
+import { areas as allAreas, regionLabels, areaLabel, serviceArea as copy, type Area, type AreaRegion, type GeoPoint, type MapLabelSide } from '../data/areas';
+
+interface Props {
+  areas?: Area[];
+}
+const { areas = allAreas } = Astro.props;
+
+const regions = Object.keys(regionLabels) as AreaRegion[]; // keys of a Record<AreaRegion, …>: always AreaRegion
+const groups = regions
+  .map((region) => ({ region, label: regionLabels[region], items: areas.filter((a) => a.region === region) }))
+  .filter((g) => g.items.length > 0);
+// One running number per area, in list order: the key between list and map (numbers stand in for names on phones).
+const ordered = groups.flatMap((g) => g.items);
+const numberOf = (a: Area) => String(ordered.indexOf(a) + 1).padStart(2, '0');
+
+// ---- geometry (viewBox 400 x 300; the canvas keeps this ratio so % positions match the SVG) ----
+const W = 400;
+const H = 300;
+interface Box { x: number; y: number; w: number; h: number }
+interface Pt { x: number; y: number }
+
+const home = ordered.filter((a) => a.region === 'london');
+const away = ordered.filter((a) => a.region !== 'london');
+
+// Equirectangular projection fitted into a box, with a minimum span so one point doesn't explode the scale.
+function fit(points: GeoPoint[], box: Box, minSpan: number, pad: number) {
+  const lats = points.map((p) => p.lat);
+  const lons = points.map((p) => p.lon);
+  const midLat = (Math.min(...lats) + Math.max(...lats)) / 2;
+  const k = Math.cos((midLat * Math.PI) / 180);
+  const x0 = Math.min(...lons) * k;
+  const x1 = Math.max(...lons) * k;
+  const y0 = Math.min(...lats);
+  const y1 = Math.max(...lats);
+  const spanX = Math.max(x1 - x0, minSpan * k) * (1 + pad * 2);
+  const spanY = Math.max(y1 - y0, minSpan) * (1 + pad * 2);
+  const s = Math.min(box.w / spanX, box.h / spanY);
+  const cx = (x0 + x1) / 2;
+  const cy = (y0 + y1) / 2;
+  const project = (p: GeoPoint): Pt => ({
+    x: box.x + box.w / 2 + (p.lon * k - cx) * s,
+    y: box.y + box.h / 2 - (p.lat - cy) * s,
+  });
+  // The geographic window the box shows, for the graticule.
+  const view = {
+    lonMin: (cx - box.w / 2 / s) / k, lonMax: (cx + box.w / 2 / s) / k,
+    latMin: cy - box.h / 2 / s, latMax: cy + box.h / 2 / s,
+  };
+  return { project, view };
+}
+
+const centroid = (pts: GeoPoint[]): GeoPoint => ({
+  lat: pts.reduce((n, p) => n + p.lat, 0) / pts.length,
+  lon: pts.reduce((n, p) => n + p.lon, 0) / pts.length,
+});
+
+// Panels: the country on the left and the home inset on the right; either one alone takes the canvas.
+const countryBox: Box = home.length ? { x: 18, y: 22, w: 150, h: 256 } : { x: 40, y: 22, w: 320, h: 256 };
+const ring = home.length
+  ? (away.length ? { cx: 286, cy: 154, r: 102 } : { cx: W / 2, cy: H / 2, r: 128 })
+  : null;
+
+const homeCentre = home.length ? centroid(home.map((a) => a.map)) : null;
+const country = away.length ? fit([...away.map((a) => a.map), ...(homeCentre ? [homeCentre] : [])], countryBox, 1, 0.08) : null;
+const inner = ring ? { x: ring.cx - ring.r * 0.6, y: ring.cy - ring.r * 0.6, w: ring.r * 1.2, h: ring.r * 1.2 } : null;
+const inset = ring && inner ? fit(home.map((a) => a.map), inner, 0.02, 0.04) : null;
+
+// Graticule every whole degree inside the country panel.
+const graticule = country
+  ? {
+      lats: Array.from({ length: 40 }, (_, i) => Math.ceil(country.view.latMin) + i).filter((v) => v <= country.view.latMax),
+      lons: Array.from({ length: 40 }, (_, i) => Math.ceil(country.view.lonMin) + i).filter((v) => v <= country.view.lonMax),
+    }
+  : null;
+const deg = (v: number, pos: string, neg: string) => (v === 0 ? "0°" : `${Math.abs(v)}°${v > 0 ? pos : neg}`);
+
+// The river: a smooth curve through its points (Catmull-Rom as cubic Béziers), clipped to the ring.
+function smooth(pts: Pt[]): string {
+  if (pts.length < 2) return '';
+  const f = (n: number) => n.toFixed(1);
+  let d = `M${f(pts[0].x)} ${f(pts[0].y)}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(i - 1, 0)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(i + 2, pts.length - 1)];
+    d += ` C${f(p1.x + (p2.x - p0.x) / 6)} ${f(p1.y + (p2.y - p0.y) / 6)} ${f(p2.x - (p3.x - p1.x) / 6)} ${f(p2.y - (p3.y - p1.y) / 6)} ${f(p2.x)} ${f(p2.y)}`;
+  }
+  return d;
+}
+const riverPts = inset ? copy.map.river.points.map(inset.project) : [];
+const river = smooth(riverPts);
+// Its name sits on the westernmost stretch well inside the ring.
+const riverLabel = ring ? riverPts.find((p) => Math.hypot(p.x - ring.cx, p.y - ring.cy) < ring.r * 0.8) : undefined;
+
+// The home city's mark on the country panel, and a leader from it to the inset ring.
+const homeMark = country && homeCentre ? country.project(homeCentre) : null;
+const leader = homeMark && ring
+  ? (() => {
+      const dx = ring.cx - homeMark.x;
+      const dy = ring.cy - homeMark.y;
+      const len = Math.hypot(dx, dy);
+      return { x1: homeMark.x + (dx / len) * 7, y1: homeMark.y + (dy / len) * 7, x2: ring.cx - (dx / len) * ring.r, y2: ring.cy - (dy / len) * ring.r };
+    })()
+  : null;
+
+interface MapPoint { area: Area; pos: Pt; side: MapLabelSide }
+const points: MapPoint[] = [
+  ...(country ? away.map((area) => ({ area, pos: country.project(area.map), side: area.map.label ?? 'right' })) : []),
+  ...(inset ? home.map((area) => ({ area, pos: inset.project(area.map), side: area.map.label ?? 'right' })) : []),
+];
+const pct = (p: Pt) => `--x:${((p.x / W) * 100).toFixed(2)}%;--y:${((p.y / H) * 100).toFixed(2)}%`;
+const href = (a: Area) => `/brand-photographer/${a.slug}/`;
+---
+{ordered.length > 0 && (
+  <section class="sh-section" aria-labelledby="where-i-work">
+    <div class="sh-container sh-svc">
+      <div class="sh-block-head sh-svc__head">
+        <p class="sh-meta" data-reveal>{copy.eyebrow}</p>
+        <h2 class="sh-d-l" id="where-i-work" data-split>{copy.title}</h2>
+        <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140">{copy.lead}</p>
+      </div>
+
+      <div class="sh-svc__map" aria-hidden="true" data-reveal>
+        <div class="sh-svc__canvas">
+          <svg class="sh-svc__svg" viewBox={`0 0 ${W} ${H}`} focusable="false">
+            {ring && (
+              <defs>
+                <clipPath id="sh-svc-ring"><circle cx={ring.cx} cy={ring.cy} r={ring.r} /></clipPath>
+              </defs>
+            )}
+            {country && graticule && (
+              <g class="sh-svc__grid">
+                {graticule.lats.map((lat) => {
+                  const y = country.project({ lat, lon: 0 }).y;
+                  return (
+                    <>
+                      <line x1={countryBox.x} x2={countryBox.x + countryBox.w} y1={y} y2={y} />
+                      <text class="sh-svc__tick" x={countryBox.x} y={y - 3}>{deg(lat, 'N', 'S')}</text>
+                    </>
+                  );
+                })}
+                {graticule.lons.map((lon) => {
+                  const x = country.project({ lat: country.view.latMin, lon }).x;
+                  return (
+                    <>
+                      <line x1={x} x2={x} y1={countryBox.y} y2={countryBox.y + countryBox.h} />
+                      <text class="sh-svc__tick" x={x + 3} y={countryBox.y + countryBox.h}>{deg(lon, 'E', 'W')}</text>
+                    </>
+                  );
+                })}
+              </g>
+            )}
+            {leader && <line class="sh-svc__leader" x1={leader.x1} y1={leader.y1} x2={leader.x2} y2={leader.y2} />}
+            {homeMark && <circle class="sh-svc__home" cx={homeMark.x} cy={homeMark.y} r="5" />}
+            {ring && (
+              <g>
+                <circle class="sh-svc__ring-fill" cx={ring.cx} cy={ring.cy} r={ring.r} />
+                {river && <path class="sh-svc__river" d={river} clip-path="url(#sh-svc-ring)" />}
+                <circle class="sh-svc__ring" cx={ring.cx} cy={ring.cy} r={ring.r} pathLength="1" />
+              </g>
+            )}
+          </svg>
+
+          {homeMark && (
+            <span class="sh-svc__tag sh-svc__tag--home" style={pct(homeMark)}>{copy.map.home.name}</span>
+          )}
+          {country && <span class="sh-svc__caption sh-svc__caption--country">{copy.map.countryCaption}</span>}
+          {ring && (
+            <span class="sh-svc__tag sh-svc__tag--ring" style={pct({ x: ring.cx, y: ring.cy - ring.r })}>{copy.map.home.ring}</span>
+          )}
+          {river && riverLabel && (
+            <span class="sh-svc__river-name" style={pct(riverLabel)}>{copy.map.river.name}</span>
+          )}
+
+          {points.map((p, i) => (
+            <a
+              class={`sh-svc__pt sh-svc__pt--${p.side}`}
+              href={href(p.area)}
+              tabindex="-1"
+              style={`${pct(p.pos)};--i:${i}`}
+            >
+              <span class="sh-svc__dot"></span>
+              <span class="sh-svc__name">{areaLabel(p.area)}</span>
+              <span class="sh-svc__no">{numberOf(p.area)}</span>
+            </a>
+          ))}
+        </div>
+        <p class="sh-meta-s sh-svc__note">
+          {ring && <span>{copy.map.home.caption}</span>}
+          <span>{copy.map.note}</span>
+        </p>
+      </div>
+
+      <div class="sh-svc__list" role="group" aria-label={copy.listLabel}>
+        {groups.map((g) => (
+          <div class="sh-svc__group">
+            <h3 class="sh-meta sh-svc__group-title">{g.label}</h3>
+            <ul class="sh-svc__links">
+              {g.items.map((a) => (
+                <li>
+                  <a class="sh-svc__link" href={href(a)}>
+                    <span class="sh-svc__link-no" aria-hidden="true">{numberOf(a)}</span>
+                    <span class="sh-svc__link-name">{areaLabel(a)}</span>
+                    <span class="sh-svc__link-arrow" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

@@ -1,5 +1,6 @@
 // Builders for schema.org JSON-LD. Pages pass the result to BaseLayout's `schema` prop.
 import { site, business, type FaqItem } from './site';
+import { areas, areaLabel } from './areas';
 
 export type JsonLdObject = Record<string, unknown>;
 
@@ -21,7 +22,20 @@ function realProfile(url: string): string | undefined {
   }
 }
 
-export function businessSchema(siteUrl: URL | string, image: string, areaServed: string[] = business.areaServed): JsonLdObject {
+// London itself, then every area: London districts sit inside London, UK cities and destinations stand alone.
+function areaServed(): JsonLdObject[] {
+  const london: JsonLdObject = { '@type': 'City', name: site.city };
+  return [
+    london,
+    ...areas.map((area) =>
+      area.region === 'london'
+        ? { '@type': 'Place', name: areaLabel(area), containedInPlace: london }
+        : { '@type': area.region === 'uk' ? 'City' : 'Place', name: areaLabel(area) },
+    ),
+  ];
+}
+
+export function businessSchema(siteUrl: URL | string, image: string): JsonLdObject {
   const origin = new URL('/', siteUrl).href;
   const profile = realProfile(site.instagram);
   return {
@@ -40,7 +54,7 @@ export function businessSchema(siteUrl: URL | string, image: string, areaServed:
       addressRegion: business.region,
       addressCountry: business.country,
     },
-    areaServed: areaServed.map((name) => ({ '@type': 'Place', name })),
+    areaServed: areaServed(),
     priceRange: business.priceRange,
     ...(profile ? { sameAs: [profile] } : {}),
   };

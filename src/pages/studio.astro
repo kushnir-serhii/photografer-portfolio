@@ -4,6 +4,7 @@ import StoryBlock from '../components/StoryBlock.astro';
 import Marquee from '../components/Marquee.astro';
 import Testimonial from '../components/Testimonial.astro';
 import ClosingCta from '../components/ClosingCta.astro';
+import ServiceArea from '../components/ServiceArea.astro';
 import { pictures, studioPage as s, testimonial } from '../data/site';
 ---
 <BaseLayout title={s.title} description={s.description}>
@@ -73,6 +74,8 @@ import { pictures, studioPage as s, testimonial } from '../data/site';
       </div>
     </div>
   </section>
+
+  <ServiceArea />
 
   <section class="sh-section sh-section--band">
     <div class="sh-container">

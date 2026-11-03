@@ -51,8 +51,6 @@ export const business = {
   country: 'GB',
   // Ex VAT, from the cheapest to the dearest package. Per-package Offers with numeric prices come in spec 003.
   priceRange: '£120–£1,750',
-  // Place names for areaServed; slice 2 feeds this from the areas data set.
-  areaServed: [site.city],
 };
 
 export const nav = [

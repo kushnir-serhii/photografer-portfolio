@@ -94,7 +94,11 @@ Set `PUBLIC_FORM_ENDPOINT` in `.env` (and in the host's build env) to a form ser
 
 ## Site URL
 
-Set `site` in `astro.config.mjs` to the production domain (no trailing path). It sets canonical URLs and Open Graph image URLs.
+Set `site` in `astro.config.mjs` to the production domain (no trailing path). It sets canonical URLs and Open Graph image URLs, and the sitemap (`/sitemap-index.xml`) and `robots.txt` take the domain from it too.
+
+## Search
+
+After launch, submit `https://<domain>/sitemap-index.xml` in Google Search Console. Check `/`, `/rates/` and an area page in Google's Rich Results Test.
 
 ## Deploy
 

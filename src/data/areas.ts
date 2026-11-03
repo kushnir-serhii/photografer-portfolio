@@ -49,9 +49,19 @@ export interface Area {
   alt: string;
   // Optional CSS object-position for the wide crop, e.g. '50% 70%'.
   focus?: string;
-  // Rough position on the schematic service-area map (spec 004 slice 3), 0–100 on each axis.
-  map: { x: number; y: number };
+  // Where the point sits on the schematic service-area map (spec 004 slice 3): the place's real
+  // latitude and longitude (any map app shows them). London areas go in the London inset, the rest
+  // on the country map; both fit themselves to the points, so new areas need no other change.
+  // `label` moves the name to another side of the dot when two names would touch (default 'right').
+  map: GeoPoint & { label?: MapLabelSide };
 }
+
+export interface GeoPoint {
+  lat: number;
+  lon: number;
+}
+
+export type MapLabelSide = 'left' | 'right' | 'above' | 'below';
 
 const londonTravel = 'Inside the M25, so travel is included in every package.';
 const londonPrice = 'Half day £950, full day £1,750, ex VAT.';
@@ -77,7 +87,7 @@ export const areas: Area[] = [
     ],
     image: shoreditchHighStreet,
     alt: 'A man in a denim jacket looking up on a busy high street, a crate of flowers on a café table in front of him',
-    map: { x: 72, y: 79 },
+    map: { lat: 51.5246, lon: -0.0783 },
   },
   {
     slug: 'soho', name: 'Soho', region: 'london',
@@ -98,7 +108,7 @@ export const areas: Area[] = [
     ],
     image: sohoRainReflection,
     alt: 'A low view across a wet street, shopfronts and people reflected in a puddle',
-    map: { x: 69, y: 80 },
+    map: { lat: 51.5136, lon: -0.1365 },
   },
   {
     slug: 'kings-cross', name: "King's Cross", region: 'london',
@@ -109,7 +119,7 @@ export const areas: Area[] = [
     venues: ['Granary Square', 'Coal Drops Yard', "Regent's Canal towpath", 'Your office and meeting rooms'],
     image: kingsCrossCoalDropsYard,
     alt: 'A paved square with planted beds and benches, a person walking past brick buildings',
-    map: { x: 70, y: 77 },
+    map: { lat: 51.5347, lon: -0.1246 },
   },
   {
     slug: 'hackney', name: 'Hackney', region: 'london',
@@ -120,7 +130,7 @@ export const areas: Area[] = [
     venues: ['Canal-side warehouses', "Hackney Wick's painted walls", 'Queen Elizabeth Olympic Park', "Makers' studios and workshops"],
     image: hackneyWickGraffitiWall,
     alt: 'A man in a cap and green jacket walking past a long graffiti wall',
-    map: { x: 74, y: 78 },
+    map: { lat: 51.5433, lon: -0.0225, label: 'left' },
   },
   {
     slug: 'peckham', name: 'Peckham', region: 'london',
@@ -131,7 +141,7 @@ export const areas: Area[] = [
     venues: ['Rye Lane shopfronts', 'Railway arches', 'Peckham Levels', 'Rooftops before opening'],
     image: peckhamShopfront,
     alt: 'A man in the doorway of a bright money-transfer shopfront with yellow and blue signs',
-    map: { x: 72, y: 83 },
+    map: { lat: 51.4740, lon: -0.0690 },
   },
   {
     slug: 'manchester', name: 'Manchester', region: 'uk',
@@ -153,7 +163,7 @@ export const areas: Area[] = [
     ],
     image: manchesterFoggyStreet,
     alt: 'Cars with headlights on driving down a wide road that disappears into fog, bare trees on either side',
-    map: { x: 49, y: 52 },
+    map: { lat: 53.4808, lon: -2.2426 },
   },
   {
     slug: 'bristol', name: 'Bristol', region: 'uk',
@@ -165,7 +175,7 @@ export const areas: Area[] = [
     venues: ['Harbourside and Wapping Wharf', 'Stokes Croft', 'Studios in old warehouses'],
     image: bristolHarbourside,
     alt: 'A row of colourful terraced houses above the harbour at dusk, boats and their reflections on the water',
-    map: { x: 40, y: 80 },
+    map: { lat: 51.4545, lon: -2.5879 },
   },
   {
     slug: 'edinburgh', name: 'Edinburgh', region: 'uk',
@@ -178,7 +188,7 @@ export const areas: Area[] = [
     image: edinburghOldTown,
     alt: 'Looking down a narrow street between tall stone buildings, cars and buses on the road below',
     focus: '50% 62%',
-    map: { x: 44, y: 18 },
+    map: { lat: 55.9533, lon: -3.1883 },
   },
   {
     slug: 'cotswolds', name: 'the Cotswolds', region: 'destination',
@@ -200,7 +210,7 @@ export const areas: Area[] = [
     ],
     image: cotswoldsCastleCombe,
     alt: 'A village road lined with honey-coloured stone cottages under a blue sky',
-    map: { x: 46, y: 74 },
+    map: { lat: 51.8330, lon: -1.8433 },
   },
 ];
 
@@ -235,6 +245,41 @@ export const areaPage = {
     primary: 'Send a brief',
     call: 'or call / WhatsApp',
     meta: 'Every brief answered within two working days',
+  },
+};
+
+// The "Where I work" section on /studio/ and the footer column: a schematic map plus a grouped list.
+export const serviceArea = {
+  eyebrow: 'Where I work',
+  title: 'London first, the rest of the UK when the work calls',
+  lead: 'Travel inside the M25 is included in every package. Further out, travel is at cost and agreed in the quote.',
+  listLabel: 'Areas and cities',
+  footerTitle: 'Where I work',
+  // The map: the country around the cities, and an inset for the areas inside the home city.
+  map: {
+    countryCaption: 'Great Britain',
+    home: { name: 'London', ring: 'M25', caption: 'Inside the M25: travel included' },
+    // A river through the home inset, drawn from these points (west to east); leave empty for none.
+    river: {
+      name: 'Thames',
+      points: [
+        { lat: 51.468, lon: -0.214 },
+        { lat: 51.482, lon: -0.168 },
+        { lat: 51.486, lon: -0.127 },
+        { lat: 51.502, lon: -0.121 },
+        { lat: 51.509, lon: -0.104 },
+        { lat: 51.507, lon: -0.077 },
+        { lat: 51.503, lon: -0.052 },
+        { lat: 51.508, lon: -0.030 },
+        { lat: 51.500, lon: -0.024 },
+        { lat: 51.486, lon: -0.012 },
+        { lat: 51.494, lon: 0.006 },
+        { lat: 51.508, lon: 0.008 },
+        { lat: 51.503, lon: 0.050 },
+        { lat: 51.495, lon: 0.080 },
+      ] satisfies GeoPoint[],
+    },
+    note: 'Schematic, not to scale',
   },
 };
 
