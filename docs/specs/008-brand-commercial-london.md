@@ -109,6 +109,8 @@ Why: in review the design read as "not a wedding photographer", the name "Still 
 
 - **Open (photos):** `on-set-fashion-shoot.jpg` has a small light-maker mark on a softbox, cropped out at 4:5 but in the source file; on phones the hero group's faces sit behind the headline (contrast passes). Review with the photo set.
 
+- **Decided (2026-11-03):** the Fold Coffee cover (`fold-drum-roaster-floor.jpg`, possibly a well-known flagship roastery, no readable logo) stays.
+
 ## Log
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
