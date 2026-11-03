@@ -30,6 +30,9 @@
   --surface-pop: #1a1a1e;
   --shadow-pop: 0 18px 48px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
   --accent-wash: rgba(212, 255, 63, 0.12);
+  /* Text laid over a photograph on a scrim (film poster): light in both themes. */
+  --on-image: #f6f6f3;
+  --on-image-muted: #dcdcd7;
 }
 
 :root[data-theme="day"] {
@@ -57,6 +60,8 @@
   --surface-pop: #f9f9f7;
   --shadow-pop: 0 18px 40px rgba(10, 10, 11, 0.14), 0 2px 8px rgba(10, 10, 11, 0.08);
   --accent-wash: rgba(95, 124, 0, 0.14);
+  --on-image: #f6f6f3;
+  --on-image-muted: #dcdcd7;
 }
 
 :root {

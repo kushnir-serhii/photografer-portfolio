@@ -14,7 +14,7 @@ Everything runs locally and needs no accounts. This file collects what changes w
 | WhatsApp / Messenger | placeholder WhatsApp number (`site.whatsapp`), Messenger empty | launch |
 | Availability dates | demo data (`availability` in `src/data/site.ts`) | launch |
 | Area and city list | demo set of 9 (5 London areas, 3 UK cities, the Cotswolds) in `src/data/areas.ts` | launch |
-| Video hosting | — | 005 |
+| Films | three Pexels placeholder clips in `public/films/` (see [Placeholder films](#placeholder-films)) | launch |
 | Client gallery service | — (demo only) | 006 |
 
 ## Content to swap
@@ -24,6 +24,7 @@ Everything runs locally and needs no accounts. This file collects what changes w
 3a. **Quick contact and availability:** `site.whatsapp` is the client's WhatsApp number in international form, digits only (`447700900123`); empty hides the option. `site.messenger` is an m.me username, optional. The WhatsApp message templates are in `quickContact`. `availability` holds the first month (`from`), how many months to show, and the ISO dates that are booked or have only half a day left; the client (or you) updates it and rebuilds. Later it can be fed from the client's public Google Calendar iCal.
 3c. **Prices and the calculator:** every price is a number, ex VAT, in `src/data/site.ts`: `plans[].price` (a per-unit plan such as headshots also gets `qty` with min / max and the unit words) and `addOns` (`id` stable once published, it is in `?addons=`; `price`, `priceFrom` for "from" prices, `unit` such as "per image", optional `qty`). The marquee, the rates description, area price hints, `priceRange` and the `Offer` JSON-LD are built from these numbers. Currency and locale are `money` in `src/data/format.ts`. `budgetRanges` need a `max` per range so a quote can pick the budget on the brief. Calculator copy is in `calculatorCopy`.
 3b. **Areas:** `src/data/areas.ts` holds one entry per area page (`/brand-photographer/<slug>/`): `slug` (stable once published: it is the URL and the `?area=` value on `/contact/`), `name`, `region` (London, UK city or destination), a short first-person `intro`, the `travel` terms, a `priceHint`, optional `venues` (kinds of places or public places, never a business shown as a client) and an optional local `faq` (also published as `FAQPage` data), a street or city `image` with `alt` (optional `focus` for the wide crop), and `map` coordinates for the service-area map. Page copy is in `areaPage`. Link a project to an area with `areaSlug` in `projects`; an area without one shows recent work from elsewhere.
+3d. **Films:** `films` in `src/data/site.ts`: one entry per film with `client`, `title`, `duration`, a `poster` photo with `alt`, and a `source`: a self-hosted file (`{ type: 'file', src: '/films/<name>.mp4', captions?: '/films/<name>.vtt' }`, H.264 MP4, 720p, a few MB) or a hosted video (`{ type: 'vimeo' | 'youtube', id }`; YouTube plays from youtube-nocookie, Vimeo with `dnt=1`). Nothing loads before the visitor presses play. `filmReel.film` picks the film on the home page; a gallery frame plays a film when it has `film: '<id>'`. Add captions (WebVTT) for any film with speech.
 3. **Copy in pages:** home, studio, rates (FAQ) and contact still hold some copy in markup; specs move it into `src/data/` as they touch it.
 4. **Privacy page:** have the text reviewed for the client's country (UK GDPR for the UK; the EU's GDPR elsewhere in the EU).
 
@@ -88,6 +89,16 @@ Every photograph in `src/assets/work/` is a stand-in from [Unsplash](https://uns
 | `area-edinburgh-old-town.jpg` | /brand-photographer/edinburgh/ (photo, share image) | https://unsplash.com/photos/vehicles-traveling-on-street-in-between-buildings-during-daytime-7EMiFX17Eeg | Carly Reeves | Unsplash License |
 
 | `area-cotswolds-castle-combe.jpg` | /brand-photographer/cotswolds/ (photo, share image) | https://unsplash.com/photos/a-street-lined-with-old-stone-houses-under-a-blue-sky-SgqFUY7lT1o | George Ciobra | Unsplash License |
+
+## Placeholder films
+
+The clips in `public/films/` are stand-ins from [Pexels](https://www.pexels.com), free to use under the [Pexels License](https://www.pexels.com/license/). Replace them with the client's own films (or Vimeo/YouTube ids) before launch.
+
+| File | Used on | Source | Author | Licence |
+| --- | --- | --- | --- | --- |
+| `kiln-ceramics.mp4` | Home film reel; /work/ (Kiln frame) | https://www.pexels.com/video/molding-a-clay-pot-using-pottery-wheel-9363336/ | Mikhail Nilov | Pexels License |
+| `camera-operator-prep.mp4` | /work/ (camera operator frame) | https://www.pexels.com/video/a-cameraman-preparing-for-the-shooting-production-8089126/ | Ron Lach | Pexels License |
+| `crew-on-set.mp4` | /work/ (crew on set frame) | https://www.pexels.com/video/a-videographer-and-director-shooting-a-production-8089118/ | Ron Lach | Pexels License |
 
 ## Enquiry form
 

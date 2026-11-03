@@ -8,10 +8,14 @@ import StoryBlock from '../components/StoryBlock.astro';
 import Packages from '../components/Packages.astro';
 import Testimonial from '../components/Testimonial.astro';
 import ClosingCta from '../components/ClosingCta.astro';
+import FilmReel from '../components/FilmReel.astro';
 import {
   projects, plans, hero, marquee, testimonial, categories, pictures,
-  intro, howItWorks, packagesIntro, sectorRows, quickContact,
+  intro, howItWorks, packagesIntro, sectorRows, quickContact, films, filmReel,
 } from '../data/site';
+
+// The film the home reel plays; no film found, no section.
+const reelFilm = films.find((f) => f.id === filmReel.film);
 ---
 <BaseLayout>
   <Hero
@@ -49,6 +53,21 @@ import {
       <Slider projects={projects} label="Selected projects" autoplay={5600} />
     </div>
   </section>
+
+  {reelFilm && (
+    <section class="sh-section" aria-labelledby="film-reel-title">
+      <div class="sh-container">
+        <div class="sh-block-head">
+          <p class="sh-meta" data-reveal>{filmReel.eyebrow}</p>
+          <h2 class="sh-d-l" id="film-reel-title" data-split>{filmReel.title}</h2>
+          <p class="sh-lead" data-reveal data-reveal-delay="140">{filmReel.lead}</p>
+        </div>
+        <div data-reveal data-reveal-delay="200">
+          <FilmReel film={reelFilm} play={filmReel.play} />
+        </div>
+      </div>
+    </section>
+  )}
 
   <section class="sh-section">
     <div class="sh-container">

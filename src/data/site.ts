@@ -3,6 +3,7 @@
 import type { ImageMetadata } from 'astro';
 import type { AreaSlug } from './areas';
 import { formatPrice, priceText } from './format';
+import type { FilmSource } from './film';
 import heroTeamPortraitStudio from '../assets/work/hero-team-portrait-studio.jpg';
 import foldDrumRoasterFloor from '../assets/work/fold-drum-roaster-floor.jpg';
 import marlowFinchStreetCoat from '../assets/work/marlow-finch-street-coat.jpg';
@@ -120,6 +121,8 @@ export interface Frame {
   alt: string;
   size: GallerySize;
   category: Category;
+  // Id of a film in `films`: the frame plays it (film frames on /work/).
+  film?: string;
 }
 
 export const categories: { id: Category | 'all'; label: string }[] = [
@@ -138,15 +141,62 @@ export const frames: Frame[] = [
   { src: saltroomLongTable, alt: 'A long restaurant table laid with glasses and napkins, running towards a bright front window', size: 'wide', category: 'food' },
   { src: orielAmberDroppersWindowLight, alt: 'Three amber dropper bottles on a white ledge, crossed by low window light and long shadows', size: 'default', category: 'product' },
   { src: northlineHeadshotLaughing, alt: 'A woman in a checked shirt laughing towards the camera against a dark grey backdrop', size: 'default', category: 'portraits' },
-  { src: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel', size: 'default', category: 'film' },
+  { src: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel', size: 'default', category: 'film', film: 'kiln-ceramics' },
   { src: portraitByTheWindow, alt: 'A bearded man in a dark room, lit from the side by a tall window', size: 'half', category: 'portraits' },
-  { src: cameraOperatorWarehouse, alt: 'A camera operator checking the monitor of a cinema camera beside an actor in a warehouse', size: 'half', category: 'film' },
+  { src: cameraOperatorWarehouse, alt: 'A camera operator checking the monitor of a cinema camera beside an actor in a warehouse', size: 'half', category: 'film', film: 'camera-operator' },
   { src: amberDropperWindowShadow, alt: 'An amber dropper bottle on a wooden stand, striped by shadows from a window', size: 'tall', category: 'product' },
   { src: foldDrumRoasterFloor, alt: 'A large drum roaster turning freshly roasted beans in its cooling tray on a roastery floor under hanging lamps', size: 'wide', category: 'food' },
   { src: marlowFinchStreetCoat, alt: 'A woman in a black coat and sunglasses standing in a cobbled street lined with parked cars', size: 'default', category: 'brand' },
   { src: coffeeBeansSampleScoop, alt: "A hand holding a roaster's sample scoop full of coffee beans against a dark background", size: 'default', category: 'food' },
-  { src: filmSetFirelight, alt: 'A small film crew around a cinema camera in a firelit wooden room', size: 'default', category: 'film' },
+  { src: filmSetFirelight, alt: 'A small film crew around a cinema camera in a firelit wooden room', size: 'default', category: 'film', film: 'crew-on-set' },
 ];
+
+// ---------- films (home reel, film frames on /work/) ----------
+
+export type { FilmSource };
+
+export interface Film {
+  // Stable id, used by Frame.film and filmReel.film.
+  id: string;
+  client: string;
+  title: string;
+  // Length shown on the poster, "0:23".
+  duration: string;
+  // Poster: one of the gallery photos. Nothing of the film loads until it is played.
+  poster: ImageMetadata;
+  alt: string;
+  source: FilmSource;
+}
+
+// Demo clips are Pexels videos in public/films/ (720p, no sound; sources in docs/setup.md). For a client,
+// swap in their own mp4 files (add `captions: '/films/name.vtt'` for a WebVTT track) or a Vimeo / YouTube id:
+// `source: { type: 'vimeo', id: '76979871' }`.
+export const films: Film[] = [
+  {
+    id: 'kiln-ceramics', client: 'Kiln Ceramics', title: 'Hands, clay and a slow wheel', duration: '0:23',
+    poster: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel',
+    source: { type: 'file', src: '/films/kiln-ceramics.mp4' },
+  },
+  {
+    id: 'camera-operator', client: 'Behind the scenes', title: 'Lining up the first shot', duration: '0:25',
+    poster: cameraOperatorWarehouse, alt: 'A camera operator checking the monitor of a cinema camera beside an actor in a warehouse',
+    source: { type: 'file', src: '/films/camera-operator-prep.mp4' },
+  },
+  {
+    id: 'crew-on-set', client: 'Behind the scenes', title: 'A small crew, one long day', duration: '0:37',
+    poster: filmSetFirelight, alt: 'A small film crew around a cinema camera in a firelit wooden room',
+    source: { type: 'file', src: '/films/crew-on-set.mp4' },
+  },
+];
+
+// The reel on the home page. `film`: the id of the film it plays.
+export const filmReel = {
+  eyebrow: 'Film',
+  title: 'Stills and film, one crew',
+  lead: 'Short films for launches, websites and social, shot on the same day as the stills.',
+  film: 'kiln-ceramics',
+  play: 'Play film',
+};
 
 export interface Picture {
   src: ImageMetadata;
