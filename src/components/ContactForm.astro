@@ -2,10 +2,11 @@
 import { site, plans, shootTypes, budgetRanges, enquiryForm as copy } from '../data/site';
 import type { Plan } from '../data/site';
 import { areas } from '../data/areas';
+import { formatPrice } from '../data/format';
 import Icon from './Icon.astro';
 
 // Option text doubles as the submitted value, so the email reads "Full day — £1,750".
-const planText = (p: Plan) => `${p.name} — ${p.price}${p.unit === 'per shoot' ? '' : ` ${p.unit}`}`;
+const planText = (p: Plan) => `${p.name} — ${formatPrice(p.price)}${p.unit === 'per shoot' ? '' : ` ${p.unit}`}`;
 // Slug -> name for ?area=; the script fills the brief from it.
 const areaData = JSON.stringify(Object.fromEntries(areas.map((a) => [a.slug, a.name])));
 const action = site.formEndpoint || `mailto:${site.email}`;
@@ -64,7 +65,7 @@ const action = site.formEndpoint || `mailto:${site.email}`;
     <div class="sh-field">
       <label class="sh-label" for="c-budget">Budget, ex VAT</label>
       <select class="sh-select" id="c-budget" name="budget">
-        {budgetRanges.map((b) => <option>{b}</option>)}
+        {budgetRanges.map((b) => <option>{b.label}</option>)}
       </select>
     </div>
   </div>

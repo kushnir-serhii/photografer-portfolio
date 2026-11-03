@@ -4,10 +4,10 @@ import Packages from '../components/Packages.astro';
 import StoryBlock from '../components/StoryBlock.astro';
 import ClosingCta from '../components/ClosingCta.astro';
 import FaqList from '../components/FaqList.astro';
-import { faqSchema } from '../data/schema';
-import { plans, pictures, ratesPage, addOns, faq } from '../data/site';
+import { faqSchema, offersSchema } from '../data/schema';
+import { plans, pictures, ratesPage, addOns, addOnPriceText, faq } from '../data/site';
 ---
-<BaseLayout title={ratesPage.title} description={ratesPage.description} schema={[faqSchema(faq)]}>
+<BaseLayout title={ratesPage.title} description={ratesPage.description} schema={[faqSchema(faq), offersSchema(plans, Astro.site!)]}>
   <section class="sh-section">
     <div class="sh-container">
       <p class="sh-meta sh-head__eyebrow" data-reveal>{ratesPage.eyebrow}</p>
@@ -35,9 +35,13 @@ import { plans, pictures, ratesPage, addOns, faq } from '../data/site';
                 {a.name}
                 {a.detail && <span class="sh-addons__detail">{a.detail}</span>}
               </span>
-              <span class="sh-addons__price">{a.price}</span>
+              <span class="sh-addons__price">{addOnPriceText(a)}</span>
             </li>
           ))}
+          <li class="sh-addons__item">
+            <span class="sh-addons__name">{ratesPage.travel.name}</span>
+            <span class="sh-addons__price">{ratesPage.travel.price}</span>
+          </li>
         </ul>
         <p class="sh-meta-s">{ratesPage.addOnsNote}</p>
       </StoryBlock>

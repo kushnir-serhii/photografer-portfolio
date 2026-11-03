@@ -2,6 +2,7 @@
 // docs/setup.md): replace them with the photographer's own work before launch.
 import type { ImageMetadata } from 'astro';
 import type { AreaSlug } from './areas';
+import { formatPrice, priceText } from './format';
 import heroTeamPortraitStudio from '../assets/work/hero-team-portrait-studio.jpg';
 import foldDrumRoasterFloor from '../assets/work/fold-drum-roaster-floor.jpg';
 import marlowFinchStreetCoat from '../assets/work/marlow-finch-street-coat.jpg';
@@ -43,14 +44,6 @@ export const site = {
   formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined,
   // Shows demo-only features and their labels; set false for a real client's site.
   demo: true,
-};
-
-// Details used only for schema.org structured data (src/data/schema.ts). No street address: fictional.
-export const business = {
-  region: 'Greater London',
-  country: 'GB',
-  // Ex VAT, from the cheapest to the dearest package. Per-package Offers with numeric prices come in spec 003.
-  priceRange: '£120–£1,750',
 };
 
 export const nav = [
@@ -173,11 +166,22 @@ export const pictures = {
 // Stable ids used in URLs (?plan=full-day).
 export type PlanId = 'half-day' | 'full-day' | 'headshots';
 
+// A count the visitor can choose for a per-unit price. `one` / `many`: "person" / "people".
+export interface Quantity {
+  min: number;
+  max: number;
+  one: string;
+  many: string;
+}
+
 export interface Plan {
   id: PlanId;
   no: string;
   name: string;
-  price: string;
+  // Ex VAT, in pounds; shown through formatPrice (src/data/format.ts).
+  price: number;
+  // Set when the price is per unit (headshots: per person) and the visitor picks how many.
+  qty?: Quantity;
   // What the price buys, shown under it: "per shoot", "per person, min. 5".
   unit: string;
   items: string[];
@@ -191,21 +195,37 @@ export interface Plan {
 // Placeholder prices, ex VAT.
 export const plans: Plan[] = [
   {
-    id: 'half-day', no: '01', name: 'Half day', price: '£950', unit: 'per shoot',
+    id: 'half-day', no: '01', name: 'Half day', price: 950, unit: 'per shoot',
     items: ['Four hours on location or in studio', 'About 40 edited images', 'First edit in five working days'],
     usage: '12 months, web and social', ask: 'a half day shoot',
   },
   {
-    id: 'full-day', no: '02', name: 'Full day', price: '£1,750', unit: 'per shoot', featured: true,
+    id: 'full-day', no: '02', name: 'Full day', price: 1750, unit: 'per shoot', featured: true,
     items: ['Eight hours, up to three set-ups', 'About 80 edited images', 'Shot list planned with you'],
     usage: '12 months, web and social', ask: 'a full day shoot',
   },
   {
-    id: 'headshots', no: '03', name: 'Headshots', price: '£120', unit: 'per person, min. 5',
+    id: 'headshots', no: '03', name: 'Headshots', price: 120, unit: 'per person, min. 5',
+    qty: { min: 5, max: 50, one: 'person', many: 'people' },
     items: ['On site at your office', 'Two retouched images each', 'Matching light for the whole team'],
     usage: '12 months, web and social', ask: 'team headshots',
   },
 ];
+
+// Looks a package up by id for copy built from prices (marquee, descriptions, hints).
+export function planPrice(id: PlanId): number {
+  const plan = plans.find((p) => p.id === id);
+  if (!plan) throw new Error(`Unknown plan: ${id}`);
+  return plan.price;
+}
+
+// Details used only for schema.org structured data (src/data/schema.ts). No street address: fictional.
+export const business = {
+  region: 'Greater London',
+  country: 'GB',
+  // Ex VAT, from the cheapest to the dearest package: "£120–£1,750".
+  priceRange: `${formatPrice(Math.min(...plans.map((p) => p.price)))}–${formatPrice(Math.max(...plans.map((p) => p.price)))}`,
+};
 
 // ---------- quick contact (the "Call or message" dialog) ----------
 
@@ -298,10 +318,19 @@ export const availabilityCopy = {
 
 // ---------- /rates/ copy ----------
 
+export type AddOnId = 'extra-usage' | 'retouching' | 'short-video' | 'extra-hour';
+
 export interface AddOn {
+  id: AddOnId;
   name: string;
-  // Price as shown, ex VAT: "from £300", "£25 per image", "at cost".
-  price: string;
+  // Ex VAT, in pounds. Shown with priceText(price, { from: priceFrom, unit }): "from £300", "£25 per image".
+  price: number;
+  // The real price depends on the job: shown as "from £…".
+  priceFrom?: boolean;
+  // Shown after the price: "per image".
+  unit?: string;
+  // Set when the visitor picks how many (retouched images, extra hours).
+  qty?: Quantity;
   detail?: string;
 }
 
@@ -313,7 +342,7 @@ export interface FaqItem {
 export const ratesPage = {
   title: 'Rates',
   description:
-    'Brand and commercial photography rates in London: half day £950, full day £1,750, headshots £120 per person. Ex VAT, 12 months of web and social usage included.',
+    `Brand and commercial photography rates in London: half day ${formatPrice(planPrice('half-day'))}, full day ${formatPrice(planPrice('full-day'))}, headshots ${formatPrice(planPrice('headshots'))} per person. Ex VAT, 12 months of web and social usage included.`,
   eyebrow: 'Rates — 2026 / 2027',
   heading: 'What it costs, plainly',
   lead: 'Three ways to book, the numbers in the open. Every price is ex VAT and includes 12 months of web and social usage, so you can get sign-off before you write.',
@@ -323,15 +352,32 @@ export const ratesPage = {
   addOnsNote: 'All ex VAT, quoted in writing before you book.',
   faqEyebrow: 'Questions',
   faqTitle: 'Asked most often',
+  // Not an add-on: it has no price to add up. Shown as the last row of the add-ons list.
+  travel: { name: 'Travel outside the M25', price: 'at cost' },
 };
 
+// Placeholder prices, ex VAT.
 export const addOns: AddOn[] = [
-  { name: 'Extra usage', price: 'from £300', detail: 'Print, paid ads, out-of-home or longer terms' },
-  { name: 'Extra retouching', price: '£25 per image' },
-  { name: 'Short video', price: 'from £650', detail: 'A 30–60 second cut for social' },
-  { name: 'Extra hour', price: '£200' },
-  { name: 'Travel outside the M25', price: 'at cost' },
+  { id: 'extra-usage', name: 'Extra usage', price: 300, priceFrom: true, detail: 'Print, paid ads, out-of-home or longer terms' },
+  { id: 'retouching', name: 'Extra retouching', price: 25, unit: 'per image', qty: { min: 1, max: 200, one: 'image', many: 'images' } },
+  { id: 'short-video', name: 'Short video', price: 650, priceFrom: true, detail: 'A 30–60 second cut for social' },
+  { id: 'extra-hour', name: 'Extra hour', price: 200, qty: { min: 1, max: 4, one: 'hour', many: 'hours' } },
 ];
+
+// The words in a quote summary (src/data/quote.ts): "Full day, extra hour ×2 — from £2,400 ex VAT".
+export interface QuoteCopy {
+  for: string;
+  from: string;
+  exVat: string;
+  times: string;
+}
+
+export const quoteCopy: QuoteCopy = { for: 'for', from: 'from', exVat: 'ex VAT', times: '×' };
+
+// "from £300", "£25 per image", "£200".
+export function addOnPriceText(a: AddOn): string {
+  return priceText(a.price, { from: a.priceFrom, unit: a.unit });
+}
 
 export const faq: FaqItem[] = [
   {
@@ -394,8 +440,23 @@ export const shootTypes: string[] = [
   'Not sure yet',
 ];
 
+export interface BudgetRange {
+  label: string;
+  // Upper bound, ex VAT. A total belongs to the first range whose `max` it does not exceed.
+  max?: number;
+  // The "no figure" option. Without `max` and not `notSure`, a range is open-ended ("£5,000+"):
+  // it takes any total above the last bound. (Infinity is not JSON-safe, so open ends have no `max`.)
+  notSure?: boolean;
+}
+
 // Options for the "budget" field, ex VAT.
-export const budgetRanges: string[] = ['Under £1,000', '£1,000–2,500', '£2,500–5,000', '£5,000+', 'Not sure yet'];
+export const budgetRanges: BudgetRange[] = [
+  { label: 'Under £1,000', max: 1000 },
+  { label: '£1,000–2,500', max: 2500 },
+  { label: '£2,500–5,000', max: 5000 },
+  { label: '£5,000+' },
+  { label: 'Not sure yet', notSure: true },
+];
 
 export const enquiryForm = {
   namePlaceholder: 'Alex Morgan',
@@ -426,7 +487,7 @@ export const hero = {
 
 export const marquee: string[] = [
   `Booking from ${site.season}`,
-  'Half day from £950',
+  `Half day from ${formatPrice(planPrice('half-day'))}`,
   'Usage rights included',
   'First edit in five working days',
 ];

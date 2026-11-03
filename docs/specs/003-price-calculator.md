@@ -1,6 +1,6 @@
 # 003 — Price calculator
 
-**Status:** ready · **Depends on:** 002 · **Route(s):** `/rates/`, `/contact/`
+**Status:** in-progress · **Depends on:** 002 · **Route(s):** `/rates/`, `/contact/`
 
 ## Goal
 A visitor builds their own quote on `/rates/` — package plus add-ons, with quantities where the price is per unit — sees the total change live, and sends it to me in one click: the brief on `/contact/` and the WhatsApp text arrive with the quote already in them. In the demo: *"clients arrive already knowing the price"*, and the photographer changes every price in one data file.
@@ -18,26 +18,26 @@ A visitor builds their own quote on `/rates/` — package plus add-ons, with qua
   - Travel outside the M25 is no longer an add-on: it becomes copy (`ratesPage.travel = { name, price: 'at cost' }`), shown as a note.
   - `budgetRanges` become `{ label: string; max?: number }[]` (upper bound ex VAT; "Not sure yet" has none) so a total can pick one.
   - Copy for the calculator and the quote line goes into `site.ts` (`calculatorCopy`, `enquiryForm`, `quickContact.whatsappText.quote`).
-- `src/data/quote.ts` (pure, no DOM, imports only types from `site.ts` and `formatPrice`): the quote shape `{ plan: PlanId; qty?: number; addOns: { id: AddOnId; qty?: number }[] }`, `parseQuote(params, plans, addOns)` (unknown ids ignored, quantities clamped to min–max, missing or bad quantity → min, duplicates → first wins), `quoteTotal` (`{ amount, from: boolean }`), `quoteSummary` ("Full day, extra hour ×2, short video — from £2,400 ex VAT"), `quoteParams` (back to a query string). Used at build time and by the scripts; the price data reaches the client through a JSON data attribute, never by importing `site.ts`.
+- `src/data/quote.ts` (pure, no DOM, imports only types from `site.ts` and `formatPrice`): the quote shape `{ plan: PlanId; qty?: number; addOns: { id: AddOnId; qty?: number }[] }`, `parseQuote(params, plans, addOns)` (unknown ids ignored, quantities clamped to min–max, missing or bad quantity → min, duplicates → first wins), `quoteTotal` (`{ amount, from: boolean }`), `quoteSummary` ("Full day, extra hour ×2, short video — from £2,800 ex VAT"), `quoteParams` (back to a query string). Used at build time and by the scripts; the price data reaches the client through a JSON data attribute, never by importing `site.ts`.
 - URL: `?plan=headshots&qty=8&addons=retouching:20,extra-hour:2,short-video`. `qty` is the plan's quantity; an add-on's quantity follows a colon.
 
 ## Slices
 
-### [ ] 1. Numeric prices + formatter
+### [x] 1. Numeric prices + formatter
 - **Build:** add `format.ts`; make plan and add-on prices numbers with ids, quantities and units as in **Data**; render every price through `formatPrice` (package cards on home and rates, the add-ons list, the form's package options). Build the price copy from the numbers: the marquee's "Half day from £950", `ratesPage.description`, the area `priceHint`s (`areas.ts`), `business.priceRange` (cheapest to dearest plan). Add `offersSchema(plans, siteUrl)` to `schema.ts`: an `OfferCatalog` whose items are one `Offer` per package (`price`, `priceCurrency`, `UnitPriceSpecification` with `valueAddedTaxIncluded: false` and the unit text, `itemOffered` a `Service`, `offeredBy` the business `@id`), on `/rates/`. Add `quote.ts` with its helpers (used from slice 2 on). `budgetRanges` get their `max`. The page looks the same as before.
 - **Files:** `src/data/format.ts`, `src/data/quote.ts`, `src/data/site.ts`, `src/data/areas.ts`, `src/data/schema.ts`, `src/components/Packages.astro`, `src/components/ContactForm.astro`, `src/pages/rates.astro`
 - **Agent:** frontend · **Model:** sonnet
 - **Accept:**
-  - [ ] no price string is left in markup or in copy that repeats a package price; all prices render through `formatPrice`
-  - [ ] home, rates, contact and area pages look unchanged (same text, compare UI check screenshots before / after)
-  - [ ] `/rates/` has one `OfferCatalog` JSON-LD block with an `Offer` per package; `priceRange` still reads "£120–£1,750"
-  - [ ] `parseQuote` ignores unknown ids and clamps quantities (checked with a few inputs in the report)
+  - [x] no price string is left in markup or in copy that repeats a package price; all prices render through `formatPrice`
+  - [x] home, rates, contact and area pages look unchanged (same text, compare UI check screenshots before / after)
+  - [x] `/rates/` has one `OfferCatalog` JSON-LD block with an `Offer` per package; `priceRange` still reads "£120–£1,750"
+  - [x] `parseQuote` ignores unknown ids and clamps quantities (checked with a few inputs in the report)
 
 ### [ ] 2. Calculator on /rates/
 - **Build:** a `PriceCalculator.astro` section that replaces the add-ons block on `/rates/` (the three package cards above stay as they are):
   - package choice as compact radio cards (name, price, unit); Full day (the featured plan) is chosen by default, `?plan=` overrides it; Headshots shows a people stepper (5–50) when chosen;
   - add-ons as toggles with name, detail and price; retouching and extra hour show a − / + stepper (with a labelled number input) once on; "from" prices say "from";
-  - a total panel: the chosen lines, the total ("£2,150", or "From £2,400" when any chosen price is "from"), "ex VAT", the travel note (inside the M25 included, further out at cost), a CTA "Send this to us" → `/contact/?plan=…&qty=…&addons=…`, and an "or call / WhatsApp" quick-contact opener carrying the same quote (`data-plan`, `data-qty`, `data-addons`);
+  - a total panel: the chosen lines, the total ("£2,150", or "From £2,800" when any chosen price is "from"), "ex VAT", the travel note (inside the M25 included, further out at cost), a CTA "Send this to us" → `/contact/?plan=…&qty=…&addons=…`, and an "or call / WhatsApp" quick-contact opener carrying the same quote (`data-plan`, `data-qty`, `data-addons`);
   - desktop: two columns, the total panel sticky in the right one; phones: a compact bottom bar (total + CTA) while the calculator is on screen, the full panel at the end of the section, and enough space that the bar never covers content;
   - the calculator keeps `?plan=&qty=&addons=` of `/rates/` in step (`replaceState`), so a reload or a shared link shows the same quote;
   - without JS: the same section reads as a price list (packages and add-ons with prices), the controls stay disabled and the panel shows a link to the brief form.
@@ -76,3 +76,4 @@ The client's real prices, add-ons (with units and quantity limits) and usage ter
 ## Log
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
+| 2026-11-03 | 1 | done: `format.ts` (`money`, `formatPrice`, `priceText`), numeric plan/add-on prices with ids, quantities and units, travel as `ratesPage.travel`, price copy (marquee, rates description, area hints, `priceRange`) built from numbers, `OfferCatalog` JSON-LD on `/rates/`, `quote.ts` helpers (checked: unknown ids dropped, qty clamped, duplicates first wins, round-trip), `budgetRanges` with `max` / `notSure`. Built pages diffed against the baseline: identical except the new JSON-LD on rates. | `format.ts`, `quote.ts`, `site.ts`, `areas.ts`, `schema.ts`, `Packages.astro`, `ContactForm.astro`, `rates.astro` |
