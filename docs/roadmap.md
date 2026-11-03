@@ -9,7 +9,7 @@ Already built before the process existed: the demo site (home, work, studio, rat
 | # | Spec | Status | Depends on |
 | --- | --- | --- | --- |
 | 001 | [Playwright UI check](specs/001-ui-check.md) | done | — |
-| 002 | [Booking flow: package → enquiry, quick contact, availability](specs/002-booking-flow.md) | draft | 001, 008 |
+| 002 | [Booking flow: package → enquiry, quick contact, availability](specs/002-booking-flow.md) | ready | 001, 008 |
 | 003 | [Price calculator](specs/003-price-calculator.md) | draft | 002 |
 | 004 | [Area pages + SEO](specs/004-city-pages-seo.md) | draft | 001, 008 |
 | 005 | [Film reel](specs/005-film-reel.md) | draft | 001, 008 |
