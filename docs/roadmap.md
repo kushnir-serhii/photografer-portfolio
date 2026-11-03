@@ -12,7 +12,7 @@ Already built before the process existed: the demo site (home, work, studio, rat
 | 002 | [Booking flow: package → enquiry, quick contact, availability](specs/002-booking-flow.md) | done | 001, 008 |
 | 003 | [Price calculator](specs/003-price-calculator.md) | done | 002 |
 | 004 | [Area pages + SEO](specs/004-city-pages-seo.md) | done | 001, 008 |
-| 005 | [Film reel](specs/005-film-reel.md) | draft | 001, 008 |
+| 005 | [Film reel](specs/005-film-reel.md) | ready | 001, 008 |
 | 006 | [Client gallery (demo)](specs/006-client-gallery.md) | draft | 001, 008 |
 | 007 | [Niche variants](specs/007-niche-variants.md) | draft | 002, 003, 004 |
 | 008 | [Repositioning: brand & commercial photographer in London](specs/008-brand-commercial-london.md) | done | 001 |
