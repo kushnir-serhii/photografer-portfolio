@@ -36,6 +36,8 @@ export const site = {
   season: 'January 2027',
   // Where the enquiry form posts (e.g. a Formspree endpoint). Set PUBLIC_FORM_ENDPOINT in .env.
   formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined,
+  // Shows demo-only features and their labels; set false for a real client's site.
+  demo: true,
 };
 
 export const nav = [
@@ -153,7 +155,11 @@ export const pictures = {
 } satisfies Record<string, Picture>;
 
 
+// Stable ids used in URLs (?plan=full-day).
+export type PlanId = 'half-day' | 'full-day' | 'headshots';
+
 export interface Plan {
+  id: PlanId;
   no: string;
   name: string;
   price: string;
@@ -168,17 +174,17 @@ export interface Plan {
 // Placeholder prices, ex VAT.
 export const plans: Plan[] = [
   {
-    no: '01', name: 'Half day', price: '£950', unit: 'per shoot',
+    id: 'half-day', no: '01', name: 'Half day', price: '£950', unit: 'per shoot',
     items: ['Four hours on location or in studio', 'About 40 edited images', 'First edit in five working days'],
     usage: '12 months, web and social',
   },
   {
-    no: '02', name: 'Full day', price: '£1,750', unit: 'per shoot', featured: true,
+    id: 'full-day', no: '02', name: 'Full day', price: '£1,750', unit: 'per shoot', featured: true,
     items: ['Eight hours, up to three set-ups', 'About 80 edited images', 'Shot list planned with you'],
     usage: '12 months, web and social',
   },
   {
-    no: '03', name: 'Headshots', price: '£120', unit: 'per person, min. 5',
+    id: 'headshots', no: '03', name: 'Headshots', price: '£120', unit: 'per person, min. 5',
     items: ['On site at your office', 'Two retouched images each', 'Matching light for the whole team'],
     usage: '12 months, web and social',
   },
@@ -290,6 +296,9 @@ export const enquiryForm = {
   companyPlaceholder: 'Saltroom',
   emailPlaceholder: 'alex@saltroom.co.uk',
   datePlaceholder: 'Week of 12 March',
+  packageLabel: 'Package',
+  packageNone: 'Not sure yet',
+  packageChange: 'Change',
   dateHelp: 'A rough week is fine. Not fixed yet? Leave it empty.',
   briefPlaceholder: 'A spring menu launch, 12 dishes, at our place in Peckham. Pictures for the website and Instagram.',
   briefHelp: 'What the pictures are for, where, and roughly how many.',

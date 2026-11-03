@@ -1,5 +1,6 @@
 // Site behaviour on top of the Still Hours motion runtime.
 import './still-hours.js';
+import { initBooking } from './booking';
 
 type Runtime = { init(root?: ParentNode): unknown; theme: { get(): string } };
 const runtime = (window as unknown as { StillHours?: Runtime }).StillHours;
@@ -57,6 +58,7 @@ document.addEventListener('astro:page-load', () => {
   markCurrentNav();
   initGalleries();
   initEnquiryForms();
+  initBooking();
 });
 
 /* ---------- gallery filters ---------- */

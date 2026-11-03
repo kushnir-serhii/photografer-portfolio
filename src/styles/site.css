@@ -194,6 +194,10 @@ body.has-drawer { overflow: hidden; }
 .sh-contact { align-items: start; }
 .sh-contact__title { margin: 0; }
 .sh-enquiry { margin-top: var(--space-3); }
+.sh-enquiry__choice { margin: 0; color: var(--ink-muted); }
+.sh-enquiry__choice[hidden] { display: none; }
+.sh-enquiry__change { min-height: 44px; min-width: 44px; padding: 0 4px; border: 0; background: none; font: inherit; color: var(--accent-text);
+  text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .sh-contact__aside { display: grid; gap: 28px; }
 .sh-contact__direct-title { margin: 0 0 14px; }
 .sh-contact__intro { display: grid; gap: var(--space-4); }

@@ -1,6 +1,6 @@
 # 002 — Booking flow: package → enquiry, quick contact, availability
 
-**Status:** ready · **Depends on:** 001, 008 · **Route(s):** `/`, `/rates/`, `/contact/`, header on every page
+**Status:** in-progress · **Depends on:** 001, 008 · **Route(s):** `/`, `/rates/`, `/contact/`, header on every page
 
 ## Goal
 A visitor picks a package, sees whether the date is free, and reaches me in one tap — by brief (already filled in), phone or WhatsApp. In the demo this is the main story: *"fewer vague emails, more booked shoots."*
@@ -21,15 +21,15 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
 
 ## Slices
 
-### [ ] 1. Package → prefilled brief
+### [x] 1. Package → prefilled brief
 - **Build:** plan ids; each package CTA reads "Book this" (the featured one stays primary) and links to `/contact/?plan=<id>`; the contact form gets a "Package" select (plans + "Not sure yet", `name="package"`) next to "Preferred date", with "Shoot type" and "Budget" in the other row; it is preselected from `?plan=`, and `?date=` (ISO) fills the date as a readable English date ("12 June 2027"); a short line above the form confirms the choice ("Full day — £1,750 ex VAT · Change"), where "Change" focuses the select. Changing the package or date keeps `?plan`/`?date` in the URL (`replaceState`).
 - **Files:** `src/data/site.ts`, `src/components/Packages.astro`, `src/components/ContactForm.astro`, `src/scripts/booking.ts`, `src/scripts/site.ts`
 - **Agent:** frontend → designer (the confirmation line)
 - **Accept:**
-  - [ ] each package's CTA opens `/contact/` with that package selected; an unknown `plan` is ignored without errors
-  - [ ] the selected package is in the submitted form data (endpoint and `mailto:`)
-  - [ ] without JS the links still lead to the form and the select works by hand
-  - [ ] 375px without horizontal scroll, Night and Day
+  - [x] each package's CTA opens `/contact/` with that package selected; an unknown `plan` is ignored without errors
+  - [x] the selected package is in the submitted form data (endpoint and `mailto:`)
+  - [x] without JS the links still lead to the form and the select works by hand
+  - [x] 375px without horizontal scroll, Night and Day
 
 ### [ ] 2. Quick-contact dialog
 - **Build:** `QuickContact.astro` (native `<dialog>`, outside `<main>` so it persists) with Call (`tel:`), WhatsApp (`https://wa.me/<number>?text=…`), Messenger (`https://m.me/<user>`) and "Write a message" (→ `/contact/`, carrying `plan`/`date`). Plus "Email" (`mailto:`). Messenger only when `site.messenger` is set (empty in the demo). Opened from: the header (a quiet "Call or message" button before "Book a shoot" on desktop; a 44px phone icon button with `aria-label` next to the burger on phones; also a button in the drawer foot), an "or call / WhatsApp" text link under each package CTA (opens the dialog with that package), and a third quiet action "Call or message" in the hero. The WhatsApp text is pre-written: "Hi Robin, is 12 June 2027 free for a full day shoot?" with date and package, "Hi Robin, I'd like to ask about a full day shoot. Which dates are free?" with a package only, a neutral line otherwise. Without JS the openers are plain links to `/contact/`.
@@ -64,3 +64,4 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
 ## Log
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
+| 2026-11-03 | 1 | done: plan ids, "Book this" → `/contact/?plan=`, Package select ("Not sure yet" by default), `?date=` → "12 June 2027", confirmation line with Change; checked in a browser (bad plan/date ignored, 375px, Night/Day). The confirmation line reuses tokens, so no separate designer pass. | `site.ts` (data), `Packages.astro`, `ContactForm.astro`, `booking.ts`, `site.ts` (script), `site.css` |
