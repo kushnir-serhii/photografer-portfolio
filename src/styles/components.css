@@ -404,11 +404,14 @@
               transform var(--dur-base) var(--ease-out-expo) var(--sh-delay, 0ms);
 }
 .sh-js [data-reveal]:not([data-reveal="clip"]):not([data-reveal="kinetic"]).is-in { opacity: 1; transform: none; }
-.sh-js [data-reveal="clip"] {
+/* The clip goes on the image, not on the observed element: Chrome treats a fully
+   clipped target as not intersecting, so the reveal would never fire. */
+.sh-js [data-reveal="clip"] .sh-img {
   clip-path: inset(0 0 100% 0);
-  transition: clip-path var(--dur-slow) var(--ease-out-expo) var(--sh-delay, 0ms);
+  transition: clip-path var(--dur-slow) var(--ease-out-expo) var(--sh-delay, 0ms),
+              transform 1.1s var(--ease-out-expo);
 }
-.sh-js [data-reveal="clip"].is-in { clip-path: inset(0 0 0 0); }
+.sh-js [data-reveal="clip"].is-in .sh-img { clip-path: inset(0 0 0 0); }
 .sh-js [data-reveal="kinetic"] .sh-word__in {
   transform: translateY(110%);
   transition: transform var(--dur-slow) var(--ease-out-expo);
@@ -418,6 +421,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sh-js [data-reveal], .sh-js [data-reveal].is-in { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+  .sh-js [data-reveal="clip"] .sh-img { clip-path: none !important; }
   .sh-js [data-reveal="kinetic"] .sh-word__in { transform: none !important; }
   .sh-marquee__track { animation: none; }
   .sh-frame:hover .sh-img, .sh-slide__media .sh-img { transform: none; }
