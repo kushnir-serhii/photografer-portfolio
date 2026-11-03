@@ -30,6 +30,10 @@ export const site = {
   email: 'hello@robinhale.studio',
   phone: '020 7946 0321',
   phoneHref: 'tel:+442079460321',
+  // WhatsApp number in international form, digits only (no +, spaces or leading 0). Empty hides WhatsApp.
+  whatsapp: '447700900321',
+  // Facebook Messenger username for m.me links. Empty hides Messenger.
+  messenger: '',
   instagram: 'https://instagram.com/',
   clientGalleries: '#',
   // The next bookable period; used in the hero, marquee and footer instead of a hard-coded date.
@@ -168,6 +172,8 @@ export interface Plan {
   items: string[];
   // Licence terms included in the price.
   usage: string;
+  // How a client names this package in a message: "is 12 June 2027 free for {ask}?".
+  ask: string;
   featured?: boolean;
 }
 
@@ -176,19 +182,46 @@ export const plans: Plan[] = [
   {
     id: 'half-day', no: '01', name: 'Half day', price: '£950', unit: 'per shoot',
     items: ['Four hours on location or in studio', 'About 40 edited images', 'First edit in five working days'],
-    usage: '12 months, web and social',
+    usage: '12 months, web and social', ask: 'a half day shoot',
   },
   {
     id: 'full-day', no: '02', name: 'Full day', price: '£1,750', unit: 'per shoot', featured: true,
     items: ['Eight hours, up to three set-ups', 'About 80 edited images', 'Shot list planned with you'],
-    usage: '12 months, web and social',
+    usage: '12 months, web and social', ask: 'a full day shoot',
   },
   {
     id: 'headshots', no: '03', name: 'Headshots', price: '£120', unit: 'per person, min. 5',
     items: ['On site at your office', 'Two retouched images each', 'Matching light for the whole team'],
-    usage: '12 months, web and social',
+    usage: '12 months, web and social', ask: 'team headshots',
   },
 ];
+
+// ---------- quick contact (the "Call or message" dialog) ----------
+
+export const quickContact = {
+  title: 'Call or message',
+  lead: 'Calls Mon–Fri, 9–6. Messages any time; I reply the same day.',
+  // Opener labels: header, drawer and hero; under each package; the phone icon button on phones.
+  opener: 'Call or message',
+  planOpener: 'or call / WhatsApp',
+  iconLabel: 'Call or message',
+  close: 'Close',
+  call: 'Call',
+  whatsapp: 'WhatsApp',
+  whatsappDetail: 'Pre-written message',
+  email: 'Email',
+  messenger: 'Messenger',
+  messengerDetail: 'Message on Facebook',
+  brief: 'Send a brief',
+  briefDetail: 'The full form, about two minutes',
+  // The WhatsApp message, pre-written from what the visitor has chosen. {date}: "12 June 2027"; {plan}: Plan.ask.
+  whatsappText: {
+    both: 'Hi Robin, is {date} free for {plan}?',
+    plan: "Hi Robin, I'd like to ask about {plan}. Which dates are free?",
+    date: 'Hi Robin, is {date} free for a shoot?',
+    none: "Hi Robin, I'd like to ask about a shoot.",
+  },
+};
 
 // ---------- /rates/ copy ----------
 

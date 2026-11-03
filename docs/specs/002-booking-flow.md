@@ -31,15 +31,15 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
   - [x] without JS the links still lead to the form and the select works by hand
   - [x] 375px without horizontal scroll, Night and Day
 
-### [ ] 2. Quick-contact dialog
+### [x] 2. Quick-contact dialog
 - **Build:** `QuickContact.astro` (native `<dialog>`, outside `<main>` so it persists) with Call (`tel:`), WhatsApp (`https://wa.me/<number>?text=…`), Messenger (`https://m.me/<user>`) and "Write a message" (→ `/contact/`, carrying `plan`/`date`). Plus "Email" (`mailto:`). Messenger only when `site.messenger` is set (empty in the demo). Opened from: the header (a quiet "Call or message" button before "Book a shoot" on desktop; a 44px phone icon button with `aria-label` next to the burger on phones; also a button in the drawer foot), an "or call / WhatsApp" text link under each package CTA (opens the dialog with that package), and a third quiet action "Call or message" in the hero. The WhatsApp text is pre-written: "Hi Robin, is 12 June 2027 free for a full day shoot?" with date and package, "Hi Robin, I'd like to ask about a full day shoot. Which dates are free?" with a package only, a neutral line otherwise. Without JS the openers are plain links to `/contact/`.
 - **Files:** `src/components/QuickContact.astro`, `src/components/Header.astro`, `src/components/Packages.astro`, `src/components/Hero.astro`, `src/layouts/BaseLayout.astro`, `src/scripts/booking.ts`, `src/styles/site.css`, `src/data/site.ts`
 - **Agent:** designer → frontend
 - **Accept:**
-  - [ ] the dialog traps focus, closes on Escape and backdrop click, and returns focus to its opener, also after a client-side navigation
-  - [ ] the WhatsApp link contains the package and date when they are known, URL-encoded
-  - [ ] an empty `whatsapp` / `messenger` hides that option; targets ≥ 44px
-  - [ ] works at 375px as a bottom sheet, at 1280px as a centered dialog, both themes
+  - [x] the dialog traps focus, closes on Escape and backdrop click, and returns focus to its opener, also after a client-side navigation
+  - [x] the WhatsApp link contains the package and date when they are known, URL-encoded
+  - [x] an empty `whatsapp` / `messenger` hides that option; targets ≥ 44px
+  - [x] works at 375px as a bottom sheet, at 1280px as a centered dialog, both themes
 
 ### [ ] 3. Availability calendar
 - **Build:** `AvailabilityCalendar.astro` on `/contact/` in the right column (desktop: direct contacts → calendar → photo; phones: intro → direct contacts → calendar → form): a month grid (Mon-first) from `availability`, days marked free / half day left / booked / past (a half-day-left day can be picked), previous-next month buttons within the configured range, legend. Choosing a free day fills the form's date (readable English date) and `?date=` in the URL and moves focus to the form; it also updates the WhatsApp text in the quick-contact dialog. In demo mode a small note says "Demo dates — in your site this shows your real calendar." Without JS the calendar renders the first month of the range statically. The calendar is shown for a real client too (dates kept in data); only the note depends on `site.demo`.
@@ -65,3 +65,4 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
 | 2026-11-03 | 1 | done: plan ids, "Book this" → `/contact/?plan=`, Package select ("Not sure yet" by default), `?date=` → "12 June 2027", confirmation line with Change; checked in a browser (bad plan/date ignored, 375px, Night/Day). The confirmation line reuses tokens, so no separate designer pass. | `site.ts` (data), `Packages.astro`, `ContactForm.astro`, `booking.ts`, `site.ts` (script), `site.css` |
+| 2026-11-03 | 2 | done: `QuickContact` dialog (Call, WhatsApp, Email, Send a brief; Messenger when set), openers in header (text ≥1351px and 1001–1279px, phone icon elsewhere so the brand never wraps), drawer, package cards, hero; `setBookingDate()` for slice 3; extra WhatsApp template for a date without a package; capture-phase opener listener (the ClientRouter took the links first). Designer built the script too. Checked 375/1280/1440, Night/Day, reduced motion, no JS. | `QuickContact.astro`, `Header.astro`, `Packages.astro`, `Icon.astro`, `BaseLayout.astro`, `index.astro`, `booking.ts`, `site.css`, `tokens.css`, `site.ts` |

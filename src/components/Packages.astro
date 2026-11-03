@@ -1,5 +1,6 @@
 ---
 import type { Plan } from '../data/site';
+import { quickContact } from '../data/site';
 
 interface Props {
   plans: Plan[];
@@ -24,6 +25,7 @@ const { plans } = Astro.props;
       {plan.featured
         ? <a class="sh-btn sh-btn--primary" href={`/contact/?plan=${plan.id}`} data-magnetic="0.2">Book this</a>
         : <a class="sh-btn sh-btn--outline" href={`/contact/?plan=${plan.id}`}>Book this</a>}
+      <a class="sh-plan__alt" href={`/contact/?plan=${plan.id}`} data-quick-contact data-plan={plan.id}>{quickContact.planOpener}</a>
     </article>
   ))}
 </div>

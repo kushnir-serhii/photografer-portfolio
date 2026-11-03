@@ -1,5 +1,5 @@
 ---
-import { nav, site } from '../data/site';
+import { nav, quickContact, site } from '../data/site';
 import Icon from './Icon.astro';
 
 const path = Astro.url.pathname.replace(/\/?$/, '/');
@@ -23,7 +23,13 @@ const isCurrent = (href: string) => path === href;
         <button class="sh-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch colour theme">
           <span data-theme-label>Day</span>
         </button>
+        <a class="sh-nav__call" href="/contact/" data-quick-contact>
+          <Icon name="phone" /><span class="sh-nav__call-text">{quickContact.opener}</span>
+        </a>
         <a class="sh-btn sh-btn--primary" href="/contact/">Book a shoot</a>
+        <a class="sh-burger sh-nav__phone" href="/contact/" aria-label={quickContact.iconLabel} data-quick-contact>
+          <Icon name="phone" />
+        </a>
         <button class="sh-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sh-drawer" data-drawer-open>
           <Icon name="burger" />
         </button>
@@ -51,6 +57,7 @@ const isCurrent = (href: string) => path === href;
   </ul>
   <div class="sh-drawer__foot">
     <a class="sh-btn sh-btn--primary sh-btn--block" href="/contact/">Book a shoot</a>
+    <a class="sh-btn sh-btn--outline sh-btn--block" href="/contact/" data-quick-contact>{quickContact.opener}</a>
     <p class="sh-meta-s">{site.descriptor}</p>
     <p class="sh-meta-s">{site.email} · {site.phone}</p>
   </div>
