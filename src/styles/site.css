@@ -56,9 +56,26 @@ body.has-drawer { overflow: hidden; }
 
 /* ---------- FAQ ---------- */
 
-.sh-faq { display: grid; gap: 26px; }
-.sh-faq h3 { margin: 0 0 8px; }
-.sh-faq p { margin: 0; }
+.sh-faq { display: grid; }
+.sh-faq__item { border-top: 1px solid var(--line); }
+.sh-faq__item:last-child { border-bottom: 1px solid var(--line); }
+.sh-faq__q {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  min-height: 56px; padding: 14px 0; cursor: pointer; list-style: none;
+}
+.sh-faq__q::-webkit-details-marker { display: none; }
+.sh-faq__q::marker { content: ''; }
+.sh-faq__q h3 { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.sh-faq__icon { position: relative; flex: none; width: 16px; height: 16px; color: var(--accent-text); }
+.sh-faq__icon::before, .sh-faq__icon::after {
+  content: ''; position: absolute; left: 0; top: 7px; width: 16px; height: 2px; background: currentColor;
+  transition: transform var(--dur-fast) linear;
+}
+.sh-faq__icon::after { transform: rotate(90deg); }
+.sh-faq__item[open] .sh-faq__icon::after { transform: rotate(0deg); }
+.sh-faq__q:hover .sh-faq__icon { color: var(--ink); }
+.sh-faq__a { margin: 0; padding: 0 0 22px; max-width: 62ch; }
+@media (prefers-reduced-motion: reduce) { .sh-faq__icon::before, .sh-faq__icon::after { transition: none; } }
 
 /* ---------- prose ---------- */
 
@@ -179,8 +196,27 @@ body.has-drawer { overflow: hidden; }
 .sh-enquiry { margin-top: var(--space-3); }
 .sh-contact__aside { display: grid; gap: 28px; }
 .sh-contact__direct-title { margin: 0 0 14px; }
-/* Phones read the direct contacts first; from two columns the photo leads the side column. */
-@media (min-width: 900px) { .sh-contact__photo { order: -1; } }
+.sh-contact__intro { display: grid; gap: var(--space-4); }
+.sh-contact__intro > p { margin: 0; }
+.sh-contact__list a, .sh-contact__list li > span { display: inline-flex; align-items: center; min-height: 44px; }
+/* Phones: intro, direct contacts, form, photo in one DOM order (wrappers dissolve into the story grid).
+   From two columns: form column left, photo then contacts in the side column. */
+@media (max-width: 899px) {
+  .sh-contact__main, .sh-contact__aside { display: contents; }
+  .sh-contact__intro { order: 0; }
+  .sh-contact__direct { order: 1; }
+  .sh-contact__form { order: 2; }
+  .sh-contact__photo { order: 3; }
+  .sh-contact__direct-title { margin-bottom: 4px; }
+  .sh-contact__list { gap: 0; }
+  .sh-contact__list li:last-child > span { min-height: 0; }
+}
+@media (min-width: 900px) {
+  .sh-contact__main { display: grid; gap: var(--space-4); align-content: start; }
+  .sh-contact__photo { order: -1; }
+  .sh-contact__list { gap: var(--space-3); }
+  .sh-contact__list a, .sh-contact__list li > span { min-height: 0; }
+}
 .sh-contact__next-title { margin: 0 0 28px; }
 .sh-contact__steps { list-style: none; margin: 0; padding: 0; }
 

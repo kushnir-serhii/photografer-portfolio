@@ -8,16 +8,18 @@ import { site, pictures, contactPage } from '../data/site';
   <section class="sh-section">
     <div class="sh-container">
       <div class="sh-story sh-contact">
-        <div class="sh-story__body">
-          <p class="sh-meta" data-reveal>{contactPage.eyebrow}</p>
-          <h1 class="sh-d-xl sh-contact__title" data-split>{contactPage.heading}</h1>
-          <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140">{contactPage.lead}</p>
-          <ContactForm />
+        <div class="sh-story__body sh-contact__main">
+          <div class="sh-contact__intro">
+            <p class="sh-meta" data-reveal>{contactPage.eyebrow}</p>
+            <h1 class="sh-d-xl sh-contact__title" data-split>{contactPage.heading}</h1>
+            <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140">{contactPage.lead}</p>
+          </div>
+          <div class="sh-contact__form"><ContactForm /></div>
         </div>
         <div class="sh-story__media sh-contact__aside">
           <div class="sh-contact__direct">
             <h2 class="sh-meta sh-contact__direct-title">{contactPage.directTitle}</h2>
-            <ul class="sh-footer__list">
+            <ul class="sh-footer__list sh-contact__list">
               <li><a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a></li>
               <li><a class="sh-link" href={site.phoneHref}>{site.phone}</a></li>
               <li><span class="sh-muted sh-body-s">{contactPage.directNote}</span></li>

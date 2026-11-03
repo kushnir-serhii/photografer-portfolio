@@ -46,15 +46,15 @@ import { plans, pictures, ratesPage, addOns, faq } from '../data/site';
     <div class="sh-container sh-container--narrow">
       <p class="sh-meta sh-faq__eyebrow" data-reveal>{ratesPage.faqEyebrow}</p>
       <h2 class="sh-d-l sh-faq__title" data-split>{ratesPage.faqTitle}</h2>
-      <div class="sh-faq">
-        {faq.map((item, i) => (
-          <>
-            {i > 0 && <hr class="sh-rule" />}
-            <div data-reveal>
+      <div class="sh-faq" data-reveal>
+        {faq.map((item) => (
+          <details class="sh-faq__item">
+            <summary class="sh-faq__q">
               <h3 class="sh-d-s">{item.q}</h3>
-              <p class="sh-muted">{item.a}</p>
-            </div>
-          </>
+              <span class="sh-faq__icon" aria-hidden="true"></span>
+            </summary>
+            <p class="sh-muted sh-faq__a">{item.a}</p>
+          </details>
         ))}
       </div>
     </div>
