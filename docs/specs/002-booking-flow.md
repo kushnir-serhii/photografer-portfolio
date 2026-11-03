@@ -1,6 +1,6 @@
 # 002 — Booking flow: package → enquiry, quick contact, availability
 
-**Status:** in-progress · **Depends on:** 001, 008 · **Route(s):** `/`, `/rates/`, `/contact/`, header on every page
+**Status:** done · **Depends on:** 001, 008 · **Route(s):** `/`, `/rates/`, `/contact/`, header on every page
 
 ## Goal
 A visitor picks a package, sees whether the date is free, and reaches me in one tap — by brief (already filled in), phone or WhatsApp. In the demo this is the main story: *"fewer vague emails, more booked shoots."*
@@ -67,3 +67,4 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog), `src/scripts/calendar.ts` (
 | 2026-11-03 | 1 | done: plan ids, "Book this" → `/contact/?plan=`, Package select ("Not sure yet" by default), `?date=` → "12 June 2027", confirmation line with Change; checked in a browser (bad plan/date ignored, 375px, Night/Day). The confirmation line reuses tokens, so no separate designer pass. | `site.ts` (data), `Packages.astro`, `ContactForm.astro`, `booking.ts`, `site.ts` (script), `site.css` |
 | 2026-11-03 | 2 | done: `QuickContact` dialog (Call, WhatsApp, Email, Send a brief; Messenger when set), openers in header (text at 1024–1279px and ≥1360px, a phone icon elsewhere so the brand never wraps), drawer, package cards, hero; `setBookingDate()` for slice 3; extra WhatsApp template for a date without a package; capture-phase opener listener (the ClientRouter took the links first). Designer built the script too. Checked 375/1280/1440, Night/Day, reduced motion, no JS. | `QuickContact.astro`, `Header.astro`, `Packages.astro`, `Icon.astro`, `BaseLayout.astro`, `index.astro`, `booking.ts`, `site.css`, `tokens.css`, `site.ts` |
 | 2026-11-03 | 3 | done: `AvailabilityCalendar` in the right column of `/contact/` (phones: intro → contacts → calendar → form → photo), grid with roving focus, arrows/Home/End/PageUp/PageDown, states free / half day left / booked / past with marks (not colour alone), pick → date field, `?date=`, WhatsApp text, status line; all-booked and range-over lines; static first month without JS (build date marks past days); `dates.ts` split out so the component can share it at build time. Checked 375/1280, Night/Day, keyboard, no JS, mocked clock. | `AvailabilityCalendar.astro`, `calendar.ts`, `dates.ts`, `booking.ts`, `site.ts` (script, data), `contact.astro`, `site.css` |
+| 2026-11-03 | — | UI check passed (root, rates, contact · 375/1280 · Night/Day); screenshots reviewed. Spec done. | — |
