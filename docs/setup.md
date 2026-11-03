@@ -11,8 +11,8 @@ Everything runs locally and needs no accounts. This file collects what changes w
 | Enquiry form endpoint | not set — falls back to `mailto:` | launch |
 | Site URL | `https://robinhale.studio` placeholder in `astro.config.mjs` | launch |
 | Hosting | not chosen (any static host) | launch |
-| WhatsApp / Messenger | not set | 002 |
-| Availability dates | demo data | 002 |
+| WhatsApp / Messenger | placeholder WhatsApp number (`site.whatsapp`), Messenger empty | launch |
+| Availability dates | demo data (`availability` in `src/data/site.ts`) | launch |
 | Area and city list | — | 004 |
 | Video hosting | — | 005 |
 | Client gallery service | — (demo only) | 006 |
@@ -20,7 +20,8 @@ Everything runs locally and needs no accounts. This file collects what changes w
 ## Content to swap
 
 1. **Photographs:** put the client's work into `src/assets/work/` (JPG, kebab-case names, about 2400px on the long edge) and point the imports at the top of `src/data/site.ts` to them: project covers (`projects`), the `/work/` gallery (`frames`), the hero (`hero.image`) and the page photos (`pictures`); each has an `alt` that describes what is in the picture. `astro:assets` builds the AVIF/WebP sizes; the default share image is the hero at 1200px. Delete the placeholders listed below. Ratios: 4:5 for people, 3:2 for rooms, 16:9 for slides; keep the subject near the centre, the slider crops to 4:5 on phones. The `/work/` gallery packs without holes only for certain mixes and orders of frame sizes (default, tall, wide, half); when the frame list changes, run `npm run ui-check` and look at the work screenshots at 375px and 1280px.
-2. **`src/data/site.ts`:** name, description, email, phone, Instagram, client-galleries link, projects, frames, pictures, plans. Set `demo: false` (once spec 002 adds the flag) so demo-only features disappear.
+2. **`src/data/site.ts`:** name, description, email, phone, Instagram, client-galleries link, projects, frames, pictures, plans. Set `demo: false` so demo-only labels disappear.
+3a. **Quick contact and availability:** `site.whatsapp` is the client's WhatsApp number in international form, digits only (`447700900123`); empty hides the option. `site.messenger` is an m.me username, optional. The WhatsApp message templates are in `quickContact`. `availability` holds the first month (`from`), how many months to show, and the ISO dates that are booked or have only half a day left; the client (or you) updates it and rebuilds. Later it can be fed from the client's public Google Calendar iCal.
 3. **Copy in pages:** home, studio, rates (add-ons, FAQ) and contact still hold some copy in markup; specs move it into `src/data/` as they touch it.
 4. **Privacy page:** have the text reviewed for the client's country (UK GDPR for the UK; the EU's GDPR elsewhere in the EU).
 

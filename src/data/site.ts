@@ -223,6 +223,63 @@ export const quickContact = {
   },
 };
 
+// ---------- availability calendar (/contact/) ----------
+
+export interface Availability {
+  // First month shown, 'yyyy-mm'. The calendar starts at the later of this and the visitor's current month.
+  from: string;
+  // How many months from `from` can be browsed.
+  months: number;
+  // ISO days (yyyy-mm-dd) that are taken. Any day not listed is free, weekends included.
+  booked: string[];
+  // ISO days with only half a day left; these can still be picked.
+  halfDay?: string[];
+}
+
+// Demo dates. For a real client, keep this in step with their diary (or connect a calendar later, see docs/setup.md).
+export const availability: Availability = {
+  from: '2027-01',
+  months: 4,
+  booked: [
+    '2027-01-06', '2027-01-07', '2027-01-13', '2027-01-14', '2027-01-15', '2027-01-20', '2027-01-27', '2027-01-28',
+    '2027-02-03', '2027-02-04', '2027-02-09', '2027-02-10', '2027-02-11', '2027-02-17', '2027-02-18', '2027-02-24',
+    '2027-02-25',
+    '2027-03-01', '2027-03-02', '2027-03-03', '2027-03-04', '2027-03-05', '2027-03-09', '2027-03-10', '2027-03-11',
+    '2027-03-12', '2027-03-16', '2027-03-17', '2027-03-18', '2027-03-19', '2027-03-23', '2027-03-24', '2027-03-25',
+    '2027-03-26', '2027-03-30',
+    '2027-04-01', '2027-04-07', '2027-04-08', '2027-04-14', '2027-04-15', '2027-04-21', '2027-04-22', '2027-04-28',
+    '2027-04-29',
+  ],
+  halfDay: [
+    '2027-01-11', '2027-01-22',
+    '2027-02-01', '2027-02-15', '2027-02-26',
+    '2027-03-08', '2027-03-22', '2027-03-31',
+    '2027-04-06', '2027-04-20',
+  ],
+};
+
+export const availabilityCopy = {
+  title: 'Free days',
+  hint: 'Pick a day and it goes straight into the brief.',
+  // Shown only when site.demo is true.
+  demoNote: 'Demo dates — in your site this shows your real calendar.',
+  prev: 'Previous month',
+  next: 'Next month',
+  legendLabel: 'Legend',
+  legend: { free: 'Free', half: 'Half day left', booked: 'Booked' },
+  // Ends each day's accessible name: "Friday 12 March 2027, booked".
+  states: { free: 'free', half: 'half day left', booked: 'booked', past: 'past' },
+  // Announced after a pick. {date}: "12 June 2027".
+  picked: '{date} added to the brief',
+  // A month with no free day left, and the case where every listed month is over.
+  // Each line ends with the two ways out: the brief form and the quick-contact dialog.
+  full: 'Every day this month is taken. I keep a waiting list:',
+  closed: 'I have not opened these months yet. Ask me directly:',
+  briefLink: 'send a brief',
+  or: 'or',
+  callLink: 'call',
+};
+
 // ---------- /rates/ copy ----------
 
 export interface AddOn {

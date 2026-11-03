@@ -17,7 +17,7 @@ A visitor picks a package, sees whether the date is free, and reaches me in one 
 - `availability`: `{ from: string; months: number; booked: string[]; halfDay?: string[] }`: `from` is the first month (`2027-01`), `months` how many to show (4), ISO dates for booked days and days with only half a day left. The calendar starts at the later of `from` and the current month. Demo data looks plausible from January 2027 to April 2027 (a few booked days, a few half days).
 - WhatsApp message copy (with date and package, with package only, neutral) lives in `src/data/site.ts`.
 
-Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.ts`. URL params: `plan`, `date` (ISO). Unknown values are ignored.
+Scripts: `src/scripts/booking.ts` (prefill, dialog), `src/scripts/calendar.ts` (calendar), `src/scripts/dates.ts` (ISO dates and the month model, shared with the component at build time), wired from `site.ts`. URL params: `plan`, `date` (ISO). Unknown values are ignored.
 
 ## Slices
 
@@ -41,15 +41,15 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
   - [x] an empty `whatsapp` / `messenger` hides that option; targets ≥ 44px
   - [x] works at 375px as a bottom sheet, at 1280px as a centered dialog, both themes
 
-### [ ] 3. Availability calendar
+### [x] 3. Availability calendar
 - **Build:** `AvailabilityCalendar.astro` on `/contact/` in the right column (desktop: direct contacts → calendar → photo; phones: intro → direct contacts → calendar → form): a month grid (Mon-first) from `availability`, days marked free / half day left / booked / past (a half-day-left day can be picked), previous-next month buttons within the configured range, legend. Choosing a free day fills the form's date (readable English date) and `?date=` in the URL and moves focus to the form; it also updates the WhatsApp text in the quick-contact dialog. In demo mode a small note says "Demo dates — in your site this shows your real calendar." Without JS the calendar renders the first month of the range statically. The calendar is shown for a real client too (dates kept in data); only the note depends on `site.demo`.
 - **Files:** `src/components/AvailabilityCalendar.astro`, `src/pages/contact.astro`, `src/scripts/booking.ts`, `src/styles/site.css`, `src/data/site.ts`
 - **Agent:** designer → frontend
 - **Accept:**
-  - [ ] the grid is keyboard usable (arrow keys move between days, Enter picks), each day has an accessible name ("Friday 12 March 2027, booked")
-  - [ ] booked and past days can't be picked; picking a free day fills the date field
-  - [ ] states: a month with everything booked shows a line pointing to the form/quick contact
-  - [ ] 375px without horizontal scroll, Night and Day
+  - [x] the grid is keyboard usable (arrow keys move between days, Enter picks), each day has an accessible name ("Friday 12 March 2027, booked")
+  - [x] booked and past days can't be picked; picking a free day fills the date field
+  - [x] states: a month with everything booked shows a line pointing to the form/quick contact
+  - [x] 375px without horizontal scroll, Night and Day
 
 ## External needs
 - The client's WhatsApp number and (optionally) Messenger username.
@@ -66,3 +66,4 @@ Scripts: `src/scripts/booking.ts` (prefill, dialog, calendar), wired from `site.
 | --- | --- | --- | --- |
 | 2026-11-03 | 1 | done: plan ids, "Book this" → `/contact/?plan=`, Package select ("Not sure yet" by default), `?date=` → "12 June 2027", confirmation line with Change; checked in a browser (bad plan/date ignored, 375px, Night/Day). The confirmation line reuses tokens, so no separate designer pass. | `site.ts` (data), `Packages.astro`, `ContactForm.astro`, `booking.ts`, `site.ts` (script), `site.css` |
 | 2026-11-03 | 2 | done: `QuickContact` dialog (Call, WhatsApp, Email, Send a brief; Messenger when set), openers in header (text at 1024–1279px and ≥1360px, a phone icon elsewhere so the brand never wraps), drawer, package cards, hero; `setBookingDate()` for slice 3; extra WhatsApp template for a date without a package; capture-phase opener listener (the ClientRouter took the links first). Designer built the script too. Checked 375/1280/1440, Night/Day, reduced motion, no JS. | `QuickContact.astro`, `Header.astro`, `Packages.astro`, `Icon.astro`, `BaseLayout.astro`, `index.astro`, `booking.ts`, `site.css`, `tokens.css`, `site.ts` |
+| 2026-11-03 | 3 | done: `AvailabilityCalendar` in the right column of `/contact/` (phones: intro → contacts → calendar → form → photo), grid with roving focus, arrows/Home/End/PageUp/PageDown, states free / half day left / booked / past with marks (not colour alone), pick → date field, `?date=`, WhatsApp text, status line; all-booked and range-over lines; static first month without JS (build date marks past days); `dates.ts` split out so the component can share it at build time. Checked 375/1280, Night/Day, keyboard, no JS, mocked clock. | `AvailabilityCalendar.astro`, `calendar.ts`, `dates.ts`, `booking.ts`, `site.ts` (script, data), `contact.astro`, `site.css` |

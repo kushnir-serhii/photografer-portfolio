@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactForm from '../components/ContactForm.astro';
+import AvailabilityCalendar from '../components/AvailabilityCalendar.astro';
 import { Picture } from 'astro:assets';
 import { site, pictures, contactPage } from '../data/site';
 ---
@@ -14,7 +15,7 @@ import { site, pictures, contactPage } from '../data/site';
             <h1 class="sh-d-xl sh-contact__title" data-split>{contactPage.heading}</h1>
             <p class="sh-lead sh-measure" data-reveal data-reveal-delay="140">{contactPage.lead}</p>
           </div>
-          <div class="sh-contact__form"><ContactForm /></div>
+          <div class="sh-contact__form" id="brief"><ContactForm /></div>
         </div>
         <div class="sh-story__media sh-contact__aside">
           <div class="sh-contact__direct">
@@ -25,6 +26,7 @@ import { site, pictures, contactPage } from '../data/site';
               <li><span class="sh-muted sh-body-s">{contactPage.directNote}</span></li>
             </ul>
           </div>
+          <div class="sh-contact__cal"><AvailabilityCalendar /></div>
           <div class="sh-frame sh-contact__photo" data-reveal="clip" data-cursor-label="View">
             <Picture
               class="sh-img sh-ratio-4x5"

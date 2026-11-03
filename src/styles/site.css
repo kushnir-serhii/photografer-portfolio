@@ -203,26 +203,86 @@ body.has-drawer { overflow: hidden; }
 .sh-contact__intro { display: grid; gap: var(--space-4); }
 .sh-contact__intro > p { margin: 0; }
 .sh-contact__list a, .sh-contact__list li > span { display: inline-flex; align-items: center; min-height: 44px; }
-/* Phones: intro, direct contacts, form, photo in one DOM order (wrappers dissolve into the story grid).
-   From two columns: form column left, photo then contacts in the side column. */
+/* Phones: intro, direct contacts, calendar, form, photo in one DOM order (wrappers dissolve into the story grid).
+   From two columns: form column left; contacts, calendar, then the photo in the side column. */
 @media (max-width: 899px) {
   .sh-contact__main, .sh-contact__aside { display: contents; }
   .sh-contact__intro { order: 0; }
   .sh-contact__direct { order: 1; }
-  .sh-contact__form { order: 2; }
-  .sh-contact__photo { order: 3; }
+  .sh-contact__cal { order: 2; }
+  .sh-contact__form { order: 3; }
+  .sh-contact__photo { order: 4; }
   .sh-contact__direct-title { margin-bottom: 4px; }
   .sh-contact__list { gap: 0; }
   .sh-contact__list li:last-child > span { min-height: 0; }
 }
 @media (min-width: 900px) {
   .sh-contact__main { display: grid; gap: var(--space-4); align-content: start; }
-  .sh-contact__photo { order: -1; }
+  .sh-contact__cal { padding-block: var(--space-3); }
   .sh-contact__list { gap: var(--space-3); }
   .sh-contact__list a, .sh-contact__list li > span { min-height: 0; }
 }
 .sh-contact__next-title { margin: 0 0 28px; }
 .sh-contact__steps { list-style: none; margin: 0; padding: 0; }
+
+/* ---------- availability calendar ---------- */
+
+/* Status never rests on colour alone: free days carry a filled square, half days a half-filled one,
+   booked days are struck through; each day's accessible name says it in words. */
+.sh-cal { position: relative; display: grid; gap: var(--space-4); max-width: 440px; }
+.sh-cal__head { display: grid; gap: var(--space-2); }
+.sh-cal__title, .sh-cal__hint, .sh-cal__demo, .sh-cal__month { margin: 0; }
+.sh-cal__hint[hidden], .sh-cal__body[hidden], .sh-cal__nav[hidden], .sh-cal__line[hidden], .sh-cal__line [hidden] { display: none; }
+.sh-cal__demo { max-width: 44ch; }
+.sh-cal__body { display: grid; gap: var(--space-3); }
+.sh-cal__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 44px;
+  padding-bottom: var(--space-3); border-bottom: 1px solid var(--line); }
+.sh-cal__nav { display: flex; gap: var(--space-2); }
+.sh-cal__step { width: 44px; height: 44px; flex-basis: 44px; }
+.sh-cal__step[aria-disabled="true"] { opacity: 0.38; cursor: default; }
+.sh-cal__step[aria-disabled="true"]:hover { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+
+.sh-cal__grid { width: calc(100% + 4px); margin-inline: -2px; table-layout: fixed; border-collapse: separate; border-spacing: 2px; }
+.sh-cal__grid th {
+  padding: 0 0 var(--space-2); text-align: center;
+  font-family: var(--font-mono); font-size: 11px; line-height: 14px; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.sh-cal__grid td { padding: 0; text-align: center; }
+.sh-cal__day {
+  position: relative; display: grid; place-items: center; width: 100%; min-height: 48px; padding: 0 0 8px;
+  border: 1px solid transparent; border-radius: var(--radius-xs); background: none; color: var(--ink);
+  font-family: var(--font-mono); font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums;
+}
+button.sh-cal__day { cursor: pointer; transition: background-color var(--dur-fast) linear, border-color var(--dur-fast) linear, color var(--dur-fast) linear; }
+button.sh-cal__day[aria-disabled="true"] { cursor: default; }
+button.sh-cal__day:not([aria-disabled="true"]):hover { border-color: var(--line-strong); background: var(--accent-wash); }
+.sh-cal__day[aria-current="date"] { border-color: var(--line-strong); }
+.sh-cal__day:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+/* The marks: under the number in the grid, and on their own in the legend. */
+.sh-cal__day::after, .sh-cal__key { content: ""; box-sizing: border-box; width: 8px; height: 8px; }
+.sh-cal__day::after { position: absolute; left: 50%; bottom: 6px; translate: -50% 0; }
+.sh-cal__day[data-state="free"]::after, .sh-cal__key[data-state="free"] { background: var(--accent-mark); }
+.sh-cal__day[data-state="half"]::after, .sh-cal__key[data-state="half"] {
+  border: 1px solid var(--accent-mark); background: linear-gradient(90deg, var(--accent-mark) 50%, transparent 50%);
+}
+.sh-cal__day[data-state="booked"], .sh-cal__day[data-state="past"] { color: var(--ink-faint); }
+.sh-cal__day[data-state="booked"], .sh-cal__key[data-state="booked"] { text-decoration: line-through; text-decoration-thickness: 1px; }
+.sh-cal__day[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.sh-cal__day[aria-pressed="true"]::after { border-color: var(--on-accent); }
+.sh-cal__day[aria-pressed="true"][data-state="free"]::after { background: var(--on-accent); }
+.sh-cal__day[aria-pressed="true"][data-state="half"]::after { background: linear-gradient(90deg, var(--on-accent) 50%, transparent 50%); }
+
+.sh-cal__legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); color: var(--ink-muted); }
+.sh-cal__legend li { display: inline-flex; align-items: center; gap: var(--space-2); }
+.sh-cal__key { display: inline-block; flex: none; }
+.sh-cal__key[data-state="booked"] { width: auto; height: auto; font-size: 11px; color: var(--ink-faint); }
+
+.sh-cal__line { margin: 0; padding-left: var(--space-4); border-left: 2px solid var(--accent-mark); color: var(--ink-muted); }
+.sh-cal__status { margin: 0; color: var(--accent-text); }
+/* Empty, the live region stays in the page (so it is announced when filled) but takes no room. */
+.sh-cal__status:empty { position: absolute; }
 
 /* ---------- 404 ---------- */
 
