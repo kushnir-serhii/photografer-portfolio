@@ -256,6 +256,8 @@ export const quickContact = {
     planArea: "Hi Robin, I'd like to ask about {plan} in {area}. Which dates are free?",
     dateArea: 'Hi Robin, is {date} free for a shoot in {area}?',
     noneArea: "Hi Robin, I'd like to ask about a shoot in {area}. Which dates are free?",
+    // Added to any of the eight when the visitor built a quote on /rates/. {quote}: the summary, "Full day, extra hour ×2 — £2,150 ex VAT".
+    quote: ' My quote from your site: {quote}.',
   },
 };
 
@@ -491,6 +493,8 @@ export const enquiryForm = {
   packageLabel: 'Package',
   packageNone: 'Not sure yet',
   packageChange: 'Change',
+  // Link on the confirmation line back to the calculator, when the package comes with add-ons or a quantity.
+  quoteEdit: 'Edit quote',
   dateHelp: 'A rough week is fine. Not fixed yet? Leave it empty.',
   briefPlaceholder: 'A spring menu launch, 12 dishes, at our place in Peckham. Pictures for the website and Instagram.',
   // Starts an empty brief when the visitor arrives from an area page (?area=). {area}: Area.name.

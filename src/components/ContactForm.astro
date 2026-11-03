@@ -1,5 +1,5 @@
 ---
-import { site, plans, shootTypes, budgetRanges, enquiryForm as copy } from '../data/site';
+import { site, plans, addOns, quoteCopy, shootTypes, budgetRanges, enquiryForm as copy } from '../data/site';
 import type { Plan } from '../data/site';
 import { areas } from '../data/areas';
 import { formatPrice } from '../data/format';
@@ -9,6 +9,13 @@ import Icon from './Icon.astro';
 const planText = (p: Plan) => `${p.name} — ${formatPrice(p.price)}${p.unit === 'per shoot' ? '' : ` ${p.unit}`}`;
 // Slug -> name for ?area=; the script fills the brief from it.
 const areaData = JSON.stringify(Object.fromEntries(areas.map((a) => [a.slug, a.name])));
+// What the script needs to rebuild a quote from ?plan=&qty=&addons= and pick the budget; options are in budgetRanges order.
+const quoteData = JSON.stringify({
+  plans: plans.map(({ id, name, price, qty }) => ({ id, name, price, qty })),
+  addOns: addOns.map(({ id, name, price, priceFrom, qty }) => ({ id, name, price, priceFrom, qty })),
+  copy: quoteCopy,
+  budgets: budgetRanges,
+});
 const action = site.formEndpoint || `mailto:${site.email}`;
 ---
 <form
@@ -21,10 +28,12 @@ const action = site.formEndpoint || `mailto:${site.email}`;
   data-endpoint={site.formEndpoint}
   data-areas={areaData}
   data-area-brief={copy.briefArea}
+  data-quote-data={quoteData}
 >
   <p class="sh-enquiry__choice sh-body-s" data-plan-choice aria-live="polite" hidden>
-    <span data-plan-choice-text></span> · <button class="sh-enquiry__change" type="button" data-plan-change>{copy.packageChange}</button>
+    <span data-plan-choice-text></span> · <button class="sh-enquiry__change" type="button" data-plan-change>{copy.packageChange}</button><span data-quote-edit-wrap hidden> · <a class="sh-link" href="/rates/#quote" data-quote-edit>{copy.quoteEdit}</a></span>
   </p>
+  <input type="hidden" name="quote" value="" disabled data-quote-field />
   <div class="sh-row sh-row--2">
     <div class="sh-field">
       <label class="sh-label" for="c-name">Your name</label>

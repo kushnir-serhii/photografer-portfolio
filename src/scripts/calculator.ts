@@ -4,10 +4,8 @@
 // The price data comes as JSON in data-calc, never by importing site.ts (which pulls in images).
 import { formatPrice, priceText } from '../data/format';
 import { parseQuote, quoteQuery, quoteTotal, type Quote } from '../data/quote';
-import type { AddOn, Plan, PlanId, Quantity, QuoteCopy } from '../data/site';
-
-type PlanData = Pick<Plan, 'id' | 'name' | 'price' | 'qty'>;
-type AddOnData = Pick<AddOn, 'id' | 'name' | 'price' | 'priceFrom' | 'qty'>;
+import type { PlanId, Quantity, QuoteCopy } from '../data/site';
+import { isRecord, readPriceLists, text, type AddOnData, type PlanData } from './price-data';
 
 interface CalcData {
   defaultPlan: PlanId;
@@ -18,29 +16,14 @@ interface CalcData {
 
 const QUOTE_PARAMS = ['plan', 'qty', 'addons'];
 
-const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
-
-function isQuantity(v: unknown): v is Quantity {
-  return isRecord(v) && typeof v.min === 'number' && typeof v.max === 'number'
-    && typeof v.one === 'string' && typeof v.many === 'string';
-}
-
-function isPriced(v: unknown): v is { id: string; name: string; price: number } {
-  return isRecord(v) && typeof v.id === 'string' && typeof v.name === 'string' && typeof v.price === 'number'
-    && (v.qty === undefined || isQuantity(v.qty));
-}
-
-// The ids come from the build (site.ts types), so a priced entry with a string id is trusted as one.
 function readData(json: string | undefined): CalcData | null {
   try {
     const parsed: unknown = JSON.parse(json ?? '');
-    if (!isRecord(parsed) || !Array.isArray(parsed.plans) || !Array.isArray(parsed.addOns) || !isRecord(parsed.copy)) return null;
-    // Narrowed field by field above; the casts only restore the id unions written by the build.
-    const plans = parsed.plans.filter(isPriced) as PlanData[];
-    const addOns = parsed.addOns.filter(isPriced) as AddOnData[];
-    const c = parsed.copy;
-    const text = (v: unknown) => (typeof v === 'string' ? v : '');
-    const copy = { for: text(c.for), from: text(c.from), exVat: text(c.exVat), times: text(c.times), totalFrom: text(c.totalFrom) };
+    if (!isRecord(parsed)) return null;
+    const lists = readPriceLists(parsed);
+    if (!lists || !isRecord(parsed.copy)) return null;
+    const { plans, addOns } = lists;
+    const copy = { ...lists.copy, totalFrom: text(parsed.copy.totalFrom) };
     const defaultPlan = plans.find((p) => p.id === parsed.defaultPlan)?.id ?? plans[0]?.id;
     return defaultPlan ? { defaultPlan, plans, addOns, copy } : null;
   } catch {

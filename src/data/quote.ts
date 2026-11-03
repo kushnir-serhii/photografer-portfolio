@@ -3,7 +3,7 @@
 // JSON, never by importing site.ts). The words in the summary come in as a QuoteCopy argument
 // (quoteCopy in site.ts), so this file holds no client-facing copy.
 // URL form: ?plan=headshots&qty=8&addons=retouching:20,extra-hour:2,short-video
-import type { AddOn, AddOnId, Plan, PlanId, Quantity, QuoteCopy } from './site';
+import type { AddOn, AddOnId, BudgetRange, Plan, PlanId, Quantity, QuoteCopy } from './site';
 import { formatPrice } from './format';
 
 export interface QuoteAddOn {
@@ -55,6 +55,26 @@ export function parseQuote(
     quote.addOns.push(addOn.qty ? { id: addOn.id, qty: clampQty(rawQty, addOn.qty) } : { id: addOn.id });
   }
   return quote;
+}
+
+// A quote the visitor actually built: add-ons, or a quantity for a per-unit plan (?qty= present).
+// A plan alone ("Full day" from a package card) is only a package choice, so this gives null for it.
+export function parseBuiltQuote(
+  params: URLSearchParams,
+  plans: readonly PlanLike[],
+  addOns: readonly AddOnLike[],
+): Quote | null {
+  const quote = parseQuote(params, plans, addOns);
+  if (!quote) return null;
+  const plan = plans.find((p) => p.id === quote.plan);
+  return quote.addOns.length > 0 || (plan?.qty !== undefined && params.has('qty')) ? quote : null;
+}
+
+// Index of the budget range that holds `amount` (ex VAT): the first whose `max` it does not exceed, else the
+// open-ended one (neither `max` nor `notSure`). -1 when the list has no fitting option.
+export function budgetIndex(amount: number, ranges: readonly Pick<BudgetRange, 'max' | 'notSure'>[]): number {
+  const fit = ranges.findIndex((r) => r.max !== undefined && amount <= r.max);
+  return fit !== -1 ? fit : ranges.findIndex((r) => r.max === undefined && !r.notSure);
 }
 
 export function quoteTotal(quote: Quote, plans: readonly PlanLike[], addOns: readonly AddOnLike[]): QuoteTotal {

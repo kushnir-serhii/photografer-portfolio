@@ -49,7 +49,7 @@ A visitor builds their own quote on `/rates/` — package plus add-ons, with qua
   - [x] 375px without horizontal scroll, the bottom bar never covers content; Night and Day; reduced motion
   - [x] `/rates/?plan=headshots&qty=8&addons=retouching:20,bogus` opens with that quote (the unknown id ignored); no JS shows a readable price list and a link to the form
 
-### [ ] 3. Selection in the enquiry
+### [x] 3. Selection in the enquiry
 - **Build:** `/contact/` reads `qty` and `addons` as well as `plan`:
   - the confirmation line from 002 shows package + add-ons + total ("Full day, extra hour ×2 — £2,150 ex VAT") with an "Edit quote" link back to `/rates/?…` (the calculator); with a plan alone it stays as in 002;
   - changing the package in the form keeps the add-ons and recomputes the total; form reset clears the quote and its params;
@@ -59,9 +59,9 @@ A visitor builds their own quote on `/rates/` — package plus add-ons, with qua
 - **Files:** `src/components/ContactForm.astro`, `src/components/QuickContact.astro`, `src/scripts/booking.ts`, `src/data/site.ts` (copy)
 - **Agent:** frontend
 - **Accept:**
-  - [ ] unknown add-on ids and bad quantities are ignored; the total matches the calculator for the same URL
-  - [ ] the submitted data contains the package, add-ons and total (in `quote`); the budget follows the total until the visitor changes it
-  - [ ] the WhatsApp text from `/rates/` (calculator opener) and from `/contact/?plan=…&addons=…` includes the summary and total
+  - [x] unknown add-on ids and bad quantities are ignored; the total matches the calculator for the same URL
+  - [x] the submitted data contains the package, add-ons and total (in `quote`); the budget follows the total until the visitor changes it
+  - [x] the WhatsApp text from `/rates/` (calculator opener) and from `/contact/?plan=…&addons=…` includes the summary and total
 
 ## External needs
 The client's real prices, add-ons (with units and quantity limits) and usage terms.
@@ -78,3 +78,4 @@ The client's real prices, add-ons (with units and quantity limits) and usage ter
 | --- | --- | --- | --- |
 | 2026-11-03 | 1 | done: `format.ts` (`money`, `formatPrice`, `priceText`), numeric plan/add-on prices with ids, quantities and units, travel as `ratesPage.travel`, price copy (marquee, rates description, area hints, `priceRange`) built from numbers, `OfferCatalog` JSON-LD on `/rates/`, `quote.ts` helpers (checked: unknown ids dropped, qty clamped, duplicates first wins, round-trip), `budgetRanges` with `max` / `notSure`. Built pages diffed against the baseline: identical except the new JSON-LD on rates. | `format.ts`, `quote.ts`, `site.ts`, `areas.ts`, `schema.ts`, `Packages.astro`, `ContactForm.astro`, `rates.astro` |
 | 2026-11-03 | 2 | done: `PriceCalculator` replaces the add-ons block (the rates photo dropped: two columns with a sticky panel, work first); package radio cards, add-on checkboxes, `QtyStepper` (reused three times, `aria-disabled` at limits, clamp on blur/Enter), panel with lines and unit maths, total announced after a 450 ms pause, "Send this to me" (first person, instead of "to us") and the quick-contact opener with `data-plan/qty/addons`; phone bar via IntersectionObserver with scroll padding; URL kept in step with `quoteQuery` (readable); no JS: disabled price list + link to the form. Checked 375/1280, Night/Day, `?plan=headshots&qty=8&addons=retouching:20,bogus` → £1,460, bogus dropped. | `PriceCalculator.astro`, `QtyStepper.astro`, `Icon.astro` (minus/plus), `calculator.ts`, `site.ts` (script, copy), `quote.ts`, `rates.astro`, `site.css` |
+| 2026-11-03 | 3 | done: `/contact/` reads `qty`/`addons` (`parseBuiltQuote`: a plan alone stays 002), line "Headshots for 8 people, extra retouching ×20 — £1,460 ex VAT · Change · Edit quote" (→ `/rates/?…#quote`), package change keeps add-ons, "Not sure yet" and reset clear the quote; hidden `quote` field (disabled when empty); budget follows the total (`budgetIndex`) until changed by hand; WhatsApp adds " My quote from your site: …" from the calculator opener or the URL; the dialog's brief link carries the quote. Shared JSON guards in `price-data.ts`. Checked in Playwright via `FormData` and the WhatsApp href. | `ContactForm.astro`, `QuickContact.astro`, `booking.ts`, `calculator.ts`, `price-data.ts`, `quote.ts`, `site.ts` (copy), `rates.astro` |
