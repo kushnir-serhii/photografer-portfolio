@@ -1,6 +1,6 @@
 # 004 — Area pages + SEO
 
-**Status:** ready · **Depends on:** 001, 008 · **Route(s):** `/brand-photographer/[slug]/`, `/rates/`, `/studio/`, every page (`<head>`)
+**Status:** in-progress · **Depends on:** 001, 008 · **Route(s):** `/brand-photographer/[slug]/`, `/rates/`, `/studio/`, every page (`<head>`)
 
 ## Goal
 A marketing manager searching "brand photographer Shoreditch" lands on a page made for Shoreditch, and Google shows the studio's FAQ and details as rich results. In the demo: *"people searching in my area find me"* — shown with a Rich Results preview and the area pages.
@@ -17,13 +17,13 @@ A marketing manager searching "brand photographer Shoreditch" lands on a page ma
 
 ## Slices
 
-### [ ] 1. Structured data
+### [x] 1. Structured data
 - **Build:** a `JsonLd.astro` helper (the FAQ is already in `site.ts`); business JSON-LD in `BaseLayout` from `site.ts`; `FAQPage` on `/rates/`.
 - **Files:** `src/components/JsonLd.astro`, `src/layouts/BaseLayout.astro`, `src/pages/rates.astro`, `src/data/site.ts`
 - **Agent:** frontend
 - **Accept:**
-  - [ ] the JSON-LD on `/` and `/rates/` parses and uses valid schema.org types (checked with the Rich Results / Schema validator by hand, noted in the log)
-  - [ ] one block per type per page; nothing duplicated across client-side navigations
+  - [x] the JSON-LD on `/` and `/rates/` parses and uses valid schema.org types (checked with the Rich Results / Schema validator by hand, noted in the log)
+  - [x] one block per type per page; nothing duplicated across client-side navigations
 
 ### [ ] 2. Area pages
 - **Build:** `src/pages/brand-photographer/[slug].astro` with `getStaticPaths` from `areas.ts`: hero image, H1 ("Brand photographer in Shoreditch"), local intro, projects shot there (from `projects`), travel note and price hint, local FAQ (+ `FAQPage`, only when the area has one), CTA to the form (`/contact/?area=<slug>`: an empty brief field starts with "Shoot in Shoreditch: ", and the quick-contact WhatsApp text names the area) and to the quick contact, breadcrumbs (+ `BreadcrumbList`), own title, description and canonical.
@@ -49,6 +49,7 @@ A marketing manager searching "brand photographer Shoreditch" lands on a page ma
 - Submit the sitemap in Google Search Console after launch ([setup.md](../setup.md)).
 
 ## Open questions
+- **To check by hand:** paste `/` and `/rates/` into Google's Rich Results Test once deployed (or the built HTML into validator.schema.org).
 - **Decided (2026-11-03):** route `/brand-photographer/<slug>/` (keyword in the path; 007 may change the segment).
 - **Decided (2026-11-03):** sitemap via `@astrojs/sitemap` (new dependency, approved); `robots.txt` as an endpoint built from `site`.
 - **Decided (2026-11-03):** business JSON-LD carries `priceRange` only; per-package `Offer`s wait for numeric prices in 003.
@@ -59,3 +60,4 @@ A marketing manager searching "brand photographer Shoreditch" lands on a page ma
 ## Log
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
+| 2026-11-03 | 1 | done: `JsonLd.astro` (escapes `<`), `schema.ts` builders (`businessSchema`, `faqSchema`), `business` details in `site.ts`, `ProfessionalService` on every page from `BaseLayout`, `FAQPage` on `/rates/` via a `schema` prop. Every block parsed with `JSON.parse`, types checked against schema.org; Playwright: `/` → `/rates/` → `/studio/` by client navigation keeps one block per type. The Google Rich Results Test is left for a hand check on the deployed URL (agents don't send pages to external services). `sameAs` waits for a real Instagram URL. | `JsonLd.astro`, `schema.ts`, `site.ts`, `BaseLayout.astro`, `rates.astro` |

@@ -3,9 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Packages from '../components/Packages.astro';
 import StoryBlock from '../components/StoryBlock.astro';
 import ClosingCta from '../components/ClosingCta.astro';
+import { faqSchema } from '../data/schema';
 import { plans, pictures, ratesPage, addOns, faq } from '../data/site';
 ---
-<BaseLayout title={ratesPage.title} description={ratesPage.description}>
+<BaseLayout title={ratesPage.title} description={ratesPage.description} schema={[faqSchema(faq)]}>
   <section class="sh-section">
     <div class="sh-container">
       <p class="sh-meta sh-head__eyebrow" data-reveal>{ratesPage.eyebrow}</p>

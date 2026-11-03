@@ -44,6 +44,16 @@ export const site = {
   demo: true,
 };
 
+// Details used only for schema.org structured data (src/data/schema.ts). No street address: fictional.
+export const business = {
+  region: 'Greater London',
+  country: 'GB',
+  // Ex VAT, from the cheapest to the dearest package. Per-package Offers with numeric prices come in spec 003.
+  priceRange: '£120–£1,750',
+  // Place names for areaServed; slice 2 feeds this from the areas data set.
+  areaServed: [site.city],
+};
+
 export const nav = [
   { label: 'Work', href: '/work/' },
   { label: 'Studio', href: '/studio/' },
