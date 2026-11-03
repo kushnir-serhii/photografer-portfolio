@@ -57,3 +57,22 @@ export function faqSchema(items: FaqItem[]): JsonLdObject {
     })),
   };
 }
+
+export interface BreadcrumbItem {
+  name: string;
+  // Absolute URL of the page.
+  url: string;
+}
+
+export function breadcrumbSchema(items: BreadcrumbItem[]): JsonLdObject {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}

@@ -11,6 +11,20 @@ export function setParam(name: string, value: string | null) {
   history.replaceState(history.state, '', url);
 }
 
+/** Reads a slug -> name map from a data attribute; anything else gives an empty map. */
+function readAreas(json: string | undefined): Map<string, string> {
+  const map = new Map<string, string>();
+  try {
+    const parsed: unknown = JSON.parse(json ?? '{}');
+    if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+      for (const [slug, name] of Object.entries(parsed)) if (typeof name === 'string') map.set(slug, name);
+    }
+  } catch {
+    // Malformed data: no areas.
+  }
+  return map;
+}
+
 export function initBooking() {
   document.querySelectorAll<HTMLFormElement>('form[data-enquiry]').forEach((form) => {
     const select = form.querySelector<HTMLSelectElement>('[data-plan-select]');
@@ -49,6 +63,16 @@ export function initBooking() {
         showChoice();
       }));
     }
+
+    // ?area=shoreditch starts an empty brief with "Shoot in Shoreditch: ". Unknown slugs are ignored; typed text is kept.
+    const briefInput = form.querySelector<HTMLTextAreaElement>('textarea[name="brief"]');
+    const areaWanted = params.get('area');
+    const areaName = areaWanted ? readAreas(form.dataset.areas).get(areaWanted) : undefined;
+    if (briefInput && areaName && form.dataset.areaBrief && !briefInput.value.trim()) {
+      briefInput.value = form.dataset.areaBrief.replace('{area}', () => areaName);
+    }
+    // After a sent brief the form is empty again; the area is not asked for twice.
+    form.addEventListener('reset', () => setTimeout(() => setParam('area', null)));
 
     if (dateInput) {
       // ?date=2027-06-12 fills the field as "12 June 2027". Invalid dates are ignored.
@@ -92,10 +116,12 @@ function readPlans(json: string | undefined): QuickPlan[] {
   }
 }
 
-const fill = (template: string, date: string, plan: string) => template.replace('{date}', date).replace('{plan}', plan);
+const fill = (template: string, date: string, plan: string, area = '') =>
+  template.replace('{date}', () => date).replace('{plan}', () => plan).replace('{area}', () => area);
 
 function wireQuickContact(dialog: HTMLDialogElement) {
   const plans = readPlans(dialog.dataset.plans);
+  const areaNames = readAreas(dialog.dataset.areas);
   const context = dialog.querySelector<HTMLElement>('[data-quick-context]');
   const whatsapp = dialog.querySelector<HTMLAnchorElement>('[data-quick-whatsapp]');
   const brief = dialog.querySelector<HTMLAnchorElement>('[data-quick-brief]');
@@ -109,23 +135,29 @@ function wireQuickContact(dialog: HTMLDialogElement) {
     const plan = plans.find((p) => p.id === (from.dataset.plan ?? params.get('plan')));
     const iso = bookingDate ?? (parseIsoDate(params.get('date')) ? params.get('date') : null);
     const date = formatDate(iso);
+    const areaId = from.dataset.area ?? params.get('area') ?? '';
+    const areaName = areaNames.get(areaId);
 
     if (context) {
       context.textContent = [plan?.name, date].filter(Boolean).join(' · ');
       context.hidden = !plan && !date;
     }
     if (whatsapp && dialog.dataset.waNumber) {
-      const { waBoth = '', waPlan = '', waDate = '', waNone = '' } = dialog.dataset;
-      const text = plan && date ? fill(waBoth, date, plan.ask)
-        : plan ? fill(waPlan, '', plan.ask)
-        : date ? fill(waDate, date, '')
-        : waNone;
+      const d = dialog.dataset;
+      const { waBoth = '', waPlan = '', waDate = '', waNone = '' } = d;
+      const { waBothArea = waBoth, waPlanArea = waPlan, waDateArea = waDate, waNoneArea = waNone } = d;
+      const a = areaName ?? '';
+      const text = plan && date ? fill(areaName ? waBothArea : waBoth, date, plan.ask, a)
+        : plan ? fill(areaName ? waPlanArea : waPlan, '', plan.ask, a)
+        : date ? fill(areaName ? waDateArea : waDate, date, '', a)
+        : fill(areaName ? waNoneArea : waNone, '', '', a);
       whatsapp.href = `https://wa.me/${dialog.dataset.waNumber}?text=${encodeURIComponent(text)}`;
     }
     if (brief) {
       const url = new URL('/contact/', location.origin);
       if (plan) url.searchParams.set('plan', plan.id);
       if (iso) url.searchParams.set('date', iso);
+      if (areaName) url.searchParams.set('area', areaId);
       brief.href = url.pathname + url.search;
     }
   }

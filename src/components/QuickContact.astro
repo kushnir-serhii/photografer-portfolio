@@ -4,11 +4,13 @@
 // booking.ts opens it from any [data-quick-contact] link and pre-writes the WhatsApp text.
 // Without JS it never opens: every opener is a plain link to /contact/.
 import { plans, quickContact as copy, site } from '../data/site';
+import { areas } from '../data/areas';
 import Icon from './Icon.astro';
 
 const whatsappHref = (text: string) => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
 // Only what the script needs to pre-write the message; site.ts itself never reaches the client.
 const planData = JSON.stringify(plans.map(({ id, name, ask }) => ({ id, name, ask })));
+const areaData = JSON.stringify(Object.fromEntries(areas.map((a) => [a.slug, a.name])));
 ---
 <dialog
   class="sh-quick"
@@ -21,6 +23,11 @@ const planData = JSON.stringify(plans.map(({ id, name, ask }) => ({ id, name, as
   data-wa-plan={copy.whatsappText.plan}
   data-wa-date={copy.whatsappText.date}
   data-wa-none={copy.whatsappText.none}
+  data-areas={areaData}
+  data-wa-both-area={copy.whatsappText.bothArea}
+  data-wa-plan-area={copy.whatsappText.planArea}
+  data-wa-date-area={copy.whatsappText.dateArea}
+  data-wa-none-area={copy.whatsappText.noneArea}
   transition:persist="quick-contact"
 >
   <div class="sh-quick__panel">

@@ -1,0 +1,147 @@
+---
+// One page per area or city in src/data/areas.ts: /brand-photographer/<slug>/.
+import type { GetStaticPaths } from 'astro';
+import { Picture, getImage } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import FaqList from '../../components/FaqList.astro';
+import ClosingCta from '../../components/ClosingCta.astro';
+import { areas, areaPage as copy, areaText, areaLabel, type Area } from '../../data/areas';
+import { projects, type Project } from '../../data/site';
+import { breadcrumbSchema, faqSchema, type JsonLdObject } from '../../data/schema';
+
+export const getStaticPaths = (() => areas.map((area) => ({ params: { slug: area.slug }, props: { area } }))) satisfies GetStaticPaths;
+
+interface Props {
+  area: Area;
+}
+const { area } = Astro.props;
+const t = (template: string) => areaText(template, area);
+
+// Up to three cards: projects shot here first, then the most recent from elsewhere.
+const shown = 3;
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const recency = (p: Project) => p.year * 12 + months.indexOf(p.month);
+const newestFirst = [...projects].sort((a, b) => recency(b) - recency(a));
+const local = newestFirst.filter((p) => p.areaSlug === area.slug);
+const elsewhere = newestFirst.filter((p) => p.areaSlug !== area.slug).slice(0, Math.max(0, shown - local.length));
+const cards = [...local, ...elsewhere];
+
+const path = `/brand-photographer/${area.slug}/`;
+const contactHref = `/contact/?area=${area.slug}`;
+const crumbs = [
+  { name: copy.breadcrumb.home, href: '/' },
+  { name: copy.breadcrumb.parent.label, href: copy.breadcrumb.parent.href },
+  { name: areaLabel(area), href: path },
+];
+
+const og = await getImage({ src: area.image, width: 1200, format: 'jpg' });
+const schema: JsonLdObject[] = [
+  breadcrumbSchema(crumbs.map((c) => ({ name: c.name, url: new URL(c.href, Astro.site).href }))),
+  ...(area.faq?.length ? [faqSchema(area.faq)] : []),
+];
+---
+<BaseLayout title={t(copy.title)} description={t(copy.description)} image={og.src} schema={schema}>
+  <section class="sh-section">
+    <div class="sh-container">
+      <nav class="sh-crumbs" aria-label={copy.breadcrumb.label}>
+        <ol class="sh-crumbs__list">
+          {crumbs.map((c, i) => (
+            <li class="sh-crumbs__item">
+              {i < crumbs.length - 1
+                ? <a class="sh-crumbs__link" href={c.href}>{c.name}</a>
+                : <span class="sh-crumbs__current" aria-current="page">{c.name}</span>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <p class="sh-meta sh-head__eyebrow" data-reveal>{t(copy.eyebrow)}</p>
+      <h1 class="sh-d-xl sh-head__title sh-area__title" data-split>{t(copy.title)}</h1>
+      <p class="sh-lead sh-measure sh-head__lead" data-reveal data-reveal-delay="140">{area.intro}</p>
+    </div>
+  </section>
+
+  <section class="sh-section sh-section--flush">
+    <div class="sh-container">
+      <div class="sh-frame sh-area__media">
+        <Picture
+          class="sh-img"
+          pictureAttributes={{ class: 'sh-pic' }}
+          src={area.image}
+          alt={area.alt}
+          style={area.focus ? `object-position: ${area.focus}` : undefined}
+          formats={['avif', 'webp']}
+          widths={[640, 960, 1280, 1600, 2400]}
+          sizes="(min-width: 1440px) 1344px, (min-width: 721px) calc(100vw - 96px), calc(100vw - 48px)"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="sh-section">
+    <div class="sh-container">
+      <div class="sh-section-head">
+        <div class="sh-block-head sh-area__work-head">
+          <h2 class="sh-d-l" data-split>{local.length ? t(copy.workTitle) : copy.emptyTitle}</h2>
+          {local.length === 0
+            ? <p class="sh-area__note" data-reveal>{t(copy.empty)}</p>
+            : elsewhere.length > 0 && <p class="sh-muted" data-reveal>{copy.workMore}</p>}
+        </div>
+        <a class="sh-btn sh-btn--outline" href="/work/">{copy.allWork}</a>
+      </div>
+      <div class="sh-projects">
+        {cards.map((p) => <ProjectCard project={p} href={`/work/#${p.slug}`} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="sh-section sh-section--band">
+    <div class="sh-container sh-studio-split">
+      <div>
+        <h2 class="sh-d-l" data-split>{copy.detailsTitle}</h2>
+        <p class="sh-area__rates" data-reveal><a class="sh-btn sh-btn--outline" href="/rates/">{copy.detailsCta}</a></p>
+      </div>
+      <dl class="sh-gets sh-area__facts" data-reveal>
+        <div class="sh-gets__item">
+          <dt class="sh-meta">{copy.travelLabel}</dt>
+          <dd class="sh-muted">{area.travel}</dd>
+        </div>
+        <div class="sh-gets__item">
+          <dt class="sh-meta">{copy.priceLabel}</dt>
+          <dd class="sh-area__price">{area.priceHint}</dd>
+        </div>
+        {area.venues && area.venues.length > 0 && (
+          <div class="sh-gets__item">
+            <dt class="sh-meta">{copy.venuesLabel}</dt>
+            <dd>
+              <ul class="sh-tags sh-area__venues">
+                {area.venues.map((v) => <li class="sh-tags__item">{v}</li>)}
+              </ul>
+            </dd>
+          </div>
+        )}
+      </dl>
+    </div>
+  </section>
+
+  {area.faq && area.faq.length > 0 && (
+    <section class="sh-section">
+      <div class="sh-container sh-container--narrow">
+        <p class="sh-meta sh-faq__eyebrow" data-reveal>{copy.faqEyebrow}</p>
+        <h2 class="sh-d-l sh-faq__title" data-split>{t(copy.faqTitle)}</h2>
+        <FaqList items={area.faq} />
+      </div>
+    </section>
+  )}
+
+  <ClosingCta
+    eyebrow={copy.cta.eyebrow}
+    title={t(copy.cta.title)}
+    cta={copy.cta.primary}
+    href={contactHref}
+    meta={copy.cta.meta}
+    call={{ label: copy.cta.call, href: contactHref, area: area.slug }}
+  />
+</BaseLayout>

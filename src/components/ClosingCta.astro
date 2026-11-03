@@ -1,11 +1,36 @@
 ---
+// The closing call to action. Defaults come from closingCta; a page can pass its own copy and links
+// (area pages: a brief prefilled by ?area= and a quiet quick-contact opener).
 import { closingCta } from '../data/site';
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  cta?: string;
+  href?: string;
+  meta?: string;
+  // A quiet "call or message" opener under the button: a link to `href` without JS, the dialog with it.
+  call?: { label: string; href: string; area?: string };
+}
+const {
+  eyebrow = closingCta.eyebrow,
+  title = closingCta.title,
+  cta = closingCta.cta,
+  href = '/contact/',
+  meta = closingCta.meta,
+  call,
+} = Astro.props;
 ---
 <section class="sh-section sh-section--huge">
   <div class="sh-container sh-closing">
-    <p class="sh-meta" data-reveal>{closingCta.eyebrow}</p>
-    <h2 class="sh-d-xl sh-closing__title" data-split>{closingCta.title}</h2>
-    <a class="sh-btn sh-btn--primary sh-btn--lg" href="/contact/" data-magnetic="0.25">{closingCta.cta}</a>
-    <p class="sh-meta-s sh-closing__meta" data-reveal data-reveal-delay="160">{closingCta.meta}</p>
+    <p class="sh-meta" data-reveal>{eyebrow}</p>
+    <h2 class="sh-d-xl sh-closing__title" data-split>{title}</h2>
+    <a class="sh-btn sh-btn--primary sh-btn--lg" href={href} data-magnetic="0.25">{cta}</a>
+    {call && (
+      <p class="sh-closing__alt">
+        <a class="sh-plan__alt" href={call.href} data-quick-contact data-area={call.area}>{call.label}</a>
+      </p>
+    )}
+    <p class="sh-meta-s sh-closing__meta" data-reveal data-reveal-delay="160">{meta}</p>
   </div>
 </section>

@@ -13,7 +13,7 @@ Everything runs locally and needs no accounts. This file collects what changes w
 | Hosting | not chosen (any static host) | launch |
 | WhatsApp / Messenger | placeholder WhatsApp number (`site.whatsapp`), Messenger empty | launch |
 | Availability dates | demo data (`availability` in `src/data/site.ts`) | launch |
-| Area and city list | — | 004 |
+| Area and city list | demo set of 9 (5 London areas, 3 UK cities, the Cotswolds) in `src/data/areas.ts` | launch |
 | Video hosting | — | 005 |
 | Client gallery service | — (demo only) | 006 |
 
@@ -22,6 +22,7 @@ Everything runs locally and needs no accounts. This file collects what changes w
 1. **Photographs:** put the client's work into `src/assets/work/` (JPG, kebab-case names, about 2400px on the long edge) and point the imports at the top of `src/data/site.ts` to them: project covers (`projects`), the `/work/` gallery (`frames`), the hero (`hero.image`) and the page photos (`pictures`); each has an `alt` that describes what is in the picture. `astro:assets` builds the AVIF/WebP sizes; the default share image is the hero at 1200px. Delete the placeholders listed below. Ratios: 4:5 for people, 3:2 for rooms, 16:9 for slides; keep the subject near the centre, the slider crops to 4:5 on phones. The `/work/` gallery packs without holes only for certain mixes and orders of frame sizes (default, tall, wide, half); when the frame list changes, run `npm run ui-check` and look at the work screenshots at 375px and 1280px.
 2. **`src/data/site.ts`:** name, description, email, phone, Instagram, client-galleries link, projects, frames, pictures, plans. Set `demo: false` so demo-only labels disappear.
 3a. **Quick contact and availability:** `site.whatsapp` is the client's WhatsApp number in international form, digits only (`447700900123`); empty hides the option. `site.messenger` is an m.me username, optional. The WhatsApp message templates are in `quickContact`. `availability` holds the first month (`from`), how many months to show, and the ISO dates that are booked or have only half a day left; the client (or you) updates it and rebuilds. Later it can be fed from the client's public Google Calendar iCal.
+3b. **Areas:** `src/data/areas.ts` holds one entry per area page (`/brand-photographer/<slug>/`): `slug` (stable once published: it is the URL and the `?area=` value on `/contact/`), `name`, `region` (London, UK city or destination), a short first-person `intro`, the `travel` terms, a `priceHint`, optional `venues` (kinds of places or public places, never a business shown as a client) and an optional local `faq` (also published as `FAQPage` data), a street or city `image` with `alt` (optional `focus` for the wide crop), and `map` coordinates for the service-area map. Page copy is in `areaPage`. Link a project to an area with `areaSlug` in `projects`; an area without one shows recent work from elsewhere.
 3. **Copy in pages:** home, studio, rates (add-ons, FAQ) and contact still hold some copy in markup; specs move it into `src/data/` as they touch it.
 4. **Privacy page:** have the text reviewed for the client's country (UK GDPR for the UK; the EU's GDPR elsewhere in the EU).
 
@@ -68,6 +69,24 @@ Every photograph in `src/assets/work/` is a stand-in from [Unsplash](https://uns
 | `studio-set-armchair.jpg` | Contact | https://unsplash.com/photos/a-white-chair-and-a-lamp-in-a-room-SIkG917dQ90 | [isaac macdonald](https://unsplash.com/@isaacmacdonald) | Unsplash License |
 
 | `choosing-prints-table.jpg` | Rates | https://unsplash.com/photos/people-are-arranging-photos-on-a-table-7Q31yspx1tQ | [Vitaly Gariev](https://unsplash.com/@silverkblack) | Unsplash License |
+
+| `area-shoreditch-high-street.jpg` | /brand-photographer/shoreditch/ (photo, share image) | https://unsplash.com/photos/man-walking-near-road-looking-up-kdbx8bXzKBk | [Sandro Cenni](https://unsplash.com/@sandrocenni) | Unsplash License |
+
+| `area-soho-rain-reflection.jpg` | /brand-photographer/soho/ (photo, share image) | https://unsplash.com/photos/city-street-with-reflections-in-puddles-after-rain-4dhpODMJ4As | see source | Unsplash License |
+
+| `area-kings-cross-coal-drops-yard.jpg` | /brand-photographer/kings-cross/ (photo, share image) | https://unsplash.com/photos/2SXbQFPrbnk | Marek Lumi | Unsplash License |
+
+| `area-hackney-wick-graffiti-wall.jpg` | /brand-photographer/hackney/ (photo, share image) | https://unsplash.com/photos/K4FABOBPd98 | Josh Aarons | Unsplash License |
+
+| `area-peckham-shopfront.jpg` | /brand-photographer/peckham/ (photo, share image) | https://unsplash.com/photos/person-standing-in-front-of-store-8wMflrTLm2g | Alistair MacRobert | Unsplash License |
+
+| `area-manchester-foggy-street.jpg` | /brand-photographer/manchester/ (photo, share image) | https://unsplash.com/photos/a-street-filled-with-lots-of-traffic-on-a-foggy-day-1iuHFs5vW3I | Tuna Ekici | Unsplash License |
+
+| `area-bristol-harbourside.jpg` | /brand-photographer/bristol/ (photo, share image) | https://unsplash.com/photos/julE5PYPHFI | Mikey Harris | Unsplash License |
+
+| `area-edinburgh-old-town.jpg` | /brand-photographer/edinburgh/ (photo, share image) | https://unsplash.com/photos/vehicles-traveling-on-street-in-between-buildings-during-daytime-7EMiFX17Eeg | Carly Reeves | Unsplash License |
+
+| `area-cotswolds-castle-combe.jpg` | /brand-photographer/cotswolds/ (photo, share image) | https://unsplash.com/photos/a-street-lined-with-old-stone-houses-under-a-blue-sky-SgqFUY7lT1o | George Ciobra | Unsplash License |
 
 ## Enquiry form
 

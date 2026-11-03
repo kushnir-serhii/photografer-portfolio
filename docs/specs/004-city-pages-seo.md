@@ -25,15 +25,15 @@ A marketing manager searching "brand photographer Shoreditch" lands on a page ma
   - [x] the JSON-LD on `/` and `/rates/` parses and uses valid schema.org types (checked with the Rich Results / Schema validator by hand, noted in the log)
   - [x] one block per type per page; nothing duplicated across client-side navigations
 
-### [ ] 2. Area pages
+### [x] 2. Area pages
 - **Build:** `src/pages/brand-photographer/[slug].astro` with `getStaticPaths` from `areas.ts`: hero image, H1 ("Brand photographer in Shoreditch"), local intro, projects shot there (from `projects`), travel note and price hint, local FAQ (+ `FAQPage`, only when the area has one), CTA to the form (`/contact/?area=<slug>`: an empty brief field starts with "Shoot in Shoreditch: ", and the quick-contact WhatsApp text names the area) and to the quick contact, breadcrumbs (+ `BreadcrumbList`), own title, description and canonical.
 - **Files:** `src/pages/brand-photographer/[slug].astro`, `src/data/areas.ts`, `src/data/site.ts`, components it needs
 - **Agent:** designer → frontend
 - **Accept:**
-  - [ ] every area builds to its own static page with a unique title, description and canonical
-  - [ ] an area with no projects shows a designed empty state: a short line ("No project from Soho on the site yet") and 2–3 recent projects from elsewhere, plus the CTA
-  - [ ] `?area=` fills an empty brief and the WhatsApp text; an unknown area is ignored; without JS the CTA still opens the form
-  - [ ] 375px without horizontal scroll, Night and Day
+  - [x] every area builds to its own static page with a unique title, description and canonical
+  - [x] an area with no projects shows a designed empty state: a short line ("No project from Soho on the site yet") and 2–3 recent projects from elsewhere, plus the CTA
+  - [x] `?area=` fills an empty brief and the WhatsApp text; an unknown area is ignored; without JS the CTA still opens the form
+  - [x] 375px without horizontal scroll, Night and Day
 
 ### [ ] 3. Service area + sitemap
 - **Build:** a "Where we work" section (on `/studio/` and as a footer list) linking to every area page; a schematic, stylised SVG map built from area coordinates in data (no map service, no tiles) with the grouped list (London areas, UK cities, Destinations) under it; `@astrojs/sitemap` and a `robots.txt` endpoint that takes the domain from `site`.
@@ -49,6 +49,8 @@ A marketing manager searching "brand photographer Shoreditch" lands on a page ma
 - Submit the sitemap in Google Search Console after launch ([setup.md](../setup.md)).
 
 ## Open questions
+- **Client to confirm:** area copy (local FAQ answers, travel terms such as "travel and a night usually add £150–250") is a plausible demo; a real client rewrites it.
+- **Found, not fixed:** on `/studio/`, `.sh-studio-split p { margin: 0 }` overrides `.sh-studio-cta`, so the space under the headings is lost (slice 3 touches `/studio/` and can fix it).
 - **To check by hand:** paste `/` and `/rates/` into Google's Rich Results Test once deployed (or the built HTML into validator.schema.org).
 - **Decided (2026-11-03):** route `/brand-photographer/<slug>/` (keyword in the path; 007 may change the segment).
 - **Decided (2026-11-03):** sitemap via `@astrojs/sitemap` (new dependency, approved); `robots.txt` as an endpoint built from `site`.
@@ -61,3 +63,4 @@ A marketing manager searching "brand photographer Shoreditch" lands on a page ma
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
 | 2026-11-03 | 1 | done: `JsonLd.astro` (escapes `<`), `schema.ts` builders (`businessSchema`, `faqSchema`), `business` details in `site.ts`, `ProfessionalService` on every page from `BaseLayout`, `FAQPage` on `/rates/` via a `schema` prop. Every block parsed with `JSON.parse`, types checked against schema.org; Playwright: `/` → `/rates/` → `/studio/` by client navigation keeps one block per type. The Google Rich Results Test is left for a hand check on the deployed URL (agents don't send pages to external services). `sameAs` waits for a real Instagram URL. | `JsonLd.astro`, `schema.ts`, `site.ts`, `BaseLayout.astro`, `rates.astro` |
+| 2026-11-03 | 2 | done: `areas.ts` (9 areas, new Unsplash photos, local FAQ on 4 of them), `/brand-photographer/[slug]/` with breadcrumb + `BreadcrumbList`, photo band, work shot there then recent work elsewhere (empty state line on 5 areas), travel / price / where I shoot, local FAQ + `FAQPage` when present, CTA to `/contact/?area=`; `ProjectCard` and `FaqList` pulled out of `/work/` and `/rates/` for reuse; `?area=` fills an empty brief and names the area in the WhatsApp text and the dialog's brief link. Checked 375/1280, Night/Day; Playwright for the prefill. | `areas.ts`, `[slug].astro`, `ProjectCard.astro`, `FaqList.astro`, `ClosingCta.astro`, `work.astro`, `rates.astro`, `schema.ts`, `site.ts`, `booking.ts`, `ContactForm.astro`, `QuickContact.astro`, `site.css`, `setup.md`, 9 photos |

@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Packages from '../components/Packages.astro';
 import StoryBlock from '../components/StoryBlock.astro';
 import ClosingCta from '../components/ClosingCta.astro';
+import FaqList from '../components/FaqList.astro';
 import { faqSchema } from '../data/schema';
 import { plans, pictures, ratesPage, addOns, faq } from '../data/site';
 ---
@@ -47,17 +48,7 @@ import { plans, pictures, ratesPage, addOns, faq } from '../data/site';
     <div class="sh-container sh-container--narrow">
       <p class="sh-meta sh-faq__eyebrow" data-reveal>{ratesPage.faqEyebrow}</p>
       <h2 class="sh-d-l sh-faq__title" data-split>{ratesPage.faqTitle}</h2>
-      <div class="sh-faq" data-reveal>
-        {faq.map((item) => (
-          <details class="sh-faq__item">
-            <summary class="sh-faq__q">
-              <h3 class="sh-d-s">{item.q}</h3>
-              <span class="sh-faq__icon" aria-hidden="true"></span>
-            </summary>
-            <p class="sh-muted sh-faq__a">{item.a}</p>
-          </details>
-        ))}
-      </div>
+      <FaqList items={faq} />
     </div>
   </section>
 
