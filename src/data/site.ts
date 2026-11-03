@@ -30,12 +30,18 @@ export const site = {
   email: 'hello@robinhale.studio',
   phone: '020 7946 0321',
   phoneHref: 'tel:+442079460321',
+  // WhatsApp number in international form, digits only (no +, spaces or leading 0). Empty hides WhatsApp.
+  whatsapp: '447700900321',
+  // Facebook Messenger username for m.me links. Empty hides Messenger.
+  messenger: '',
   instagram: 'https://instagram.com/',
   clientGalleries: '#',
   // The next bookable period; used in the hero, marquee and footer instead of a hard-coded date.
   season: 'January 2027',
   // Where the enquiry form posts (e.g. a Formspree endpoint). Set PUBLIC_FORM_ENDPOINT in .env.
   formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined,
+  // Shows demo-only features and their labels; set false for a real client's site.
+  demo: true,
 };
 
 export const nav = [
@@ -153,7 +159,11 @@ export const pictures = {
 } satisfies Record<string, Picture>;
 
 
+// Stable ids used in URLs (?plan=full-day).
+export type PlanId = 'half-day' | 'full-day' | 'headshots';
+
 export interface Plan {
+  id: PlanId;
   no: string;
   name: string;
   price: string;
@@ -162,27 +172,113 @@ export interface Plan {
   items: string[];
   // Licence terms included in the price.
   usage: string;
+  // How a client names this package in a message: "is 12 June 2027 free for {ask}?".
+  ask: string;
   featured?: boolean;
 }
 
 // Placeholder prices, ex VAT.
 export const plans: Plan[] = [
   {
-    no: '01', name: 'Half day', price: '£950', unit: 'per shoot',
+    id: 'half-day', no: '01', name: 'Half day', price: '£950', unit: 'per shoot',
     items: ['Four hours on location or in studio', 'About 40 edited images', 'First edit in five working days'],
-    usage: '12 months, web and social',
+    usage: '12 months, web and social', ask: 'a half day shoot',
   },
   {
-    no: '02', name: 'Full day', price: '£1,750', unit: 'per shoot', featured: true,
+    id: 'full-day', no: '02', name: 'Full day', price: '£1,750', unit: 'per shoot', featured: true,
     items: ['Eight hours, up to three set-ups', 'About 80 edited images', 'Shot list planned with you'],
-    usage: '12 months, web and social',
+    usage: '12 months, web and social', ask: 'a full day shoot',
   },
   {
-    no: '03', name: 'Headshots', price: '£120', unit: 'per person, min. 5',
+    id: 'headshots', no: '03', name: 'Headshots', price: '£120', unit: 'per person, min. 5',
     items: ['On site at your office', 'Two retouched images each', 'Matching light for the whole team'],
-    usage: '12 months, web and social',
+    usage: '12 months, web and social', ask: 'team headshots',
   },
 ];
+
+// ---------- quick contact (the "Call or message" dialog) ----------
+
+export const quickContact = {
+  title: 'Call or message',
+  lead: 'Calls Mon–Fri, 9–6. Messages any time; I reply the same day.',
+  // Opener labels: header, drawer and hero; under each package; the phone icon button on phones.
+  opener: 'Call or message',
+  planOpener: 'or call / WhatsApp',
+  iconLabel: 'Call or message',
+  close: 'Close',
+  call: 'Call',
+  whatsapp: 'WhatsApp',
+  whatsappDetail: 'Pre-written message',
+  email: 'Email',
+  messenger: 'Messenger',
+  messengerDetail: 'Message on Facebook',
+  brief: 'Send a brief',
+  briefDetail: 'The full form, about two minutes',
+  // The WhatsApp message, pre-written from what the visitor has chosen. {date}: "12 June 2027"; {plan}: Plan.ask.
+  whatsappText: {
+    both: 'Hi Robin, is {date} free for {plan}?',
+    plan: "Hi Robin, I'd like to ask about {plan}. Which dates are free?",
+    date: 'Hi Robin, is {date} free for a shoot?',
+    none: "Hi Robin, I'd like to ask about a shoot.",
+  },
+};
+
+// ---------- availability calendar (/contact/) ----------
+
+export interface Availability {
+  // First month shown, 'yyyy-mm'. The calendar starts at the later of this and the visitor's current month.
+  from: string;
+  // How many months from `from` can be browsed.
+  months: number;
+  // ISO days (yyyy-mm-dd) that are taken. Any day not listed is free, weekends included.
+  booked: string[];
+  // ISO days with only half a day left; these can still be picked.
+  halfDay?: string[];
+}
+
+// Demo dates. For a real client, keep this in step with their diary (or connect a calendar later, see docs/setup.md).
+export const availability: Availability = {
+  from: '2027-01',
+  months: 4,
+  booked: [
+    '2027-01-06', '2027-01-07', '2027-01-13', '2027-01-14', '2027-01-15', '2027-01-20', '2027-01-27', '2027-01-28',
+    '2027-02-03', '2027-02-04', '2027-02-09', '2027-02-10', '2027-02-11', '2027-02-17', '2027-02-18', '2027-02-24',
+    '2027-02-25',
+    '2027-03-01', '2027-03-02', '2027-03-03', '2027-03-04', '2027-03-05', '2027-03-09', '2027-03-10', '2027-03-11',
+    '2027-03-12', '2027-03-16', '2027-03-17', '2027-03-18', '2027-03-19', '2027-03-23', '2027-03-24', '2027-03-25',
+    '2027-03-26', '2027-03-30',
+    '2027-04-01', '2027-04-07', '2027-04-08', '2027-04-14', '2027-04-15', '2027-04-21', '2027-04-22', '2027-04-28',
+    '2027-04-29',
+  ],
+  halfDay: [
+    '2027-01-11', '2027-01-22',
+    '2027-02-01', '2027-02-15', '2027-02-26',
+    '2027-03-08', '2027-03-22', '2027-03-31',
+    '2027-04-06', '2027-04-20',
+  ],
+};
+
+export const availabilityCopy = {
+  title: 'Free days',
+  hint: 'Pick a day and it goes straight into the brief.',
+  // Shown only when site.demo is true.
+  demoNote: 'Demo dates — in your site this shows your real calendar.',
+  prev: 'Previous month',
+  next: 'Next month',
+  legendLabel: 'Legend',
+  legend: { free: 'Free', half: 'Half day left', booked: 'Booked' },
+  // Ends each day's accessible name: "Friday 12 March 2027, booked".
+  states: { free: 'free', half: 'half day left', booked: 'booked', past: 'past' },
+  // Announced after a pick. {date}: "12 June 2027".
+  picked: '{date} added to the brief',
+  // A month with no free day left, and the case where every listed month is over.
+  // Each line ends with the two ways out: the brief form and the quick-contact dialog.
+  full: 'Every day this month is taken. I keep a waiting list:',
+  closed: 'I have not opened these months yet. Ask me directly:',
+  briefLink: 'send a brief',
+  or: 'or',
+  callLink: 'call',
+};
 
 // ---------- /rates/ copy ----------
 
@@ -290,6 +386,9 @@ export const enquiryForm = {
   companyPlaceholder: 'Saltroom',
   emailPlaceholder: 'alex@saltroom.co.uk',
   datePlaceholder: 'Week of 12 March',
+  packageLabel: 'Package',
+  packageNone: 'Not sure yet',
+  packageChange: 'Change',
   dateHelp: 'A rough week is fine. Not fixed yet? Leave it empty.',
   briefPlaceholder: 'A spring menu launch, 12 dishes, at our place in Peckham. Pictures for the website and Instagram.',
   briefHelp: 'What the pictures are for, where, and roughly how many.',

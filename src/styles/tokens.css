@@ -78,6 +78,8 @@
   --radius-none: 0;
   --radius-xs: 2px;
   --radius-pill: 999px;
+  /* Top corners of the bottom sheet (quick contact on phones). */
+  --radius-sheet: 14px;
 
   --layout-max: 1440px;
   --layout-narrow: 760px;

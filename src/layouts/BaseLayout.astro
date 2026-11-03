@@ -4,6 +4,7 @@ import '../styles/components.css';
 import '../styles/site.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import QuickContact from '../components/QuickContact.astro';
 import { ClientRouter } from 'astro:transitions';
 import { getImage } from 'astro:assets';
 import { site, hero } from '../data/site';
@@ -72,6 +73,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         <slot />
       </main>
       <Footer />
+      <QuickContact />
     </div>
     <script>
       import '../scripts/site.ts';

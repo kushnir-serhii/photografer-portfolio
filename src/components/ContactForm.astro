@@ -1,7 +1,10 @@
 ---
-import { site, shootTypes, budgetRanges, enquiryForm as copy } from '../data/site';
+import { site, plans, shootTypes, budgetRanges, enquiryForm as copy } from '../data/site';
+import type { Plan } from '../data/site';
 import Icon from './Icon.astro';
 
+// Option text doubles as the submitted value, so the email reads "Full day — £1,750".
+const planText = (p: Plan) => `${p.name} — ${p.price}${p.unit === 'per shoot' ? '' : ` ${p.unit}`}`;
 const action = site.formEndpoint || `mailto:${site.email}`;
 ---
 <form
@@ -13,6 +16,9 @@ const action = site.formEndpoint || `mailto:${site.email}`;
   data-enquiry
   data-endpoint={site.formEndpoint}
 >
+  <p class="sh-enquiry__choice sh-body-s" data-plan-choice aria-live="polite" hidden>
+    <span data-plan-choice-text></span> · <button class="sh-enquiry__change" type="button" data-plan-change>{copy.packageChange}</button>
+  </p>
   <div class="sh-row sh-row--2">
     <div class="sh-field">
       <label class="sh-label" for="c-name">Your name</label>
@@ -24,24 +30,31 @@ const action = site.formEndpoint || `mailto:${site.email}`;
       <input class="sh-input" id="c-company" name="company" type="text" placeholder={copy.companyPlaceholder} autocomplete="organization" />
     </div>
   </div>
+  <div class="sh-field">
+    <label class="sh-label" for="c-mail">Email</label>
+    <input class="sh-input" id="c-mail" name="email" type="email" placeholder={copy.emailPlaceholder} autocomplete="email" required aria-describedby="c-mail-err" />
+    <p class="sh-error" id="c-mail-err" hidden><Icon name="error" /><span>This email address does not look complete.</span></p>
+  </div>
   <div class="sh-row sh-row--2">
     <div class="sh-field">
-      <label class="sh-label" for="c-mail">Email</label>
-      <input class="sh-input" id="c-mail" name="email" type="email" placeholder={copy.emailPlaceholder} autocomplete="email" required aria-describedby="c-mail-err" />
-      <p class="sh-error" id="c-mail-err" hidden><Icon name="error" /><span>This email address does not look complete.</span></p>
+      <label class="sh-label" for="c-package">{copy.packageLabel}</label>
+      <select class="sh-select" id="c-package" name="package" data-plan-select>
+        {plans.map((p) => <option data-plan={p.id} data-choice={`${planText(p)}${p.unit === 'per shoot' ? ' ex VAT' : ', ex VAT'}`}>{planText(p)}</option>)}
+        <option data-plan="" selected>{copy.packageNone}</option>
+      </select>
     </div>
+    <div class="sh-field">
+      <label class="sh-label" for="c-date">Preferred date <span class="sh-label__opt">(optional)</span></label>
+      <input class="sh-input" id="c-date" name="preferred_date" type="text" placeholder={copy.datePlaceholder} autocomplete="off" aria-describedby="c-date-help" />
+      <p class="sh-help" id="c-date-help">{copy.dateHelp}</p>
+    </div>
+  </div>
+  <div class="sh-row sh-row--2">
     <div class="sh-field">
       <label class="sh-label" for="c-kind">Shoot type</label>
       <select class="sh-select" id="c-kind" name="shoot_type">
         {shootTypes.map((t) => <option>{t}</option>)}
       </select>
-    </div>
-  </div>
-  <div class="sh-row sh-row--2">
-    <div class="sh-field">
-      <label class="sh-label" for="c-date">Preferred date <span class="sh-label__opt">(optional)</span></label>
-      <input class="sh-input" id="c-date" name="preferred_date" type="text" placeholder={copy.datePlaceholder} autocomplete="off" aria-describedby="c-date-help" />
-      <p class="sh-help" id="c-date-help">{copy.dateHelp}</p>
     </div>
     <div class="sh-field">
       <label class="sh-label" for="c-budget">Budget, ex VAT</label>

@@ -1,0 +1,81 @@
+---
+// Free days on /contact/: a Mon-first month grid from `availability` with prev/next within the range.
+// Without JS this is the range's first month, rendered at build time and read-only (legend included).
+// calendar.ts takes over from the data-calendar JSON: it re-renders for the visitor's today, turns the
+// days into buttons (arrow keys, Enter) and puts a picked day into the brief form's date field.
+import { site, availability, availabilityCopy as copy } from '../data/site';
+import { buildMonth, localIsoDate, monthRange, weekdayNames } from '../scripts/dates';
+import Icon from './Icon.astro';
+
+interface Props {
+  // Where "send a brief" points: the form's wrapper on the same page.
+  briefHref?: string;
+}
+const { briefHref = '#brief' } = Astro.props;
+
+// Build-time "today": decides the first month and the past days of the static render only.
+const today = localIsoDate();
+const range = monthRange(availability, today);
+const month = range ? buildMonth(range.first, availability, today, copy.states) : null;
+
+// Only what the script needs; site.ts itself never reaches the client.
+const calendarData = JSON.stringify({
+  data: availability,
+  copy: { states: copy.states, picked: copy.picked },
+});
+---
+<section class="sh-cal" aria-labelledby="sh-cal-title" data-calendar={calendarData}>
+  <div class="sh-cal__head">
+    <h2 class="sh-meta sh-cal__title" id="sh-cal-title">{copy.title}</h2>
+    <p class="sh-body-s sh-muted sh-cal__hint" data-cal-hint hidden>{copy.hint}</p>
+    {site.demo && <p class="sh-meta-s sh-cal__demo">{copy.demoNote}</p>}
+  </div>
+
+  <div class="sh-cal__body" data-cal-body hidden={!month}>
+    <div class="sh-cal__bar">
+      <p class="sh-d-s sh-cal__month" id="sh-cal-month" aria-live="polite" data-cal-month>{month?.label}</p>
+      <div class="sh-cal__nav" data-cal-nav hidden>
+        <button class="sh-round sh-cal__step" type="button" aria-label={copy.prev} aria-disabled="true" data-cal-prev><Icon name="arrow-left" /></button>
+        <button class="sh-round sh-cal__step" type="button" aria-label={copy.next} data-cal-next><Icon name="arrow-right" /></button>
+      </div>
+    </div>
+    <table class="sh-cal__grid" aria-labelledby="sh-cal-month" data-cal-grid>
+      <thead>
+        <tr>
+          {weekdayNames.map((name) => (
+            <th scope="col"><span aria-hidden="true">{name.slice(0, 3)}</span><span class="sh-sr-only">{name}</span></th>
+          ))}
+        </tr>
+      </thead>
+      <tbody data-cal-weeks>
+        {month?.weeks.map((week) => (
+          <tr>
+            {week.map((d) => (
+              <td>
+                {d && (
+                  <span class="sh-cal__day" data-state={d.state}>
+                    <span aria-hidden="true">{d.day}</span><span class="sh-sr-only">{d.label}</span>
+                  </span>
+                )}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <ul class="sh-cal__legend sh-meta-s" aria-label={copy.legendLabel}>
+      <li><span class="sh-cal__key" data-state="free" aria-hidden="true"></span>{copy.legend.free}</li>
+      <li><span class="sh-cal__key" data-state="half" aria-hidden="true"></span>{copy.legend.half}</li>
+      <li><span class="sh-cal__key" data-state="booked" aria-hidden="true">00</span>{copy.legend.booked}</li>
+    </ul>
+  </div>
+
+  <p class="sh-body-s sh-cal__line" data-cal-line hidden={!!month && !month.full}>
+    <span data-cal-full hidden={!month}>{copy.full}</span>
+    <span data-cal-closed hidden={!!month}>{copy.closed}</span>{' '}
+    <a class="sh-link" href={briefHref}>{copy.briefLink}</a>{` ${copy.or} `}
+    <a class="sh-link" href={site.phoneHref} data-quick-contact>{copy.callLink}</a>.
+  </p>
+
+  <p class="sh-body-s sh-cal__status" role="status" data-cal-status></p>
+</section>

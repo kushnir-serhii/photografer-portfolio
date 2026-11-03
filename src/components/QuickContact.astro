@@ -1,0 +1,79 @@
+---
+// "Call or message": one tap to a human from the header, the drawer, the hero and each package.
+// A native modal <dialog> outside <main>, so it persists across client-side navigations;
+// booking.ts opens it from any [data-quick-contact] link and pre-writes the WhatsApp text.
+// Without JS it never opens: every opener is a plain link to /contact/.
+import { plans, quickContact as copy, site } from '../data/site';
+import Icon from './Icon.astro';
+
+const whatsappHref = (text: string) => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+// Only what the script needs to pre-write the message; site.ts itself never reaches the client.
+const planData = JSON.stringify(plans.map(({ id, name, ask }) => ({ id, name, ask })));
+---
+<dialog
+  class="sh-quick"
+  id="sh-quick"
+  aria-labelledby="sh-quick-title"
+  data-quick-dialog
+  data-plans={planData}
+  data-wa-number={site.whatsapp || undefined}
+  data-wa-both={copy.whatsappText.both}
+  data-wa-plan={copy.whatsappText.plan}
+  data-wa-date={copy.whatsappText.date}
+  data-wa-none={copy.whatsappText.none}
+  transition:persist="quick-contact"
+>
+  <div class="sh-quick__panel">
+    <div class="sh-quick__head">
+      <h2 class="sh-d-s sh-quick__title" id="sh-quick-title">{copy.title}</h2>
+      <button class="sh-burger sh-quick__close" type="button" aria-label={copy.close} data-quick-close>
+        <Icon name="close" />
+      </button>
+    </div>
+    <p class="sh-body-s sh-quick__lead">{copy.lead}</p>
+    <p class="sh-meta sh-meta--ink sh-quick__context" data-quick-context hidden></p>
+    <ul class="sh-quick__opts">
+      {site.phone && (
+        <li>
+          <a class="sh-quick__opt" href={site.phoneHref}>
+            <span class="sh-quick__icon"><Icon name="phone" /></span>
+            <span class="sh-quick__text"><span class="sh-quick__label">{copy.call}</span><span class="sh-quick__detail">{site.phone}</span></span>
+            <span class="sh-quick__go"><Icon name="arrow-right" /></span>
+          </a>
+        </li>
+      )}
+      {site.whatsapp && (
+        <li>
+          <a class="sh-quick__opt" href={whatsappHref(copy.whatsappText.none)} target="_blank" rel="noopener" data-quick-whatsapp>
+            <span class="sh-quick__icon"><Icon name="chat" /></span>
+            <span class="sh-quick__text"><span class="sh-quick__label">{copy.whatsapp}</span><span class="sh-quick__detail">{copy.whatsappDetail}</span></span>
+            <span class="sh-quick__go"><Icon name="arrow-right" /></span>
+          </a>
+        </li>
+      )}
+      <li>
+        <a class="sh-quick__opt" href={`mailto:${site.email}`}>
+          <span class="sh-quick__icon"><Icon name="mail" /></span>
+          <span class="sh-quick__text"><span class="sh-quick__label">{copy.email}</span><span class="sh-quick__detail">{site.email}</span></span>
+          <span class="sh-quick__go"><Icon name="arrow-right" /></span>
+        </a>
+      </li>
+      {site.messenger && (
+        <li>
+          <a class="sh-quick__opt" href={`https://m.me/${site.messenger}`} target="_blank" rel="noopener">
+            <span class="sh-quick__icon"><Icon name="chat" /></span>
+            <span class="sh-quick__text"><span class="sh-quick__label">{copy.messenger}</span><span class="sh-quick__detail">{copy.messengerDetail}</span></span>
+            <span class="sh-quick__go"><Icon name="arrow-right" /></span>
+          </a>
+        </li>
+      )}
+      <li>
+        <a class="sh-quick__opt" href="/contact/" data-quick-brief>
+          <span class="sh-quick__icon"><Icon name="brief" /></span>
+          <span class="sh-quick__text"><span class="sh-quick__label">{copy.brief}</span><span class="sh-quick__detail">{copy.briefDetail}</span></span>
+          <span class="sh-quick__go"><Icon name="arrow-right" /></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</dialog>
