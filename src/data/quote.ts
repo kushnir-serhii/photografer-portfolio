@@ -101,3 +101,15 @@ export function quoteParams(quote: Quote): URLSearchParams {
   }
   return params;
 }
+
+// The same query, kept readable for links and the address bar: "plan=headshots&qty=8&addons=retouching:20,extra-hour:2".
+// URLSearchParams would write ":" and "," as %3A / %2C; ids are slugs and quantities are numbers, so neither needs it.
+export function quoteQuery(quote: Quote): string {
+  const parts = [`plan=${encodeURIComponent(quote.plan)}`];
+  if (quote.qty !== undefined) parts.push(`qty=${quote.qty}`);
+  if (quote.addOns.length > 0) {
+    const list = quote.addOns.map((a) => (a.qty !== undefined ? `${encodeURIComponent(a.id)}:${a.qty}` : encodeURIComponent(a.id)));
+    parts.push(`addons=${list.join(',')}`);
+  }
+  return parts.join('&');
+}

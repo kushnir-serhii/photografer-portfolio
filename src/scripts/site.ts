@@ -2,6 +2,7 @@
 import './still-hours.js';
 import { initBooking } from './booking';
 import { initCalendar } from './calendar';
+import { initCalculator } from './calculator';
 
 type Runtime = { init(root?: ParentNode): unknown; theme: { get(): string } };
 const runtime = (window as unknown as { StillHours?: Runtime }).StillHours;
@@ -61,6 +62,7 @@ document.addEventListener('astro:page-load', () => {
   initEnquiryForms();
   initBooking();
   initCalendar();
+  initCalculator();
 });
 
 /* ---------- gallery filters ---------- */

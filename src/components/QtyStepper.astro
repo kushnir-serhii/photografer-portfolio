@@ -1,0 +1,42 @@
+---
+// A − / + stepper around a labelled number input, for per-unit prices in the price calculator.
+// Renders hidden and disabled; src/scripts/calculator.ts shows and enables it when its item is chosen.
+import type { Quantity } from '../data/site';
+import { calculatorCopy as copy } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  // Plan or add-on id this quantity belongs to.
+  item: string;
+  qty: Quantity;
+  value?: number;
+}
+const { item, qty, value = qty.min } = Astro.props;
+const id = `calc-qty-${item}`;
+const fill = (t: string) => t.replace('{min}', String(qty.min)).replace('{max}', String(qty.max)).replace('{many}', qty.many);
+---
+<div class="sh-calc__qty" data-qty-for={item} hidden>
+  <label class="sh-label" for={id}>{copy.howMany} {qty.many}</label>
+  <div class="sh-calc__stepper">
+    <button class="sh-round sh-calc__step" type="button" aria-label={`${copy.fewer} ${qty.many}`} aria-controls={id} data-step="-1" disabled>
+      <Icon name="minus" />
+    </button>
+    <input
+      class="sh-input sh-calc__num"
+      id={id}
+      type="number"
+      inputmode="numeric"
+      min={qty.min}
+      max={qty.max}
+      step="1"
+      value={value}
+      aria-describedby={`${id}-help`}
+      data-qty-input
+      disabled
+    />
+    <button class="sh-round sh-calc__step" type="button" aria-label={`${copy.more} ${qty.many}`} aria-controls={id} data-step="1" disabled>
+      <Icon name="plus" />
+    </button>
+  </div>
+  <p class="sh-help" id={`${id}-help`}>{fill(copy.range)}</p>
+</div>

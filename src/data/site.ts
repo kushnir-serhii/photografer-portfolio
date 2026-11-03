@@ -347,12 +347,9 @@ export const ratesPage = {
   heading: 'What it costs, plainly',
   lead: 'Three ways to book, the numbers in the open. Every price is ex VAT and includes 12 months of web and social usage, so you can get sign-off before you write.',
   note: 'Prices ex VAT · travel within the M25 included',
-  addOnsEyebrow: 'Add-ons',
-  addOnsTitle: 'What clients usually add',
-  addOnsNote: 'All ex VAT, quoted in writing before you book.',
   faqEyebrow: 'Questions',
   faqTitle: 'Asked most often',
-  // Not an add-on: it has no price to add up. Shown as the last row of the add-ons list.
+  // Not an add-on: it has no price to add up. Shown as a note in the calculator's total panel.
   travel: { name: 'Travel outside the M25', price: 'at cost' },
 };
 
@@ -373,6 +370,34 @@ export interface QuoteCopy {
 }
 
 export const quoteCopy: QuoteCopy = { for: 'for', from: 'from', exVat: 'ex VAT', times: '×' };
+
+// ---------- price calculator on /rates/ (src/components/PriceCalculator.astro) ----------
+
+export const calculatorCopy = {
+  eyebrow: 'Build a quote',
+  title: 'Add it up yourself',
+  lead: 'Pick a package, tick what you need on top and the total follows. Send it to me and the brief arrives already filled in.',
+  planLegend: 'Package',
+  addOnsLegend: 'Add-ons',
+  // Stepper label and help: "How many people", "5 to 50 people". {min} / {max} / {many} come from Quantity.
+  howMany: 'How many',
+  range: '{min} to {max} {many}',
+  // Stepper buttons' accessible names: "Fewer people", "More images".
+  fewer: 'Fewer',
+  more: 'More',
+  panelTitle: 'Your quote',
+  total: 'Total',
+  // In front of a total that holds a "from" price: "From £2,800".
+  totalFrom: 'From',
+  travel: `Travel within the M25 included. ${ratesPage.travel.name}: ${ratesPage.travel.price}.`,
+  written: 'I confirm every quote in writing before you book.',
+  send: 'Send this to me',
+  // The phone bar's shorter button.
+  sendShort: 'Send this',
+  // Shown instead of the live total when scripts are off.
+  noJs: 'Every price here is ex VAT. Tell me what you need and I will send you a written quote.',
+  noJsLink: 'Send a brief',
+};
 
 // "from £300", "£25 per image", "£200".
 export function addOnPriceText(a: AddOn): string {

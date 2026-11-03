@@ -33,21 +33,21 @@ A visitor builds their own quote on `/rates/` — package plus add-ons, with qua
   - [x] `/rates/` has one `OfferCatalog` JSON-LD block with an `Offer` per package; `priceRange` still reads "£120–£1,750"
   - [x] `parseQuote` ignores unknown ids and clamps quantities (checked with a few inputs in the report)
 
-### [ ] 2. Calculator on /rates/
+### [x] 2. Calculator on /rates/
 - **Build:** a `PriceCalculator.astro` section that replaces the add-ons block on `/rates/` (the three package cards above stay as they are):
   - package choice as compact radio cards (name, price, unit); Full day (the featured plan) is chosen by default, `?plan=` overrides it; Headshots shows a people stepper (5–50) when chosen;
   - add-ons as toggles with name, detail and price; retouching and extra hour show a − / + stepper (with a labelled number input) once on; "from" prices say "from";
-  - a total panel: the chosen lines, the total ("£2,150", or "From £2,800" when any chosen price is "from"), "ex VAT", the travel note (inside the M25 included, further out at cost), a CTA "Send this to us" → `/contact/?plan=…&qty=…&addons=…`, and an "or call / WhatsApp" quick-contact opener carrying the same quote (`data-plan`, `data-qty`, `data-addons`);
+  - a total panel: the chosen lines, the total ("£2,150", or "From £2,800" when any chosen price is "from"), "ex VAT", the travel note (inside the M25 included, further out at cost), a CTA "Send this to me" → `/contact/?plan=…&qty=…&addons=…`, and an "or call / WhatsApp" quick-contact opener carrying the same quote (`data-plan`, `data-qty`, `data-addons`);
   - desktop: two columns, the total panel sticky in the right one; phones: a compact bottom bar (total + CTA) while the calculator is on screen, the full panel at the end of the section, and enough space that the bar never covers content;
   - the calculator keeps `?plan=&qty=&addons=` of `/rates/` in step (`replaceState`), so a reload or a shared link shows the same quote;
   - without JS: the same section reads as a price list (packages and add-ons with prices), the controls stay disabled and the panel shows a link to the brief form.
 - **Files:** `src/components/PriceCalculator.astro`, `src/pages/rates.astro`, `src/scripts/calculator.ts`, `src/scripts/site.ts`, `src/data/site.ts` (copy), `src/styles/site.css`
 - **Agent:** designer → frontend
 - **Accept:**
-  - [ ] the total updates on every change (package, toggle, quantity) and is announced politely (`aria-live="polite"`)
-  - [ ] keyboard: every option reachable and toggleable; labels on all controls; steppers have labelled buttons and stay within min–max
-  - [ ] 375px without horizontal scroll, the bottom bar never covers content; Night and Day; reduced motion
-  - [ ] `/rates/?plan=headshots&qty=8&addons=retouching:20,bogus` opens with that quote (the unknown id ignored); no JS shows a readable price list and a link to the form
+  - [x] the total updates on every change (package, toggle, quantity) and is announced politely (`aria-live="polite"`)
+  - [x] keyboard: every option reachable and toggleable; labels on all controls; steppers have labelled buttons and stay within min–max
+  - [x] 375px without horizontal scroll, the bottom bar never covers content; Night and Day; reduced motion
+  - [x] `/rates/?plan=headshots&qty=8&addons=retouching:20,bogus` opens with that quote (the unknown id ignored); no JS shows a readable price list and a link to the form
 
 ### [ ] 3. Selection in the enquiry
 - **Build:** `/contact/` reads `qty` and `addons` as well as `plan`:
@@ -77,3 +77,4 @@ The client's real prices, add-ons (with units and quantity limits) and usage ter
 | Date | Slice | Result | Notes / files |
 | --- | --- | --- | --- |
 | 2026-11-03 | 1 | done: `format.ts` (`money`, `formatPrice`, `priceText`), numeric plan/add-on prices with ids, quantities and units, travel as `ratesPage.travel`, price copy (marquee, rates description, area hints, `priceRange`) built from numbers, `OfferCatalog` JSON-LD on `/rates/`, `quote.ts` helpers (checked: unknown ids dropped, qty clamped, duplicates first wins, round-trip), `budgetRanges` with `max` / `notSure`. Built pages diffed against the baseline: identical except the new JSON-LD on rates. | `format.ts`, `quote.ts`, `site.ts`, `areas.ts`, `schema.ts`, `Packages.astro`, `ContactForm.astro`, `rates.astro` |
+| 2026-11-03 | 2 | done: `PriceCalculator` replaces the add-ons block (the rates photo dropped: two columns with a sticky panel, work first); package radio cards, add-on checkboxes, `QtyStepper` (reused three times, `aria-disabled` at limits, clamp on blur/Enter), panel with lines and unit maths, total announced after a 450 ms pause, "Send this to me" (first person, instead of "to us") and the quick-contact opener with `data-plan/qty/addons`; phone bar via IntersectionObserver with scroll padding; URL kept in step with `quoteQuery` (readable); no JS: disabled price list + link to the form. Checked 375/1280, Night/Day, `?plan=headshots&qty=8&addons=retouching:20,bogus` → £1,460, bogus dropped. | `PriceCalculator.astro`, `QtyStepper.astro`, `Icon.astro` (minus/plus), `calculator.ts`, `site.ts` (script, copy), `quote.ts`, `rates.astro`, `site.css` |
