@@ -22,6 +22,7 @@ const total = String(projects.length).padStart(2, '0');
               pictureAttributes={{ class: 'sh-pic' }}
               src={project.image}
               alt={project.alt}
+              style={project.focus ? `object-position: ${project.focus}` : undefined}
               formats={['avif', 'webp']}
               widths={[480, 800, 1200, 1600, 2400]}
               sizes="(min-width: 1440px) 1344px, (min-width: 721px) calc(100vw - 96px), calc(100vw - 48px)"

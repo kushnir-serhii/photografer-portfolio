@@ -32,13 +32,15 @@ Every photograph in `src/assets/work/` is a stand-in from [Unsplash](https://uns
 | --- | --- | --- | --- | --- |
 | `hero-team-portrait-studio.jpg` | Home hero, default share image | https://unsplash.com/photos/a-group-of-people-sitting-on-a-stage-80sYJlDB9mM | [isaac macdonald](https://unsplash.com/@isaacmacdonald) | Unsplash License |
 
-| `fold-coffee-roaster.jpg` | Fold Coffee cover; /work/ | https://unsplash.com/photos/person-pouring-coffee-beans-on-a-machine-6HR8vpjYUHo | [Yanapi Senaud](https://unsplash.com/@yaanapi) | Unsplash License |
+| `fold-drum-roaster-floor.jpg` | Fold Coffee cover; /work/ | https://unsplash.com/photos/a-coffee-roaster-roasts-coffee-beans-in-a-large-factory-4DnLpTVy13s | [Zoshua Colah](https://unsplash.com/@zoshuacolah) | Unsplash License |
 
 | `marlow-finch-street-coat.jpg` | Marlow & Finch cover; /work/ | https://unsplash.com/photos/a-woman-in-a-black-coat-and-sunglasses-standing-in-the-middle-of-a-street-onp4bTOtQO8 | [Dawid Kalinowski](https://unsplash.com/@kalinoovsky) | Unsplash License |
 
-| `oriel-amber-bottle-marble.jpg` | Oriel Skincare cover; /work/ | https://unsplash.com/photos/clear-glass-bottle-with-brown-liquid-2c1orP6z2eo | [Kadarius Seegars](https://unsplash.com/@kseegars) | Unsplash License |
+| `oriel-amber-droppers-window-light.jpg` | Oriel Skincare cover; /work/ | https://unsplash.com/photos/three-bottles-of-essential-oils-sitting-on-a-shelf-yoxlQMq-Sbk | [Cosmin Ursea](https://unsplash.com/@cosminursea) | Unsplash License |
 
-| `northline-headshot-laughing.jpg` | Northline Architects cover; /work/ | https://unsplash.com/photos/smiling-woman-in-white-and-black-checkered-dress-shirt-MQ2xYBHImKM | [Compagnons](https://unsplash.com/@sigmund) | Unsplash License |
+| `northline-headshot-laughing.jpg` | /work/ | https://unsplash.com/photos/smiling-woman-in-white-and-black-checkered-dress-shirt-MQ2xYBHImKM | [Compagnons](https://unsplash.com/@sigmund) | Unsplash License |
+
+| `northline-team-reviewing-prints.jpg` | Northline Architects cover | https://unsplash.com/photos/people-reviewing-documents-in-workspace-wR56AUlEsE4 | [Andreea Avramescu](https://unsplash.com/@minakko) | Unsplash License |
 
 | `saltroom-long-table.jpg` | Saltroom cover; /work/ | https://unsplash.com/photos/clear-glass-cup-on-brown-wooden-table-sQopSb2K0CU | [Andrew Seaman](https://unsplash.com/@amseaman) | Unsplash License |
 

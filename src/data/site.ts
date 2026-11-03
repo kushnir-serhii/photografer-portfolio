@@ -2,10 +2,11 @@
 // docs/setup.md): replace them with the photographer's own work before launch.
 import type { ImageMetadata } from 'astro';
 import heroTeamPortraitStudio from '../assets/work/hero-team-portrait-studio.jpg';
-import foldCoffeeRoaster from '../assets/work/fold-coffee-roaster.jpg';
+import foldDrumRoasterFloor from '../assets/work/fold-drum-roaster-floor.jpg';
 import marlowFinchStreetCoat from '../assets/work/marlow-finch-street-coat.jpg';
-import orielAmberBottleMarble from '../assets/work/oriel-amber-bottle-marble.jpg';
+import orielAmberDroppersWindowLight from '../assets/work/oriel-amber-droppers-window-light.jpg';
 import northlineHeadshotLaughing from '../assets/work/northline-headshot-laughing.jpg';
+import northlineTeamReviewingPrints from '../assets/work/northline-team-reviewing-prints.jpg';
 import saltroomLongTable from '../assets/work/saltroom-long-table.jpg';
 import kilnHandsOnWheel from '../assets/work/kiln-hands-on-wheel.jpg';
 import trenchCoatEmptyStreet from '../assets/work/trench-coat-empty-street.jpg';
@@ -57,6 +58,8 @@ export interface Project {
   deliverables: string[];
   image: ImageMetadata;
   alt: string;
+  // Optional CSS object-position for the tight 4:5 slide on phones, e.g. '70% 50%'.
+  focus?: string;
   cta: string;
 }
 
@@ -65,25 +68,26 @@ export const projects: Project[] = [
     slug: 'fold-coffee', client: 'Fold Coffee', title: 'A roastery at six in the morning',
     sector: 'food', month: 'March', year: 2026, area: 'Hackney Wick',
     deliverables: ['Website', 'Menu boards', 'Social'], cta: 'See the project',
-    image: foldCoffeeRoaster, alt: 'Roasted coffee beans pouring from a drum roaster into the cooling tray under a wall lamp',
+    focus: '92% 50%',
+    image: foldDrumRoasterFloor, alt: 'A large drum roaster turning freshly roasted beans in its cooling tray on a roastery floor under hanging lamps',
   },
   {
-    slug: 'marlow-finch', client: 'Marlow & Finch', title: 'Spring collection, shot on the street',
+    slug: 'marlow-finch', client: 'Marlow & Finch', title: 'A new collection, shot on the street',
     sector: 'brand', month: 'April', year: 2026, area: 'Shoreditch',
     deliverables: ['Lookbook', 'Campaign', 'E-commerce'], cta: 'See the project',
     image: marlowFinchStreetCoat, alt: 'A woman in a black coat and sunglasses standing in a cobbled street lined with parked cars',
   },
   {
-    slug: 'oriel-skincare', client: 'Oriel Skincare', title: 'Glass, water and one good window',
+    slug: 'oriel-skincare', client: 'Oriel Skincare', title: 'Amber glass and one good window',
     sector: 'product', month: 'February', year: 2026, area: 'Clerkenwell',
     deliverables: ['Packshots', 'Launch campaign'], cta: 'See the project',
-    image: orielAmberBottleMarble, alt: 'An amber glass dropper bottle on a marble table against a plain grey wall',
+    image: orielAmberDroppersWindowLight, alt: 'Three amber dropper bottles on a white ledge, crossed by low window light and long shadows',
   },
   {
-    slug: 'northline-architects', client: 'Northline Architects', title: 'Twenty-four people, one afternoon',
+    slug: 'northline-architects', client: 'Northline Architects', title: 'A team, a table and one afternoon',
     sector: 'portraits', month: 'January', year: 2026, area: "King's Cross",
     deliverables: ['Team headshots', 'About page'], cta: 'See the project',
-    image: northlineHeadshotLaughing, alt: 'A woman in a checked shirt laughing towards the camera against a dark grey backdrop',
+    image: northlineTeamReviewingPrints, alt: 'Four colleagues leaning over a wooden table, talking through a spread of printouts',
   },
   {
     slug: 'saltroom', client: 'Saltroom', title: 'A new menu and a long table',
@@ -92,7 +96,7 @@ export const projects: Project[] = [
     image: saltroomLongTable, alt: 'A long restaurant table laid with glasses and napkins, running towards a bright front window',
   },
   {
-    slug: 'kiln-ceramics', client: 'Kiln Ceramics', title: 'Hands, clay and the kiln opening',
+    slug: 'kiln-ceramics', client: 'Kiln Ceramics', title: 'Hands, clay and a slow wheel',
     sector: 'film', month: 'October', year: 2025, area: 'Walthamstow',
     deliverables: ['30-second film', 'Stills'], cta: 'See the project',
     image: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel',
@@ -122,13 +126,13 @@ export const categories: { id: Category | 'all'; label: string }[] = [
 export const frames: Frame[] = [
   { src: trenchCoatEmptyStreet, alt: 'A woman in a beige trench coat standing in an empty city street at sunrise', size: 'tall', category: 'brand' },
   { src: saltroomLongTable, alt: 'A long restaurant table laid with glasses and napkins, running towards a bright front window', size: 'wide', category: 'food' },
-  { src: orielAmberBottleMarble, alt: 'An amber glass dropper bottle on a marble table against a plain grey wall', size: 'default', category: 'product' },
+  { src: orielAmberDroppersWindowLight, alt: 'Three amber dropper bottles on a white ledge, crossed by low window light and long shadows', size: 'default', category: 'product' },
   { src: northlineHeadshotLaughing, alt: 'A woman in a checked shirt laughing towards the camera against a dark grey backdrop', size: 'default', category: 'portraits' },
   { src: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel', size: 'default', category: 'film' },
   { src: portraitByTheWindow, alt: 'A bearded man in a dark room, lit from the side by a tall window', size: 'half', category: 'portraits' },
   { src: cameraOperatorWarehouse, alt: 'A camera operator checking the monitor of a cinema camera beside an actor in a warehouse', size: 'half', category: 'film' },
   { src: amberDropperWindowShadow, alt: 'An amber dropper bottle on a wooden stand, striped by shadows from a window', size: 'tall', category: 'product' },
-  { src: foldCoffeeRoaster, alt: 'Roasted coffee beans pouring from a drum roaster into the cooling tray under a wall lamp', size: 'wide', category: 'food' },
+  { src: foldDrumRoasterFloor, alt: 'A large drum roaster turning freshly roasted beans in its cooling tray on a roastery floor under hanging lamps', size: 'wide', category: 'food' },
   { src: marlowFinchStreetCoat, alt: 'A woman in a black coat and sunglasses standing in a cobbled street lined with parked cars', size: 'default', category: 'brand' },
   { src: coffeeBeansSampleScoop, alt: "A hand holding a roaster's sample scoop full of coffee beans against a dark background", size: 'default', category: 'food' },
   { src: filmSetFirelight, alt: 'A small film crew around a cinema camera in a firelit wooden room', size: 'default', category: 'film' },
