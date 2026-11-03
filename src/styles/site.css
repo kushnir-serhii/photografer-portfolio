@@ -474,7 +474,7 @@ html:has(.sh-quick[open]) { overflow: hidden; }
 /* The map: an SVG for lines in a 4:3 canvas, HTML for the points and names so text keeps its size at any width. */
 .sh-svc__map { margin: 0; min-width: 0; }
 .sh-svc__canvas { position: relative; aspect-ratio: 4 / 3; }
-.sh-svc__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.sh-svc__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
 .sh-svc__grid line { stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .sh-svc__tick { fill: var(--ink-faint); font-family: var(--font-mono); font-size: 7px; letter-spacing: 0.08em; }
 .sh-svc__leader { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 2 3; vector-effect: non-scaling-stroke; }
