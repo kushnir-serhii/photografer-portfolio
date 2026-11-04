@@ -47,6 +47,9 @@ export const site = {
   formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined,
   // Shows demo-only features and their labels; set false for a real client's site.
   demo: true,
+  // Lets search engines and other robots index the site. False: robots.txt disallows everything and
+  // every page carries noindex. The demo stays closed; set true when a real client's site goes live.
+  indexable: false,
 };
 
 // The footer's "Client galleries" link: the demo gallery, else the client's gallery service; '' hides it.
