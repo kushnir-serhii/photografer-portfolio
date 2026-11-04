@@ -13,7 +13,7 @@ The site has to work on two levels at once:
 
 | Audience | What they want | What they must see |
 | --- | --- | --- |
-| **Photographer (the buyer)** | More booked shoots with less back-and-forth; a site that looks like a studio, not a template; something they can update. Brand and commercial photographers first; other niches (weddings, food, events) through spec 007. | Features that clearly lead to enquiries; speed and mobile quality; their niche reflected; how easy swapping content is. |
+| **Photographer (the buyer)** | More booked shoots with less back-and-forth; a site that looks like a studio, not a template; something they can update. Brand and commercial photographers first; another niche gets the same site with its own data and photos. | Features that clearly lead to enquiries; speed and mobile quality; their niche reflected; how easy swapping content is. |
 | **Visitor (the photographer's client)** | Marketing managers, founders and agency producers. To know quickly whether this person fits the brief, what it costs, what they can do with the pictures, how soon the files arrive, and how to book. | Relevant work first; prices and usage terms in the open; turnaround; one-tap contact; a brief that is quick to send. |
 
 ## The demo story
@@ -26,8 +26,7 @@ The walkthrough a photographer gets, in order. Features earn their place by fitt
 4. **Booking:** "Book this" on a package → brief already filled in; availability calendar; quick contact by phone or WhatsApp. *"Fewer vague emails, more booked shoots."*
 5. **Found locally:** a page per London area and UK city, plus structured data for Google. *"People searching 'brand photographer Shoreditch' find me."*
 6. **Client gallery:** a private gallery where the client picks selects for a shoot (mocked). *"Approvals without a separate gallery service."*
-7. **Your niche:** the same site re-dressed for weddings, food or events. *"It would fit my business, not someone else's."*
-8. **Under the hood:** Lighthouse, phone, and how content lives in one data file. *"Launch in a week, and I can change prices myself."*
+7. **Under the hood:** Lighthouse, phone, and how content lives in one data file. *"Launch in a week, and I can change prices myself."*
 
 ## Pages
 

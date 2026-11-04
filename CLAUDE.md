@@ -37,7 +37,7 @@ npm run ui-check   # Playwright UI check (after spec 001), see docs/process.md â
 
 - **Static first.** Everything is prerendered. Interactivity is small TypeScript in `src/scripts/site.ts` (or a module it imports), wired on `astro:page-load` because the `ClientRouter` swaps pages without a reload. The header and drawer persist across navigations; anything inside `<main>` is wired again on every page load.
 - **Content is data.** Names, contacts, prices, projects, frames, areas and niche copy live in `src/data/`. Components take props; pages compose components. Swapping a client means editing data and images, not components.
-- **Demo-only features** (niche switcher, mocked client gallery, fake availability) sit behind `site.demo` and say plainly in the UI that they are a demo.
+- **Demo-only features** (mocked client gallery, fake availability) sit behind `site.demo` and say plainly in the UI that they are a demo.
 - **Works without JavaScript.** Every page is readable and the enquiry form submits without JS; scripts add to it.
 - External services (form endpoint, WhatsApp, video hosts) are links or optional env vars with a working fallback when empty (the form falls back to `mailto:`).
 
