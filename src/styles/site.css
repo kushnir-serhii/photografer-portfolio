@@ -773,3 +773,101 @@ html:has(.sh-film-dialog[open]) { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .sh-gallery__film:hover .sh-film-badge, .sh-gallery__film:focus-visible .sh-film-badge { transform: none; }
 }
+
+/* ---------- client galleries (demo, spec 006) ---------- */
+
+/* A demo label: says plainly what is mocked. Shown only when site.demo is true. */
+.sh-demo-note {
+  margin: 0; max-width: 60ch; padding: var(--space-3) var(--space-4);
+  font-family: var(--font-mono); font-size: 12px; line-height: 18px; letter-spacing: 0.02em;
+  color: var(--ink-muted); border: 1px dashed var(--line-strong); border-radius: var(--radius-xs);
+}
+
+/* The code screen (/clients/). */
+.sh-gate { max-width: var(--layout-narrow); }
+.sh-gate__title { margin: 0 0 var(--space-5); }
+.sh-gate__lead { margin: 0 0 var(--space-7); max-width: 40ch; }
+.sh-gate__form { margin: 0 0 var(--space-6); }
+.sh-gate__form[hidden], .sh-gate__nojs[hidden] { display: none; }
+.sh-gate__row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-4); }
+.sh-gate__input { flex: 1 1 16ch; min-width: 0; width: auto; font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+.sh-gate__input::placeholder { text-transform: none; }
+.sh-gate__submit { flex: none; }
+.sh-gate__help { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.sh-gate__fill {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-4);
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; color: var(--ink);
+  background: transparent; border: 1px dashed var(--line-strong); border-radius: var(--radius-pill); cursor: pointer;
+  transition: border-color var(--dur-fast) linear;
+}
+.sh-gate__fill:hover { border-color: var(--ink); }
+.sh-gate__nojs { margin: 0 0 var(--space-6); max-width: 48ch; }
+@media (max-width: 600px) {
+  .sh-gate__submit { flex: 1 1 100%; }
+}
+
+/* The gallery page (/clients/<slug>/). */
+.sh-cgallery__title { margin: 0 0 var(--space-6); overflow-wrap: anywhere; }
+.sh-cgallery__facts {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5) var(--space-6);
+  margin: 0 0 var(--space-6); padding-block: var(--space-5); border-block: 1px solid var(--line);
+}
+.sh-cgallery__facts dt { margin-bottom: var(--space-2); }
+.sh-cgallery__facts dd { margin: 0; font-size: 17px; line-height: 24px; overflow-wrap: anywhere; }
+.sh-cgallery__num { font-variant-numeric: tabular-nums; }
+@media (min-width: 760px) { .sh-cgallery__facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.sh-cgallery__lead { margin: 0 0 var(--space-5); max-width: 56ch; }
+.sh-cgallery__notes { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4) var(--space-6); }
+
+/* Justified rows: every frame keeps its own ratio (--r, set per item) and the rows fill the width,
+   so nothing is cropped by the layout. The ::after soaks up the last row so it keeps its height. */
+.sh-cgallery__grid {
+  --row: 128px;
+  display: flex; flex-wrap: wrap; gap: var(--space-5) var(--space-2);
+  margin: 0; padding: 0; list-style: none;
+}
+.sh-cgallery__grid::after { content: ''; flex: 999 1 0; }
+@media (min-width: 600px) { .sh-cgallery__grid { --row: 200px; gap: var(--space-6) var(--space-3); } }
+@media (min-width: 1100px) { .sh-cgallery__grid { --row: 280px; } }
+.sh-cgallery__item { flex: var(--r, 1) 1 calc(var(--r, 1) * var(--row)); min-width: 0; display: grid; gap: var(--space-2); align-content: start; }
+.sh-cgallery__open { display: block; aspect-ratio: var(--r, 1); }
+.sh-cgallery__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-width: 0; }
+.sh-cgallery__name { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.sh-cgallery__empty { display: grid; justify-items: start; gap: var(--space-4); max-width: 52ch; }
+.sh-cgallery__empty p { margin: 0; }
+.sh-cgallery__end { margin: var(--space-7) 0 0; max-width: 56ch; }
+
+/* The viewer: a full-screen native <dialog> in the page's theme. A click on the empty space around the
+   photo (the dialog or the stage) closes it, as a backdrop would. */
+.sh-viewer {
+  box-sizing: border-box; position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; overflow: hidden; background: var(--surface-100); color: var(--ink);
+}
+.sh-viewer[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.sh-viewer::backdrop { background: var(--scrim-strong); }
+html:has(.sh-viewer[open]) { overflow: hidden; }
+.sh-viewer__head, .sh-viewer__foot { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); }
+.sh-viewer__head { justify-content: space-between; padding-top: max(var(--space-3), env(safe-area-inset-top)); }
+.sh-viewer__foot { justify-content: center; padding-bottom: max(var(--space-3), env(safe-area-inset-bottom)); }
+.sh-viewer__name { min-width: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.sh-viewer__tools { display: flex; align-items: center; gap: var(--space-2); flex: none; }
+.sh-viewer__btn { display: grid; flex: none; }
+.sh-viewer__btn:hover { border-color: var(--ink); }
+.sh-viewer__count { min-width: 9ch; text-align: center; font-variant-numeric: tabular-nums; }
+.sh-viewer__stage { position: relative; min-height: 0; touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none; }
+.sh-viewer__img {
+  position: absolute; inset: 0 var(--space-4); margin: auto; width: auto; height: auto; max-width: calc(100% - 2 * var(--space-4)); max-height: 100%;
+  -webkit-user-drag: none;
+}
+.sh-viewer__img:not([src]) { visibility: hidden; }
+.sh-viewer__img.is-loading { opacity: 0.35; }
+.sh-viewer__img[hidden] { display: none; }
+.sh-viewer__error { position: absolute; inset: 0; margin: auto; height: fit-content; max-width: 36ch; padding: var(--space-4); text-align: center; color: var(--ink-muted); }
+.sh-viewer__error[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .sh-viewer[open] { animation: sh-quick-fade var(--dur-fast) linear; }
+  .sh-viewer__img { transition: opacity var(--dur-fast) linear; }
+}
+/* A wrapped error keeps its icon on the first line. */
+.sh-gate .sh-error { align-items: flex-start; line-height: 24px; }
+.sh-gate .sh-error svg { flex: none; margin-top: 4px; }

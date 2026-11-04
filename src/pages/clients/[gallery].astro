@@ -1,0 +1,132 @@
+---
+import { Picture, getImage } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../data/site';
+import { formatDate } from '../../scripts/dates';
+import { clientGalleries, galleryPage as copy, galleryViewer, type ClientGallery } from '../../data/client-galleries';
+
+// Demo only: with site.demo off no gallery page is built (a real client's galleries live in a gallery service).
+export function getStaticPaths() {
+  return site.demo ? clientGalleries.map((gallery) => ({ params: { gallery: gallery.slug }, props: { gallery } })) : [];
+}
+
+interface Props {
+  gallery: ClientGallery;
+}
+const { gallery } = Astro.props;
+const date = formatDate(gallery.date) ?? gallery.date;
+const name = `${gallery.client} — ${gallery.title}`;
+
+// The viewer loads the large image only when a photo is opened: its URLs ride on the grid links.
+// The link itself points at the 1600px image, so without JS a photo still opens large.
+const frames = await Promise.all(
+  gallery.frames.map(async (frame) => {
+    const ratio = frame.src.width / frame.src.height;
+    const large = await getImage({ src: frame.src, width: 1600, format: 'webp' });
+    const set = await getImage({ src: frame.src, widths: [960, 1600, 2400], format: 'webp' });
+    return { ...frame, ratio, large: large.src, srcset: set.srcSet.attribute };
+  }),
+);
+// Rendered width of a frame: rows are about 300px high above 860px (rows stretch to fill, so some headroom);
+// on a phone a landscape frame takes the row, two portrait frames share it.
+const sizesFor = (ratio: number) => `(min-width: 861px) ${Math.ceil(ratio * 380)}px, ${ratio >= 1 ? 100 : 50}vw`;
+const [footBefore = '', footAfter = ''] = copy.foot.split('{email}');
+const [emptyBefore = '', emptyAfter = ''] = copy.empty.split('{email}');
+---
+<BaseLayout title={name} description={`${gallery.client}: ${gallery.title}, ${date}. A private gallery.`} noindex>
+  <section class="sh-section">
+    <div class="sh-container sh-cgallery__head">
+      <p class="sh-meta sh-head__eyebrow">{copy.eyebrow}</p>
+      <h1 class="sh-d-xl sh-cgallery__title" data-split>{gallery.client}</h1>
+      <dl class="sh-cgallery__facts">
+        <div><dt class="sh-meta-s">{copy.shoot}</dt><dd>{gallery.title}</dd></div>
+        <div><dt class="sh-meta-s">{copy.date}</dt><dd>{date}</dd></div>
+        <div><dt class="sh-meta-s">{copy.place}</dt><dd>{gallery.place}</dd></div>
+        <div><dt class="sh-meta-s">{copy.count}</dt><dd class="sh-cgallery__num">{frames.length}</dd></div>
+      </dl>
+      {frames.length > 0 && <p class="sh-body-s sh-muted sh-cgallery__lead">{copy.lead}</p>}
+      <div class="sh-cgallery__notes">
+        {site.demo && <p class="sh-demo-note">{copy.demoNote}</p>}
+        <a class="sh-link sh-body-s" href="/clients/">{copy.back}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sh-section sh-section--flush">
+    <div class="sh-container--wide">
+      {frames.length > 0 ? (
+        <ul class="sh-cgallery__grid" role="list" data-cgallery>
+          {frames.map((frame, i) => (
+            <li class="sh-cgallery__item" style={`--r:${frame.ratio.toFixed(4)}`}>
+              <a
+                class="sh-cgallery__open sh-frame"
+                href={frame.large}
+                aria-describedby={`f-${frame.id}`}
+                data-cursor-label={copy.open}
+                data-viewer-open
+                data-id={frame.id}
+                data-srcset={frame.srcset}
+                data-width={frame.src.width}
+                data-height={frame.src.height}
+              >
+                <Picture
+                  class="sh-img sh-cgallery__img"
+                  pictureAttributes={{ class: 'sh-pic' }}
+                  src={frame.src}
+                  alt={frame.alt}
+                  formats={['avif', 'webp']}
+                  widths={[400, 640, 960, 1280]}
+                  sizes={sizesFor(frame.ratio)}
+                  loading={i < 4 ? 'eager' : 'lazy'}
+                />
+              </a>
+              {/* The foot holds the file name; slice 2 adds the select toggle next to it. */}
+              <div class="sh-cgallery__foot">
+                <p class="sh-meta-s sh-cgallery__name" id={`f-${frame.id}`}>{frame.id}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="sh-cgallery__empty">
+          <p class="sh-body-s sh-muted">{emptyBefore}<a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a>{emptyAfter}</p>
+          <a class="sh-btn sh-btn--outline" href="/clients/">{copy.back}</a>
+        </div>
+      )}
+      {frames.length > 0 && (
+        <p class="sh-body-s sh-muted sh-cgallery__end">
+          {footBefore}<a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a>{footAfter}
+        </p>
+      )}
+    </div>
+  </section>
+
+  {/* The viewer (src/scripts/client-gallery.ts): one image at a time, loaded when shown. */}
+  {frames.length > 0 && (
+    <dialog class="sh-viewer" aria-labelledby="sh-viewer-name" data-viewer>
+      <div class="sh-viewer__head">
+        <p class="sh-meta sh-meta--ink sh-viewer__name" id="sh-viewer-name" data-viewer-name></p>
+        {/* Slice 2: the select toggle sits here, before the close button. */}
+        <div class="sh-viewer__tools">
+          <button class="sh-burger sh-viewer__btn" type="button" aria-label={galleryViewer.close} data-viewer-close>
+            <Icon name="close" />
+          </button>
+        </div>
+      </div>
+      <div class="sh-viewer__stage" data-viewer-stage>
+        <img class="sh-viewer__img" alt="" decoding="async" data-viewer-img />
+        <p class="sh-body-s sh-viewer__error" role="status" hidden data-viewer-error>{galleryViewer.error}</p>
+      </div>
+      <div class="sh-viewer__foot">
+        <button class="sh-burger sh-viewer__btn" type="button" aria-label={galleryViewer.previous} data-viewer-prev>
+          <Icon name="arrow-left" />
+        </button>
+        <p class="sh-meta sh-viewer__count" aria-live="polite" data-viewer-count data-of={galleryViewer.of}></p>
+        <button class="sh-burger sh-viewer__btn" type="button" aria-label={galleryViewer.next} data-viewer-next>
+          <Icon name="arrow-right" />
+        </button>
+      </div>
+    </dialog>
+  )}
+</BaseLayout>
