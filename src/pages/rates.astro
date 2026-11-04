@@ -1,13 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Packages from '../components/Packages.astro';
-import StoryBlock from '../components/StoryBlock.astro';
+import PriceCalculator from '../components/PriceCalculator.astro';
 import ClosingCta from '../components/ClosingCta.astro';
 import FaqList from '../components/FaqList.astro';
-import { faqSchema } from '../data/schema';
-import { plans, pictures, ratesPage, addOns, faq } from '../data/site';
+import { faqSchema, offersSchema } from '../data/schema';
+import { plans, ratesPage, addOns, faq } from '../data/site';
 ---
-<BaseLayout title={ratesPage.title} description={ratesPage.description} schema={[faqSchema(faq)]}>
+<BaseLayout title={ratesPage.title} description={ratesPage.description} schema={[faqSchema(faq), offersSchema(plans, Astro.site!)]}>
   <section class="sh-section">
     <div class="sh-container">
       <p class="sh-meta sh-head__eyebrow" data-reveal>{ratesPage.eyebrow}</p>
@@ -23,24 +23,9 @@ import { plans, pictures, ratesPage, addOns, faq } from '../data/site';
     </div>
   </section>
 
-  <section class="sh-section sh-section--band">
+  <section class="sh-section sh-section--band" id="quote" aria-labelledby="sh-calc-title">
     <div class="sh-container">
-      <StoryBlock image={pictures.rates.src} alt={pictures.rates.alt} ratio="3x2" reverse>
-        <p class="sh-meta" data-reveal>{ratesPage.addOnsEyebrow}</p>
-        <h2 class="sh-d-l sh-addons__title" data-split>{ratesPage.addOnsTitle}</h2>
-        <ul class="sh-addons">
-          {addOns.map((a) => (
-            <li class="sh-addons__item">
-              <span class="sh-addons__name">
-                {a.name}
-                {a.detail && <span class="sh-addons__detail">{a.detail}</span>}
-              </span>
-              <span class="sh-addons__price">{a.price}</span>
-            </li>
-          ))}
-        </ul>
-        <p class="sh-meta-s">{ratesPage.addOnsNote}</p>
-      </StoryBlock>
+      <PriceCalculator plans={plans} addOns={addOns} />
     </div>
   </section>
 

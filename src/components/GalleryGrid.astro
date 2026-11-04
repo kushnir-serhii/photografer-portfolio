@@ -1,6 +1,8 @@
 ---
 import { Picture } from 'astro:assets';
-import { categories, workPage, type Frame, type GallerySize } from '../data/site';
+import { categories, workPage, films, filmReel, filmDialog, type Film, type Frame, type GallerySize } from '../data/site';
+import { filmWatchUrl, type FilmPlayerData } from '../data/film';
+import Icon from './Icon.astro';
 
 interface Props {
   frames: Frame[];
@@ -14,6 +16,10 @@ const sizes: Record<GallerySize, string> = {
   wide: '(min-width: 861px) 66vw, 100vw',
   half: '50vw',
 };
+// Film frames (Frame.film) play their film in the dialog below; a film id that isn't in `films` is a plain photo.
+const filmFor = (frame: Frame): Film | undefined => (frame.film ? films.find((f) => f.id === frame.film) : undefined);
+const filmName = (film: Film) => `${film.client} — ${film.title}`;
+const playerData = (film: Film): FilmPlayerData => ({ source: film.source, label: filmName(film) });
 ---
 <div data-gallery>
   <div class="sh-container sh-gallery__bar">
@@ -25,14 +31,9 @@ const sizes: Record<GallerySize, string> = {
   </div>
   <div class="sh-container--wide">
     <div class="sh-gallery">
-      {frames.map((frame, i) => (
-        <figure
-          class:list={['sh-gallery__item', 'sh-frame', frame.size !== 'default' && `sh-gallery__item--${frame.size}`]}
-          data-category={frame.category}
-          data-reveal="clip"
-          data-reveal-delay={delays[i % 3] || undefined}
-          data-cursor-label="View"
-        >
+      {frames.map((frame, i) => {
+        const film = filmFor(frame);
+        const picture = (
           <Picture
             class="sh-img"
             pictureAttributes={{ class: 'sh-pic' }}
@@ -43,8 +44,34 @@ const sizes: Record<GallerySize, string> = {
             sizes={sizes[frame.size]}
             loading="lazy"
           />
-        </figure>
-      ))}
+        );
+        return (
+          <figure
+            class:list={['sh-gallery__item', 'sh-frame', frame.size !== 'default' && `sh-gallery__item--${frame.size}`]}
+            data-category={frame.category}
+            data-reveal="clip"
+            data-reveal-delay={delays[i % 3] || undefined}
+            data-cursor-label={film ? 'Play' : 'View'}
+          >
+            {film ? (
+              <a
+                class="sh-gallery__film"
+                href={filmWatchUrl(film.source)}
+                data-film-open
+                data-film={JSON.stringify(playerData(film))}
+                data-film-meta={`${film.client} · ${film.title} · ${film.duration}`}
+                aria-label={`${filmReel.play}: ${filmName(film)} (${film.duration})`}
+              >
+                {picture}
+                <span class="sh-film-badge">
+                  <svg width="10" height="12" viewBox="0 0 10 12" aria-hidden="true"><path d="M1 .8v10.4L9.6 6z" fill="currentColor" /></svg>
+                  {filmDialog.badge}<span class="sh-film-badge__time"> · {film.duration}</span>
+                </span>
+              </a>
+            ) : picture}
+          </figure>
+        );
+      })}
     </div>
     <div class="sh-gallery__empty" data-gallery-empty hidden>
       <p class="sh-meta">{workPage.emptyText}</p>
@@ -55,4 +82,16 @@ const sizes: Record<GallerySize, string> = {
       <a class="sh-btn sh-btn--outline" href="/contact/">{workPage.galleryCta}</a>
     </div>
   </div>
+  {/* Film frames play here (src/scripts/film.ts). Empty until a film is opened; emptied again on close. */}
+  <dialog class="sh-film-dialog" aria-labelledby="sh-film-dialog-title" data-film-dialog>
+    <div class="sh-film-dialog__panel">
+      <div class="sh-film-dialog__head">
+        <p class="sh-meta sh-meta--ink sh-film-dialog__title" id="sh-film-dialog-title" data-film-dialog-title></p>
+        <button class="sh-burger sh-film-dialog__close" type="button" aria-label={filmDialog.close} data-film-dialog-close>
+          <Icon name="close" />
+        </button>
+      </div>
+      <div class="sh-film-dialog__stage" data-film-dialog-stage></div>
+    </div>
+  </dialog>
 </div>

@@ -2,6 +2,8 @@
 // docs/setup.md): replace them with the photographer's own work before launch.
 import type { ImageMetadata } from 'astro';
 import type { AreaSlug } from './areas';
+import { formatPrice, priceText } from './format';
+import type { FilmSource } from './film';
 import heroTeamPortraitStudio from '../assets/work/hero-team-portrait-studio.jpg';
 import foldDrumRoasterFloor from '../assets/work/fold-drum-roaster-floor.jpg';
 import marlowFinchStreetCoat from '../assets/work/marlow-finch-street-coat.jpg';
@@ -43,14 +45,6 @@ export const site = {
   formEndpoint: import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined,
   // Shows demo-only features and their labels; set false for a real client's site.
   demo: true,
-};
-
-// Details used only for schema.org structured data (src/data/schema.ts). No street address: fictional.
-export const business = {
-  region: 'Greater London',
-  country: 'GB',
-  // Ex VAT, from the cheapest to the dearest package. Per-package Offers with numeric prices come in spec 003.
-  priceRange: '£120–£1,750',
 };
 
 export const nav = [
@@ -127,6 +121,8 @@ export interface Frame {
   alt: string;
   size: GallerySize;
   category: Category;
+  // Id of a film in `films`: the frame plays it (film frames on /work/).
+  film?: string;
 }
 
 export const categories: { id: Category | 'all'; label: string }[] = [
@@ -145,15 +141,68 @@ export const frames: Frame[] = [
   { src: saltroomLongTable, alt: 'A long restaurant table laid with glasses and napkins, running towards a bright front window', size: 'wide', category: 'food' },
   { src: orielAmberDroppersWindowLight, alt: 'Three amber dropper bottles on a white ledge, crossed by low window light and long shadows', size: 'default', category: 'product' },
   { src: northlineHeadshotLaughing, alt: 'A woman in a checked shirt laughing towards the camera against a dark grey backdrop', size: 'default', category: 'portraits' },
-  { src: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel', size: 'default', category: 'film' },
+  { src: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel', size: 'default', category: 'film', film: 'kiln-ceramics' },
   { src: portraitByTheWindow, alt: 'A bearded man in a dark room, lit from the side by a tall window', size: 'half', category: 'portraits' },
-  { src: cameraOperatorWarehouse, alt: 'A camera operator checking the monitor of a cinema camera beside an actor in a warehouse', size: 'half', category: 'film' },
+  { src: cameraOperatorWarehouse, alt: 'A camera operator checking the monitor of a cinema camera beside an actor in a warehouse', size: 'half', category: 'film', film: 'camera-operator' },
   { src: amberDropperWindowShadow, alt: 'An amber dropper bottle on a wooden stand, striped by shadows from a window', size: 'tall', category: 'product' },
   { src: foldDrumRoasterFloor, alt: 'A large drum roaster turning freshly roasted beans in its cooling tray on a roastery floor under hanging lamps', size: 'wide', category: 'food' },
   { src: marlowFinchStreetCoat, alt: 'A woman in a black coat and sunglasses standing in a cobbled street lined with parked cars', size: 'default', category: 'brand' },
   { src: coffeeBeansSampleScoop, alt: "A hand holding a roaster's sample scoop full of coffee beans against a dark background", size: 'default', category: 'food' },
-  { src: filmSetFirelight, alt: 'A small film crew around a cinema camera in a firelit wooden room', size: 'default', category: 'film' },
+  { src: filmSetFirelight, alt: 'A small film crew around a cinema camera in a firelit wooden room', size: 'default', category: 'film', film: 'crew-on-set' },
 ];
+
+// ---------- films (home reel, film frames on /work/) ----------
+
+export type { FilmSource };
+
+export interface Film {
+  // Stable id, used by Frame.film and filmReel.film.
+  id: string;
+  client: string;
+  title: string;
+  // Length shown on the poster, "0:23".
+  duration: string;
+  // Poster: one of the gallery photos. Nothing of the film loads until it is played.
+  poster: ImageMetadata;
+  alt: string;
+  source: FilmSource;
+}
+
+// Demo clips are Pexels videos in public/films/ (720p, no sound; sources in docs/setup.md). For a client,
+// swap in their own mp4 files (add `captions: '/films/name.vtt'` for a WebVTT track) or a Vimeo / YouTube id:
+// `source: { type: 'vimeo', id: '76979871' }`.
+export const films: Film[] = [
+  {
+    id: 'kiln-ceramics', client: 'Kiln Ceramics', title: 'Hands, clay and a slow wheel', duration: '0:23',
+    poster: kilnHandsOnWheel, alt: 'Clay-covered hands shaping a terracotta pot on a spinning wheel',
+    source: { type: 'file', src: '/films/kiln-ceramics.mp4' },
+  },
+  {
+    id: 'camera-operator', client: 'Behind the scenes', title: 'Lining up the first shot', duration: '0:25',
+    poster: cameraOperatorWarehouse, alt: 'A camera operator checking the monitor of a cinema camera beside an actor in a warehouse',
+    source: { type: 'file', src: '/films/camera-operator-prep.mp4' },
+  },
+  {
+    id: 'crew-on-set', client: 'Behind the scenes', title: 'A small crew, one long day', duration: '0:37',
+    poster: filmSetFirelight, alt: 'A small film crew around a cinema camera in a firelit wooden room',
+    source: { type: 'file', src: '/films/crew-on-set.mp4' },
+  },
+];
+
+// The reel on the home page. `film`: the id of the film it plays.
+export const filmReel = {
+  eyebrow: 'Film',
+  title: 'Stills and film, one crew',
+  lead: 'Short films for launches, websites and social, shot on the same day as the stills.',
+  film: 'kiln-ceramics',
+  play: 'Play film',
+};
+
+// Film frames in the /work/ gallery: the badge on the photograph and the dialog that plays them.
+export const filmDialog = {
+  badge: 'Film',
+  close: 'Close film',
+};
 
 export interface Picture {
   src: ImageMetadata;
@@ -173,11 +222,22 @@ export const pictures = {
 // Stable ids used in URLs (?plan=full-day).
 export type PlanId = 'half-day' | 'full-day' | 'headshots';
 
+// A count the visitor can choose for a per-unit price. `one` / `many`: "person" / "people".
+export interface Quantity {
+  min: number;
+  max: number;
+  one: string;
+  many: string;
+}
+
 export interface Plan {
   id: PlanId;
   no: string;
   name: string;
-  price: string;
+  // Ex VAT, in pounds; shown through formatPrice (src/data/format.ts).
+  price: number;
+  // Set when the price is per unit (headshots: per person) and the visitor picks how many.
+  qty?: Quantity;
   // What the price buys, shown under it: "per shoot", "per person, min. 5".
   unit: string;
   items: string[];
@@ -191,21 +251,37 @@ export interface Plan {
 // Placeholder prices, ex VAT.
 export const plans: Plan[] = [
   {
-    id: 'half-day', no: '01', name: 'Half day', price: '£950', unit: 'per shoot',
+    id: 'half-day', no: '01', name: 'Half day', price: 950, unit: 'per shoot',
     items: ['Four hours on location or in studio', 'About 40 edited images', 'First edit in five working days'],
     usage: '12 months, web and social', ask: 'a half day shoot',
   },
   {
-    id: 'full-day', no: '02', name: 'Full day', price: '£1,750', unit: 'per shoot', featured: true,
+    id: 'full-day', no: '02', name: 'Full day', price: 1750, unit: 'per shoot', featured: true,
     items: ['Eight hours, up to three set-ups', 'About 80 edited images', 'Shot list planned with you'],
     usage: '12 months, web and social', ask: 'a full day shoot',
   },
   {
-    id: 'headshots', no: '03', name: 'Headshots', price: '£120', unit: 'per person, min. 5',
+    id: 'headshots', no: '03', name: 'Headshots', price: 120, unit: 'per person, min. 5',
+    qty: { min: 5, max: 50, one: 'person', many: 'people' },
     items: ['On site at your office', 'Two retouched images each', 'Matching light for the whole team'],
     usage: '12 months, web and social', ask: 'team headshots',
   },
 ];
+
+// Looks a package up by id for copy built from prices (marquee, descriptions, hints).
+export function planPrice(id: PlanId): number {
+  const plan = plans.find((p) => p.id === id);
+  if (!plan) throw new Error(`Unknown plan: ${id}`);
+  return plan.price;
+}
+
+// Details used only for schema.org structured data (src/data/schema.ts). No street address: fictional.
+export const business = {
+  region: 'Greater London',
+  country: 'GB',
+  // Ex VAT, from the cheapest to the dearest package: "£120–£1,750".
+  priceRange: `${formatPrice(Math.min(...plans.map((p) => p.price)))}–${formatPrice(Math.max(...plans.map((p) => p.price)))}`,
+};
 
 // ---------- quick contact (the "Call or message" dialog) ----------
 
@@ -236,6 +312,8 @@ export const quickContact = {
     planArea: "Hi Robin, I'd like to ask about {plan} in {area}. Which dates are free?",
     dateArea: 'Hi Robin, is {date} free for a shoot in {area}?',
     noneArea: "Hi Robin, I'd like to ask about a shoot in {area}. Which dates are free?",
+    // Added to any of the eight when the visitor built a quote on /rates/. {quote}: the summary, "Full day, extra hour ×2 — £2,150 ex VAT".
+    quote: ' My quote from your site: {quote}.',
   },
 };
 
@@ -298,10 +376,19 @@ export const availabilityCopy = {
 
 // ---------- /rates/ copy ----------
 
+export type AddOnId = 'extra-usage' | 'retouching' | 'short-video' | 'extra-hour';
+
 export interface AddOn {
+  id: AddOnId;
   name: string;
-  // Price as shown, ex VAT: "from £300", "£25 per image", "at cost".
-  price: string;
+  // Ex VAT, in pounds. Shown with priceText(price, { from: priceFrom, unit }): "from £300", "£25 per image".
+  price: number;
+  // The real price depends on the job: shown as "from £…".
+  priceFrom?: boolean;
+  // Shown after the price: "per image".
+  unit?: string;
+  // Set when the visitor picks how many (retouched images, extra hours).
+  qty?: Quantity;
   detail?: string;
 }
 
@@ -313,25 +400,67 @@ export interface FaqItem {
 export const ratesPage = {
   title: 'Rates',
   description:
-    'Brand and commercial photography rates in London: half day £950, full day £1,750, headshots £120 per person. Ex VAT, 12 months of web and social usage included.',
+    `Brand and commercial photography rates in London: half day ${formatPrice(planPrice('half-day'))}, full day ${formatPrice(planPrice('full-day'))}, headshots ${formatPrice(planPrice('headshots'))} per person. Ex VAT, 12 months of web and social usage included.`,
   eyebrow: 'Rates — 2026 / 2027',
   heading: 'What it costs, plainly',
   lead: 'Three ways to book, the numbers in the open. Every price is ex VAT and includes 12 months of web and social usage, so you can get sign-off before you write.',
   note: 'Prices ex VAT · travel within the M25 included',
-  addOnsEyebrow: 'Add-ons',
-  addOnsTitle: 'What clients usually add',
-  addOnsNote: 'All ex VAT, quoted in writing before you book.',
   faqEyebrow: 'Questions',
   faqTitle: 'Asked most often',
+  // Not an add-on: it has no price to add up. Shown as a note in the calculator's total panel.
+  travel: { name: 'Travel outside the M25', price: 'at cost' },
 };
 
+// Placeholder prices, ex VAT.
 export const addOns: AddOn[] = [
-  { name: 'Extra usage', price: 'from £300', detail: 'Print, paid ads, out-of-home or longer terms' },
-  { name: 'Extra retouching', price: '£25 per image' },
-  { name: 'Short video', price: 'from £650', detail: 'A 30–60 second cut for social' },
-  { name: 'Extra hour', price: '£200' },
-  { name: 'Travel outside the M25', price: 'at cost' },
+  { id: 'extra-usage', name: 'Extra usage', price: 300, priceFrom: true, detail: 'Print, paid ads, out-of-home or longer terms' },
+  { id: 'retouching', name: 'Extra retouching', price: 25, unit: 'per image', qty: { min: 1, max: 200, one: 'image', many: 'images' } },
+  { id: 'short-video', name: 'Short video', price: 650, priceFrom: true, detail: 'A 30–60 second cut for social' },
+  { id: 'extra-hour', name: 'Extra hour', price: 200, qty: { min: 1, max: 4, one: 'hour', many: 'hours' } },
 ];
+
+// The words in a quote summary (src/data/quote.ts): "Full day, extra hour ×2 — from £2,400 ex VAT".
+export interface QuoteCopy {
+  for: string;
+  from: string;
+  exVat: string;
+  times: string;
+}
+
+export const quoteCopy: QuoteCopy = { for: 'for', from: 'from', exVat: 'ex VAT', times: '×' };
+
+// ---------- price calculator on /rates/ (src/components/PriceCalculator.astro) ----------
+
+export const calculatorCopy = {
+  eyebrow: 'Build a quote',
+  title: 'Add it up yourself',
+  lead: 'Pick a package, tick what you need on top and the total follows. Send it to me and the brief arrives already filled in.',
+  planLegend: 'Package',
+  addOnsLegend: 'Add-ons',
+  // Stepper label and help: "How many people", "5 to 50 people". {min} / {max} / {many} come from Quantity.
+  howMany: 'How many',
+  range: '{min} to {max} {many}',
+  // Stepper buttons' accessible names: "Fewer people", "More images".
+  fewer: 'Fewer',
+  more: 'More',
+  panelTitle: 'Your quote',
+  total: 'Total',
+  // In front of a total that holds a "from" price: "From £2,800".
+  totalFrom: 'From',
+  travel: `Travel within the M25 included. ${ratesPage.travel.name}: ${ratesPage.travel.price}.`,
+  written: 'I confirm every quote in writing before you book.',
+  send: 'Send this to me',
+  // The phone bar's shorter button.
+  sendShort: 'Send this',
+  // Shown instead of the live total when scripts are off.
+  noJs: 'Every price here is ex VAT. Tell me what you need and I will send you a written quote.',
+  noJsLink: 'Send a brief',
+};
+
+// "from £300", "£25 per image", "£200".
+export function addOnPriceText(a: AddOn): string {
+  return priceText(a.price, { from: a.priceFrom, unit: a.unit });
+}
 
 export const faq: FaqItem[] = [
   {
@@ -394,8 +523,23 @@ export const shootTypes: string[] = [
   'Not sure yet',
 ];
 
+export interface BudgetRange {
+  label: string;
+  // Upper bound, ex VAT. A total belongs to the first range whose `max` it does not exceed.
+  max?: number;
+  // The "no figure" option. Without `max` and not `notSure`, a range is open-ended ("£5,000+"):
+  // it takes any total above the last bound. (Infinity is not JSON-safe, so open ends have no `max`.)
+  notSure?: boolean;
+}
+
 // Options for the "budget" field, ex VAT.
-export const budgetRanges: string[] = ['Under £1,000', '£1,000–2,500', '£2,500–5,000', '£5,000+', 'Not sure yet'];
+export const budgetRanges: BudgetRange[] = [
+  { label: 'Under £1,000', max: 1000 },
+  { label: '£1,000–2,500', max: 2500 },
+  { label: '£2,500–5,000', max: 5000 },
+  { label: '£5,000+' },
+  { label: 'Not sure yet', notSure: true },
+];
 
 export const enquiryForm = {
   namePlaceholder: 'Alex Morgan',
@@ -405,6 +549,8 @@ export const enquiryForm = {
   packageLabel: 'Package',
   packageNone: 'Not sure yet',
   packageChange: 'Change',
+  // Link on the confirmation line back to the calculator, when the package comes with add-ons or a quantity.
+  quoteEdit: 'Edit quote',
   dateHelp: 'A rough week is fine. Not fixed yet? Leave it empty.',
   briefPlaceholder: 'A spring menu launch, 12 dishes, at our place in Peckham. Pictures for the website and Instagram.',
   // Starts an empty brief when the visitor arrives from an area page (?area=). {area}: Area.name.
@@ -426,7 +572,7 @@ export const hero = {
 
 export const marquee: string[] = [
   `Booking from ${site.season}`,
-  'Half day from £950',
+  `Half day from ${formatPrice(planPrice('half-day'))}`,
   'Usage rights included',
   'First edit in five working days',
 ];

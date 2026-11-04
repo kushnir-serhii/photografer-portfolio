@@ -1,5 +1,6 @@
 // Builders for schema.org JSON-LD. Pages pass the result to BaseLayout's `schema` prop.
-import { site, business, type FaqItem } from './site';
+import { site, business, ratesPage, type FaqItem, type Plan } from './site';
+import { money } from './format';
 import { areas, areaLabel } from './areas';
 
 export type JsonLdObject = Record<string, unknown>;
@@ -68,6 +69,30 @@ export function faqSchema(items: FaqItem[]): JsonLdObject {
       '@type': 'Question',
       name: item.q,
       acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+}
+
+// One Offer per package, ex VAT, offered by the business node from businessSchema.
+export function offersSchema(items: Plan[], siteUrl: URL | string): JsonLdObject {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'OfferCatalog',
+    name: ratesPage.title,
+    itemListElement: items.map((plan) => ({
+      '@type': 'Offer',
+      name: plan.name,
+      price: plan.price,
+      priceCurrency: money.currency,
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: plan.price,
+        priceCurrency: money.currency,
+        valueAddedTaxIncluded: false,
+        unitText: plan.unit,
+      },
+      itemOffered: { '@type': 'Service', name: plan.name },
+      offeredBy: { '@id': businessId(siteUrl) },
     })),
   };
 }

@@ -3,6 +3,8 @@
 // persists across navigations, so it is wired once, at module level, at the bottom of this file.
 // The date helpers live in dates.ts (no DOM), so the calendar component can use them at build time.
 import { parseIsoDate, formatDate } from './dates';
+import { budgetIndex, parseBuiltQuote, quoteQuery, quoteSummary, quoteTotal, type Quote } from '../data/quote';
+import { readQuoteData } from './price-data';
 
 export function setParam(name: string, value: string | null) {
   const url = new URL(location.href);
@@ -36,31 +38,98 @@ export function initBooking() {
 
     if (select) {
       const options = Array.from(select.options);
+      const data = readQuoteData(form.dataset.quoteData);
+      const quoteField = form.querySelector<HTMLInputElement>('[data-quote-field]');
+      const editWrap = form.querySelector<HTMLElement>('[data-quote-edit-wrap]');
+      const editLink = form.querySelector<HTMLAnchorElement>('[data-quote-edit]');
+      const budget = form.querySelector<HTMLSelectElement>('select[name="budget"]');
+      const defaultBudget = Math.max(0, Array.from(budget?.options ?? []).findIndex((o) => o.defaultSelected));
 
-      const showChoice = () => {
-        const text = select.selectedOptions[0]?.dataset.choice;
+      // The add-ons and the plan quantity from the address, kept in memory so that switching the package
+      // back and forth does not lose them. "Not sure yet" clears them (there is no package to quote).
+      const raw: { qty: string | null; addons: string | null } = { qty: params.get('qty'), addons: params.get('addons') };
+      // The budget follows the total until the visitor picks one themselves (a user `change`; setting
+      // selectedIndex from here fires none). `budgetAuto`: the current value was set by us.
+      let budgetTouched = false;
+      let budgetAuto = false;
+      budget?.addEventListener('change', () => (budgetTouched = true));
+
+      const planId = () => select.selectedOptions[0]?.dataset.plan || '';
+
+      // The quote of the selected package plus the remembered add-ons; null for a package alone.
+      const currentQuote = (): Quote | null => {
+        const id = planId();
+        if (!data || !id) return null;
+        const p = new URLSearchParams({ plan: id });
+        if (raw.qty !== null) p.set('qty', raw.qty);
+        if (raw.addons !== null) p.set('addons', raw.addons);
+        return parseBuiltQuote(p, data.plans, data.addOns);
+      }
+
+      // plan / qty / addons in the address, readable like the calculator writes them; other params stay.
+      const writeUrl = (quote: Quote | null) => {
+        const url = new URL(location.href);
+        ['plan', 'qty', 'addons'].forEach((k) => url.searchParams.delete(k));
+        const rest = url.searchParams.toString();
+        const id = planId();
+        const own = quote ? quoteQuery(quote) : id ? `plan=${encodeURIComponent(id)}` : '';
+        const query = [rest, own].filter(Boolean).join('&');
+        history.replaceState(history.state, '', `${url.pathname}${query ? `?${query}` : ''}${url.hash}`);
+      }
+
+      // The confirmation line, the submitted `quote` field and the budget, all from the current selection.
+      const refresh = (syncUrl: boolean) => {
+        const quote = currentQuote();
+        const summary = quote && data ? quoteSummary(quote, data.plans, data.addOns, data.copy) : '';
+        const planText = select.selectedOptions[0]?.dataset.choice;
+        const text = summary || planText;
         if (choice && choiceText) {
           choiceText.textContent = text ?? '';
           choice.hidden = !text;
         }
-      };
+        if (editWrap) editWrap.hidden = !quote;
+        if (editLink && quote) editLink.href = `/rates/?${quoteQuery(quote)}#quote`;
+        // Disabled while empty: the email then carries no empty `quote` line.
+        if (quoteField) {
+          quoteField.value = summary;
+          quoteField.disabled = !summary;
+        }
+        if (budget && data && !budgetTouched) {
+          const index = quote ? budgetIndex(quoteTotal(quote, data.plans, data.addOns).amount, data.budgets) : -1;
+          if (index >= 0 && index < budget.options.length) {
+            budget.selectedIndex = index;
+            budgetAuto = true;
+          } else if (budgetAuto) {
+            budget.selectedIndex = defaultBudget;
+            budgetAuto = false;
+          }
+        }
+        if (syncUrl) writeUrl(quote);
+      }
 
       // ?plan=full-day preselects that package. Unknown ids are ignored.
       const wanted = params.get('plan');
       const match = wanted ? options.find((o) => o.dataset.plan === wanted) : undefined;
       if (match && match.dataset.plan) select.value = match.value;
-      showChoice();
+      // A shared link with unknown ids or out-of-range numbers: the address shows the quote as read.
+      refresh(currentQuote() !== null);
 
       select.addEventListener('change', () => {
-        setParam('plan', select.selectedOptions[0]?.dataset.plan || null);
-        showChoice();
+        if (!planId()) {
+          raw.qty = null;
+          raw.addons = null;
+        }
+        refresh(true);
       });
       change?.addEventListener('click', () => select.focus());
       // form.reset() after a sent brief puts the select back to "Not sure yet"; the reset fires before
-      // the fields change, so sync the line on the next tick.
+      // the fields change, so sync the line on the next tick. The quote and its params go too.
       form.addEventListener('reset', () => setTimeout(() => {
-        setParam('plan', null);
-        showChoice();
+        raw.qty = null;
+        raw.addons = null;
+        budgetTouched = false;
+        budgetAuto = false;
+        refresh(true);
       }));
     }
 
@@ -121,6 +190,7 @@ const fill = (template: string, date: string, plan: string, area = '') =>
 
 function wireQuickContact(dialog: HTMLDialogElement) {
   const plans = readPlans(dialog.dataset.plans);
+  const quoteData = readQuoteData(dialog.dataset.quoteData);
   const areaNames = readAreas(dialog.dataset.areas);
   const context = dialog.querySelector<HTMLElement>('[data-quick-context]');
   const whatsapp = dialog.querySelector<HTMLAnchorElement>('[data-quick-whatsapp]');
@@ -133,6 +203,19 @@ function wireQuickContact(dialog: HTMLDialogElement) {
   function update(from: HTMLElement) {
     const params = new URLSearchParams(location.search);
     const plan = plans.find((p) => p.id === (from.dataset.plan ?? params.get('plan')));
+    // A quote the visitor built: the opener's own (the calculator keeps its data-* current) or, for any
+    // other opener, the address (/contact/, /rates/). A package alone is not a quote.
+    let quote: Quote | null = null;
+    if (quoteData) {
+      let source = params;
+      if (from.dataset.plan !== undefined) {
+        source = new URLSearchParams({ plan: from.dataset.plan });
+        if (from.dataset.qty !== undefined) source.set('qty', from.dataset.qty);
+        if (from.dataset.addons !== undefined) source.set('addons', from.dataset.addons);
+      }
+      quote = parseBuiltQuote(source, quoteData.plans, quoteData.addOns);
+    }
+    const summary = quote && quoteData ? quoteSummary(quote, quoteData.plans, quoteData.addOns, quoteData.copy) : '';
     const iso = bookingDate ?? (parseIsoDate(params.get('date')) ? params.get('date') : null);
     const date = formatDate(iso);
     const areaId = from.dataset.area ?? params.get('area') ?? '';
@@ -151,14 +234,17 @@ function wireQuickContact(dialog: HTMLDialogElement) {
         : plan ? fill(areaName ? waPlanArea : waPlan, '', plan.ask, a)
         : date ? fill(areaName ? waDateArea : waDate, date, '', a)
         : fill(areaName ? waNoneArea : waNone, '', '', a);
-      whatsapp.href = `https://wa.me/${dialog.dataset.waNumber}?text=${encodeURIComponent(text)}`;
+      const withQuote = summary && dialog.dataset.waQuote ? text + dialog.dataset.waQuote.replace('{quote}', () => summary) : text;
+      whatsapp.href = `https://wa.me/${dialog.dataset.waNumber}?text=${encodeURIComponent(withQuote)}`;
     }
     if (brief) {
-      const url = new URL('/contact/', location.origin);
-      if (plan) url.searchParams.set('plan', plan.id);
-      if (iso) url.searchParams.set('date', iso);
-      if (areaName) url.searchParams.set('area', areaId);
-      brief.href = url.pathname + url.search;
+      // The quote's three params are written readably ("retouching:20,short-video"), like the calculator does.
+      const query = [
+        quote ? quoteQuery(quote) : plan ? `plan=${encodeURIComponent(plan.id)}` : '',
+        iso ? `date=${encodeURIComponent(iso)}` : '',
+        areaName ? `area=${encodeURIComponent(areaId)}` : '',
+      ].filter(Boolean).join('&');
+      brief.href = `/contact/${query ? `?${query}` : ''}`;
     }
   }
 

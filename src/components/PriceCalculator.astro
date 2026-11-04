@@ -1,0 +1,127 @@
+---
+// The price calculator on /rates/: one package, add-ons with quantities, a live total and a link that
+// carries the quote to the brief (/contact/?plan=…&qty=…&addons=…). src/scripts/calculator.ts wires it.
+// Without JS it reads as a price list: the controls stay disabled and hidden, the panel links to the form.
+import type { AddOn, Plan } from '../data/site';
+import { calculatorCopy as copy, quickContact, quoteCopy, addOnPriceText } from '../data/site';
+import { formatPrice } from '../data/format';
+import { quoteQuery, type Quote } from '../data/quote';
+import QtyStepper from './QtyStepper.astro';
+
+interface Props {
+  plans: Plan[];
+  addOns: AddOn[];
+}
+const { plans, addOns } = Astro.props;
+
+const defaultPlan = plans.find((p) => p.featured) ?? plans[0];
+const initial: Quote = { plan: defaultPlan.id, addOns: [] };
+if (defaultPlan.qty) initial.qty = defaultPlan.qty.min;
+const href = `/contact/?${quoteQuery(initial)}`;
+
+// Only what the script needs to add up and describe a quote; site.ts itself never reaches the client.
+const data = JSON.stringify({
+  defaultPlan: defaultPlan.id,
+  plans: plans.map(({ id, name, price, qty }) => ({ id, name, price, qty })),
+  addOns: addOns.map(({ id, name, price, priceFrom, qty }) => ({ id, name, price, priceFrom, qty })),
+  copy: { ...quoteCopy, totalFrom: copy.totalFrom },
+});
+---
+<div class="sh-calc" data-calculator data-calc={data}>
+  <div class="sh-calc__head">
+    <p class="sh-meta" data-reveal>{copy.eyebrow}</p>
+    <h2 class="sh-d-l sh-calc__title" id="sh-calc-title" data-split>{copy.title}</h2>
+    <p class="sh-body-s sh-muted sh-measure sh-calc__lead" data-reveal data-reveal-delay="120">{copy.lead}</p>
+  </div>
+
+  <div class="sh-calc__grid">
+    <div class="sh-calc__options" data-calc-options>
+      <fieldset class="sh-calc__group">
+        <legend class="sh-meta sh-meta--ink sh-calc__legend">{copy.planLegend}</legend>
+        <div class="sh-calc__plans">
+          {plans.map((plan) => (
+            <label class="sh-calc__plan">
+              <input class="sh-calc__radio" type="radio" name="calc-plan" value={plan.id} checked={plan.id === defaultPlan.id} disabled data-calc-plan />
+              <span class="sh-calc__plan-name">{plan.name}</span>
+              <span class="sh-calc__plan-price">{formatPrice(plan.price)}</span>
+              <span class="sh-calc__plan-unit">{plan.unit}</span>
+            </label>
+          ))}
+        </div>
+        {plans.map((plan) => plan.qty && <QtyStepper item={plan.id} qty={plan.qty} />)}
+      </fieldset>
+
+      <fieldset class="sh-calc__group">
+        <legend class="sh-meta sh-meta--ink sh-calc__legend">{copy.addOnsLegend}</legend>
+        <ul class="sh-addons sh-calc__addons">
+          {addOns.map((a) => (
+            <li class="sh-calc__addon">
+              <label class="sh-check sh-calc__check">
+                <input type="checkbox" value={a.id} disabled data-calc-addon />
+                <span class="sh-addons__name">
+                  {a.name}
+                  {a.detail && <span class="sh-addons__detail">{a.detail}</span>}
+                </span>
+                <span class="sh-addons__price">{addOnPriceText(a)}</span>
+              </label>
+              {a.qty && <QtyStepper item={a.id} qty={a.qty} />}
+            </li>
+          ))}
+        </ul>
+      </fieldset>
+    </div>
+
+    <aside class="sh-calc__panel" aria-labelledby="sh-calc-panel-title" data-calc-panel>
+      <h3 class="sh-meta sh-meta--ink sh-calc__panel-title" id="sh-calc-panel-title">{copy.panelTitle}</h3>
+
+      <div class="sh-calc__nojs" data-calc-nojs>
+        <p class="sh-body-s sh-muted">{copy.noJs}</p>
+        <a class="sh-btn sh-btn--primary sh-btn--block" href="/contact/">{copy.noJsLink}</a>
+      </div>
+
+      <div class="sh-calc__live" data-calc-live hidden>
+        <ul class="sh-calc__lines">
+          {plans.map((plan) => (
+            <li class="sh-calc__line" data-line-plan={plan.id} hidden={plan.id !== defaultPlan.id}>
+              <span class="sh-calc__line-name">
+                {plan.name}
+                <span class="sh-calc__line-meta" data-line-meta></span>
+              </span>
+              <span class="sh-calc__line-price" data-line-price>{formatPrice(plan.price * (plan.qty?.min ?? 1))}</span>
+            </li>
+          ))}
+          {addOns.map((a) => (
+            <li class="sh-calc__line" data-line-addon={a.id} hidden>
+              <span class="sh-calc__line-name">
+                {a.name}
+                <span class="sh-calc__line-meta" data-line-meta></span>
+              </span>
+              <span class="sh-calc__line-price" data-line-price>{addOnPriceText(a)}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="sh-calc__total" data-calc-total>
+          <span class="sh-meta">{copy.total}</span>
+          <span class="sh-calc__amount" data-calc-amount>{formatPrice(defaultPlan.price * (initial.qty ?? 1))}</span>
+          <span class="sh-meta">{quoteCopy.exVat}</span>
+        </p>
+        <p class="sh-sr-only" aria-live="polite" aria-atomic="true" data-calc-announce></p>
+        <a class="sh-btn sh-btn--primary sh-btn--block" href={href} data-calc-send data-magnetic="0.2">{copy.send}</a>
+        <a class="sh-plan__alt sh-calc__alt" href={href} data-calc-send data-quick-contact data-plan={initial.plan}>{quickContact.planOpener}</a>
+      </div>
+
+      <div class="sh-calc__notes">
+        <p class="sh-help">{copy.travel}</p>
+        <p class="sh-help">{copy.written}</p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="sh-calc__bar" data-calc-bar hidden>
+    <p class="sh-calc__bar-total">
+      <span class="sh-meta-s">{copy.total} · {quoteCopy.exVat}</span>
+      <span class="sh-calc__bar-amount" data-calc-amount>{formatPrice(defaultPlan.price * (initial.qty ?? 1))}</span>
+    </p>
+    <a class="sh-btn sh-btn--primary" href={href} data-calc-send>{copy.sendShort}</a>
+  </div>
+</div>

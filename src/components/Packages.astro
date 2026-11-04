@@ -1,6 +1,7 @@
 ---
 import type { Plan } from '../data/site';
 import { quickContact } from '../data/site';
+import { formatPrice } from '../data/format';
 
 interface Props {
   plans: Plan[];
@@ -15,7 +16,7 @@ const { plans } = Astro.props;
         {plan.featured && <p class="sh-plan__tag">Most booked</p>}
       </div>
       <div class="sh-plan__cost">
-        <p class="sh-plan__price">{plan.price}</p>
+        <p class="sh-plan__price">{formatPrice(plan.price)}</p>
         <p class="sh-plan__unit">{plan.unit} · ex VAT</p>
       </div>
       <ul class="sh-plan__list">

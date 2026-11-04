@@ -3,6 +3,8 @@
 // Every photograph is an Unsplash placeholder (sources in docs/setup.md).
 import type { ImageMetadata } from 'astro';
 import type { FaqItem } from './site';
+import { planPrice } from './site';
+import { formatPrice } from './format';
 import shoreditchHighStreet from '../assets/work/area-shoreditch-high-street.jpg';
 import sohoRainReflection from '../assets/work/area-soho-rain-reflection.jpg';
 import kingsCrossCoalDropsYard from '../assets/work/area-kings-cross-coal-drops-yard.jpg';
@@ -40,7 +42,7 @@ export interface Area {
   intro: string;
   // How travel works and who pays for it.
   travel: string;
-  // Prices as shown, ex VAT (strings until spec 003 makes prices numeric).
+  // Prices as shown, ex VAT, built from the plan prices in site.ts.
   priceHint: string;
   // Kinds of places or named public places; never a business presented as a client.
   venues?: string[];
@@ -64,8 +66,10 @@ export interface GeoPoint {
 export type MapLabelSide = 'left' | 'right' | 'above' | 'below';
 
 const londonTravel = 'Inside the M25, so travel is included in every package.';
-const londonPrice = 'Half day £950, full day £1,750, ex VAT.';
-const ukPrice = 'Half day £950, full day £1,750, ex VAT, plus travel at cost.';
+const halfDay = formatPrice(planPrice('half-day'));
+const fullDay = formatPrice(planPrice('full-day'));
+const londonPrice = `Half day ${halfDay}, full day ${fullDay}, ex VAT.`;
+const ukPrice = `Half day ${halfDay}, full day ${fullDay}, ex VAT, plus travel at cost.`;
 
 export const areas: Area[] = [
   {
