@@ -383,7 +383,10 @@ body.has-drawer { overflow: hidden; }
 }
 button.sh-cal__day { cursor: pointer; transition: background-color var(--dur-fast) linear, border-color var(--dur-fast) linear, color var(--dur-fast) linear; }
 button.sh-cal__day[aria-disabled="true"] { cursor: default; }
-button.sh-cal__day:not([aria-disabled="true"]):hover { border-color: var(--line-strong); background: var(--accent-wash); }
+/* Hover only where a pointer can hover (a tap leaves :hover stuck on touch), and never over the picked day. */
+@media (hover: hover) {
+  button.sh-cal__day:not([aria-disabled="true"], [aria-pressed="true"]):hover { border-color: var(--line-strong); background: var(--accent-wash); }
+}
 .sh-cal__day[aria-current="date"] { border-color: var(--line-strong); }
 .sh-cal__day:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 
