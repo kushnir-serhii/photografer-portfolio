@@ -14,8 +14,9 @@ Already built before the process existed: the demo site (home, work, studio, rat
 | 004 | [Area pages + SEO](specs/004-city-pages-seo.md) | done | 001, 008 |
 | 005 | [Film reel](specs/005-film-reel.md) | done | 001, 008 |
 | 006 | [Client gallery (demo)](specs/006-client-gallery.md) | done | 001, 008 |
-| 007 | [Niche variants](specs/007-niche-variants.md) | draft | 002, 003, 004 |
 | 008 | [Repositioning: brand & commercial photographer in London](specs/008-brand-commercial-london.md) | done | 001 |
+
+There is no 007: niche variants (the same site re-dressed for weddings or events) were dropped on 2026-11-04 and the spec deleted. The demo stays one niche, brand & commercial; a photographer from another niche gets the same site with their data and photos swapped in.
 
 Statuses: `draft` → `ready` → `in-progress` → `done` (meaning in [process.md](process.md#statuses)). The status here and in the spec's header must match.
 
@@ -29,7 +30,6 @@ Read top to bottom; the next spec is the first one that isn't `done`. Specs in o
 | 2 | 008 |
 | 3 | 002, 004 |
 | 4 | 003, 005, 006 |
-| 5 | 007 |
 
 - To change the order, edit this table.
 - To make a spec buildable, review it and set it to `ready` here and in the spec.

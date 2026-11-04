@@ -383,7 +383,10 @@ body.has-drawer { overflow: hidden; }
 }
 button.sh-cal__day { cursor: pointer; transition: background-color var(--dur-fast) linear, border-color var(--dur-fast) linear, color var(--dur-fast) linear; }
 button.sh-cal__day[aria-disabled="true"] { cursor: default; }
-button.sh-cal__day:not([aria-disabled="true"]):hover { border-color: var(--line-strong); background: var(--accent-wash); }
+/* Hover only where a pointer can hover (a tap leaves :hover stuck on touch), and never over the picked day. */
+@media (hover: hover) {
+  button.sh-cal__day:not([aria-disabled="true"], [aria-pressed="true"]):hover { border-color: var(--line-strong); background: var(--accent-wash); }
+}
 .sh-cal__day[aria-current="date"] { border-color: var(--line-strong); }
 .sh-cal__day:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 
@@ -874,18 +877,18 @@ html:has(.sh-viewer[open]) { overflow: hidden; }
 
 /* Selects (gallery slice 2): the mark on a photo, the filter, and the bar with the counter and the send link.
    All of it is revealed by client-gallery.ts, so without JS none of it shows. */
-.sh-select {
+.sh-pick {
   display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0;
   background: transparent; color: var(--ink); border: 1px solid var(--line-strong); border-radius: var(--radius-pill); cursor: pointer;
   transition: background-color var(--dur-fast) linear, color var(--dur-fast) linear, border-color var(--dur-fast) linear;
 }
-.sh-select[hidden] { display: none; }
-.sh-select:hover { border-color: var(--ink); }
-.sh-select[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.sh-select__off, .sh-select__on { display: grid; place-items: center; }
-.sh-select__on, .sh-select[aria-pressed="true"] .sh-select__off { display: none; }
-.sh-select[aria-pressed="true"] .sh-select__on { display: grid; }
-.sh-viewer .sh-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.sh-pick[hidden] { display: none; }
+.sh-pick:hover { border-color: var(--ink); }
+.sh-pick[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.sh-pick__off, .sh-pick__on { display: grid; place-items: center; }
+.sh-pick__on, .sh-pick[aria-pressed="true"] .sh-pick__off { display: none; }
+.sh-pick[aria-pressed="true"] .sh-pick__on { display: grid; }
+.sh-viewer .sh-pick:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 
 /* A selected photo: an accent frame and a lit file name. */
 .sh-cgallery__open { outline: 2px solid transparent; outline-offset: 2px; transition: outline-color var(--dur-fast) linear; }

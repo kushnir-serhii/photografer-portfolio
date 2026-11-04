@@ -96,9 +96,9 @@ const [emptyBefore = '', emptyAfter = ''] = copy.empty.split('{email}');
               <div class="sh-cgallery__foot">
                 <p class="sh-meta-s sh-cgallery__name" id={`f-${frame.id}`}>{frame.id}</p>
                 {/* Script-only: revealed by client-gallery.ts, so without JS no dead button shows. */}
-                <button class="sh-select" type="button" aria-pressed="false" aria-label={fillText(selects.mark, { alt: frame.alt })} data-select-toggle={frame.id} hidden>
-                  <span class="sh-select__off"><Icon name="plus" /></span>
-                  <span class="sh-select__on"><Icon name="check" /></span>
+                <button class="sh-pick" type="button" aria-pressed="false" aria-label={fillText(selects.mark, { alt: frame.alt })} data-select-toggle={frame.id} hidden>
+                  <span class="sh-pick__off"><Icon name="plus" /></span>
+                  <span class="sh-pick__on"><Icon name="check" /></span>
                 </button>
               </div>
             </li>
@@ -156,9 +156,9 @@ const [emptyBefore = '', emptyAfter = ''] = copy.empty.split('{email}');
       <div class="sh-viewer__head">
         <p class="sh-meta sh-meta--ink sh-viewer__name" id="sh-viewer-name" data-viewer-name></p>
         <div class="sh-viewer__tools">
-          <button class="sh-select" type="button" aria-pressed="false" data-viewer-select hidden>
-            <span class="sh-select__off"><Icon name="plus" /></span>
-            <span class="sh-select__on"><Icon name="check" /></span>
+          <button class="sh-pick" type="button" aria-pressed="false" data-viewer-select hidden>
+            <span class="sh-pick__off"><Icon name="plus" /></span>
+            <span class="sh-pick__on"><Icon name="check" /></span>
           </button>
           <button class="sh-burger sh-viewer__btn" type="button" aria-label={galleryViewer.close} data-viewer-close>
             <Icon name="close" />

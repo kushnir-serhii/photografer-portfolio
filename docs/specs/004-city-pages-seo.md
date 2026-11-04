@@ -51,7 +51,7 @@ A marketing manager searching "brand photographer Shoreditch" lands on a page ma
 ## Open questions
 - **Client to confirm:** area copy (local FAQ answers, travel terms such as "travel and a night usually add £150–250") is a plausible demo; a real client rewrites it.
 - **To check by hand:** paste `/` and `/rates/` into Google's Rich Results Test once deployed (or the built HTML into validator.schema.org).
-- **Decided (2026-11-03):** route `/brand-photographer/<slug>/` (keyword in the path; 007 may change the segment).
+- **Decided (2026-11-03):** route `/brand-photographer/<slug>/` (keyword in the path).
 - **Decided (2026-11-03):** sitemap via `@astrojs/sitemap` (new dependency, approved); `robots.txt` as an endpoint built from `site`.
 - **Decided (2026-11-03):** business JSON-LD carries `priceRange` only; per-package `Offer`s wait for numeric prices in 003.
 - **Decided (2026-11-03):** every area gets a new Unsplash placeholder photo; areas with no projects show a line plus recent work from elsewhere.

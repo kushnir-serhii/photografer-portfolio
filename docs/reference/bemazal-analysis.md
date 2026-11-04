@@ -36,7 +36,7 @@ Lead capture is almost entirely **phone + pre-filled WhatsApp**, repeated on the
 | FAQ as rich results | Search visibility for free | [004](../specs/004-city-pages-seo.md) slice 1 |
 | Video section | Many photographers also shoot film | [005](../specs/005-film-reel.md) |
 | (Beyond Bemazal) private client gallery | Could replace a paid gallery service | [006](../specs/006-client-gallery.md) |
-| One codebase, several services / niches | "It fits my business" | [007](../specs/007-niche-variants.md) |
+| One codebase, several services / niches | "It fits my business" | dropped (no 007, see [roadmap](../roadmap.md)) |
 | Buyer tips / where to save | Trust; fits the "prices in the open" voice | roadmap → Later |
 | Blog hub | Needs ongoing writing; weak in a demo | roadmap → Later |
 

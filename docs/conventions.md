@@ -51,7 +51,7 @@ Astro 7 · TypeScript (strict, `astro/tsconfigs/strict`) · `@astrojs/check` · 
 - Image `alt` text describes the photograph. Decorative images get `alt=""`.
 
 ## Demo features
-- Features that only make sense in the pitch (niche switcher, mocked client gallery, fake availability data) are shown only when `site.demo` is `true`, and say in the UI that they are a demo ("Demo: in your site this connects to …").
+- Features that only make sense in the pitch (mocked client gallery, fake availability data) are shown only when `site.demo` is `true`, and say in the UI that they are a demo ("Demo: in your site this connects to …").
 - Turning `site.demo` off leaves a clean, real-client site: no dead links, no demo labels.
 
 ## SEO
