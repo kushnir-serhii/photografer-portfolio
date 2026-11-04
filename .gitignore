@@ -149,3 +149,6 @@ vite.config.ts.timestamp-*
 e2e/screenshots/
 test-results/
 playwright-report/
+
+# Portfolio screenshots (local only)
+screenshots/
