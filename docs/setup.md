@@ -111,6 +111,8 @@ Set `site` in `astro.config.mjs` to the production domain (no trailing path). It
 
 ## Search
 
+The demo is closed to search engines, AI crawlers and other robots (`site.indexable: false` in `src/data/site.ts`: `robots.txt` disallows everything and names the AI bots, every page has `noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai`, and the sitemap link is dropped). Set it to `true` at launch.
+
 After launch, submit `https://<domain>/sitemap-index.xml` in Google Search Console. Check `/`, `/rates/` and an area page in Google's Rich Results Test.
 
 ## Deploy
