@@ -9,7 +9,7 @@ Everything runs locally and needs no accounts. This file collects what changes w
 | Photographs | Unsplash placeholders in `src/assets/work/` (see [Placeholder photographs](#placeholder-photographs)) | launch |
 | Studio name, copy, contacts | Robin Hale placeholders in `src/data/site.ts` | launch |
 | Enquiry form endpoint | not set — falls back to `mailto:` | launch |
-| Site URL | `https://robinhale.studio` placeholder in `astro.config.mjs` | launch |
+| Site URL | `SITE_URL` env var; empty = Vercel's production domain on Vercel, else the `https://robinhale.studio` placeholder | launch |
 | Hosting | not chosen (any static host) | launch |
 | WhatsApp / Messenger | placeholder WhatsApp number (`site.whatsapp`), Messenger empty | launch |
 | Availability dates | demo data (`availability` in `src/data/site.ts`) | launch |
@@ -107,7 +107,7 @@ Set `PUBLIC_FORM_ENDPOINT` in `.env` (and in the host's build env) to a form ser
 
 ## Site URL
 
-Set `site` in `astro.config.mjs` to the production domain (no trailing path). It sets canonical URLs and Open Graph image URLs, and the sitemap (`/sitemap-index.xml`) and `robots.txt` take the domain from it too.
+Set `SITE_URL` (in `.env` locally, see `.env.example`, and in the host's build env) to the production domain, no trailing path. On Vercel it can stay empty: `astro.config.mjs` then uses the project's production domain (`VERCEL_PROJECT_PRODUCTION_URL`). It sets canonical URLs and Open Graph image URLs, and the sitemap (`/sitemap-index.xml`) and `robots.txt` take the domain from it too.
 
 ## Search
 
