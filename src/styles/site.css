@@ -871,3 +871,54 @@ html:has(.sh-viewer[open]) { overflow: hidden; }
 /* A wrapped error keeps its icon on the first line. */
 .sh-gate .sh-error { align-items: flex-start; line-height: 24px; }
 .sh-gate .sh-error svg { flex: none; margin-top: 4px; }
+
+/* Selects (gallery slice 2): the mark on a photo, the filter, and the bar with the counter and the send link.
+   All of it is revealed by client-gallery.ts, so without JS none of it shows. */
+.sh-select {
+  display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0;
+  background: transparent; color: var(--ink); border: 1px solid var(--line-strong); border-radius: var(--radius-pill); cursor: pointer;
+  transition: background-color var(--dur-fast) linear, color var(--dur-fast) linear, border-color var(--dur-fast) linear;
+}
+.sh-select[hidden] { display: none; }
+.sh-select:hover { border-color: var(--ink); }
+.sh-select[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.sh-select__off, .sh-select__on { display: grid; place-items: center; }
+.sh-select__on, .sh-select[aria-pressed="true"] .sh-select__off { display: none; }
+.sh-select[aria-pressed="true"] .sh-select__on { display: grid; }
+.sh-viewer .sh-select:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* A selected photo: an accent frame and a lit file name. */
+.sh-cgallery__open { outline: 2px solid transparent; outline-offset: 2px; transition: outline-color var(--dur-fast) linear; }
+.sh-cgallery__item.is-selected .sh-cgallery__open { outline-color: var(--accent-mark); }
+.sh-cgallery__item.is-selected .sh-cgallery__name { color: var(--accent-text); }
+.sh-cgallery__item[hidden], .sh-cgallery__grid[hidden], .sh-cgallery__empty[hidden] { display: none; }
+
+.sh-cgallery__tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); margin-bottom: var(--space-6); }
+.sh-cgallery__tools[hidden], .sh-cgallery__bar[hidden] { display: none; }
+.sh-cgallery__tools p { margin: 0; }
+
+/* Sticky at the bottom while the grid is on screen; it settles in the flow after the last photo,
+   so it never covers the end of the page. */
+.sh-cgallery__bar {
+  position: sticky; bottom: 0; z-index: 5; margin-top: var(--space-6);
+  display: grid; gap: var(--space-3) var(--space-6); align-items: center;
+  padding: var(--space-4) var(--space-4) max(var(--space-4), env(safe-area-inset-bottom));
+  background: var(--surface-100); border-top: 1px solid var(--line-strong);
+}
+.sh-cgallery__status { display: grid; gap: var(--space-1); min-width: 0; }
+.sh-cgallery__count, .sh-cgallery__note, .sh-cgallery__hint { margin: 0; font-variant-numeric: tabular-nums; }
+.sh-cgallery__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); }
+.sh-cgallery__hint { grid-column: 1 / -1; }
+.sh-cgallery__hint[hidden], .sh-cgallery__note[hidden] { display: none; }
+.sh-cgallery__actions .sh-btn { white-space: normal; text-align: center; }
+.sh-cgallery__actions .is-disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+.sh-cgallery__actions .sh-btn.is-disabled { background: transparent; color: var(--ink-muted); border-color: var(--line-strong); }
+.sh-cgallery__actions .sh-link.is-disabled { color: var(--ink-muted); background-image: none; }
+/* Phones: count and the send button share one row, the email link sits under them, so the bar stays low. */
+.sh-cgallery__bar { grid-template-columns: minmax(0, 1fr) auto; }
+@media (max-width: 600px) {
+  .sh-cgallery__bar { gap: var(--space-2) var(--space-3); padding-top: var(--space-3); }
+  .sh-cgallery__actions { display: contents; }
+  .sh-cgallery__actions .sh-btn { grid-column: 2; grid-row: 1; min-height: 44px; padding-inline: var(--space-4); }
+  .sh-cgallery__actions .sh-link { grid-column: 1 / -1; justify-self: start; }
+}

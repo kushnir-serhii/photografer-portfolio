@@ -5,6 +5,7 @@
 import { parseIsoDate, formatDate } from './dates';
 import { budgetIndex, parseBuiltQuote, quoteQuery, quoteSummary, quoteTotal, type Quote } from '../data/quote';
 import { readQuoteData } from './price-data';
+import { readSelectsCopy, readSelectsGalleries, selectsMessage, validSelects } from './gallery-selects';
 
 export function setParam(name: string, value: string | null) {
   const url = new URL(location.href);
@@ -140,8 +141,21 @@ export function initBooking() {
     if (briefInput && areaName && form.dataset.areaBrief && !briefInput.value.trim()) {
       briefInput.value = form.dataset.areaBrief.replace('{area}', () => areaName);
     }
-    // After a sent brief the form is empty again; the area is not asked for twice.
-    form.addEventListener('reset', () => setTimeout(() => setParam('area', null)));
+    // ?gallery=harbour-content-day&selects=RH_0412,RH_0419 (from "Send my selection") starts an empty brief
+    // with the list of photos. Ids are checked against that gallery; an unknown gallery or no valid id gives no prefill.
+    const galleryWanted = params.get('gallery');
+    const selectsCopy = readSelectsCopy(form.dataset.selectsCopy);
+    const gallery = galleryWanted ? readSelectsGalleries(form.dataset.galleries).find((g) => g.slug === galleryWanted) : undefined;
+    if (briefInput && selectsCopy && gallery && !briefInput.value.trim()) {
+      const ids = validSelects(gallery, params.get('selects'));
+      if (ids.length > 0) briefInput.value = selectsMessage(selectsCopy, gallery.shoot, gallery.date, ids);
+    }
+    // After a sent brief the form is empty again; the area and the selects are not asked for twice.
+    form.addEventListener('reset', () => setTimeout(() => {
+      setParam('area', null);
+      setParam('gallery', null);
+      setParam('selects', null);
+    }));
 
     if (dateInput) {
       // ?date=2027-06-12 fills the field as "12 June 2027". Invalid dates are ignored.

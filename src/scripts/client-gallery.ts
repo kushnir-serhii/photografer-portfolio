@@ -2,10 +2,14 @@
 // initClientGallery() is called from site.ts on astro:page-load; both live inside <main>.
 // The code check runs in the browser against codes in the page: a demo, not protection (the page says so).
 import { navigate } from 'astro:transitions/client';
+import { fillText, readSelectsCopy, selectsMessage } from './gallery-selects';
 
 export function initClientGallery() {
   document.querySelectorAll<HTMLFormElement>('form[data-gate]').forEach(wireGate);
-  document.querySelectorAll<HTMLDialogElement>('dialog[data-viewer]').forEach(wireViewer);
+  // The selects first: the viewer's own toggle follows them.
+  const grid = document.querySelector<HTMLElement>('[data-cgallery]');
+  const selects = grid ? wireSelects(grid) : null;
+  document.querySelectorAll<HTMLDialogElement>('dialog[data-viewer]').forEach((d) => wireViewer(d, selects));
 }
 
 /* ---------- code screen ---------- */
@@ -74,6 +78,176 @@ function wireGate(form: HTMLFormElement) {
   });
 }
 
+/* ---------- selects ---------- */
+
+const positive = (value: string | undefined): number => {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+};
+
+/** What the viewer needs from the selects: the state of a photo and a way to change it. */
+interface Selects {
+  has(id: string): boolean;
+  toggle(id: string): void;
+  onChange(callback: () => void): void;
+  /** The accessible name of a photo's mark ("Add to selects: <alt>"). */
+  markLabel(alt: string): string;
+}
+
+type Filter = 'all' | 'selects';
+
+/** The saved ids of a gallery; only ids that exist in it, anything else ignored. Storage may be blocked. */
+function loadSelects(key: string, known: Set<string>): Set<string> {
+  const chosen = new Set<string>();
+  try {
+    const parsed: unknown = JSON.parse(localStorage.getItem(key) ?? '[]');
+    if (Array.isArray(parsed)) {
+      for (const id of parsed) if (typeof id === 'string' && known.has(id)) chosen.add(id);
+    }
+  } catch {
+    // Unreadable or blocked: start with none.
+  }
+  return chosen;
+}
+
+function saveSelects(key: string, ids: string[]) {
+  try {
+    localStorage.setItem(key, JSON.stringify(ids));
+  } catch {
+    // Blocked or full: the selects live in memory until the page closes.
+  }
+}
+
+function wireSelects(grid: HTMLElement): Selects | null {
+  const scope = grid.closest('main') ?? document;
+  const bar = scope.querySelector<HTMLElement>('[data-selects-bar]');
+  const tools = scope.querySelector<HTMLElement>('[data-selects-tools]');
+  const emptyBox = scope.querySelector<HTMLElement>('[data-selects-empty]');
+  const count = bar?.querySelector<HTMLElement>('[data-selects-count]');
+  const note = bar?.querySelector<HTMLElement>('[data-selects-note]');
+  const send = bar?.querySelector<HTMLAnchorElement>('[data-selects-send]');
+  const mail = bar?.querySelector<HTMLAnchorElement>('[data-selects-mail]');
+  const hint = bar?.querySelector<HTMLElement>('[data-selects-hint]');
+  const chipAll = tools?.querySelector<HTMLButtonElement>('[data-selects-filter="all"]');
+  const chipSelects = tools?.querySelector<HTMLButtonElement>('[data-selects-filter="selects"]');
+  if (!bar || !tools || !count || !note || !send || !mail || !chipAll || !chipSelects) return null;
+
+  const copy = readSelectsCopy(bar.dataset.copy);
+  const { slug = '', shoot = '', date = '', email = '', mark = '' } = bar.dataset;
+  const included = positive(bar.dataset.included);
+  if (!copy || !/^[a-z0-9-]+$/.test(slug) || !included) return null;
+
+  // Every photo, in gallery order.
+  const items = new Map<string, { item: HTMLElement; button: HTMLButtonElement }>();
+  grid.querySelectorAll<HTMLButtonElement>('button[data-select-toggle]').forEach((button) => {
+    const id = button.dataset.selectToggle;
+    const item = button.closest<HTMLElement>('li');
+    if (id && item) items.set(id, { item, button });
+  });
+  if (items.size === 0) return null;
+
+  const key = `sh-fav-${slug}`;
+  const chosen = loadSelects(key, new Set(items.keys()));
+  let filter: Filter = 'all';
+  const listeners: Array<() => void> = [];
+  const ordered = () => Array.from(items.keys()).filter((id) => chosen.has(id));
+
+  // A link with no target looks and reads as unavailable and points at the explanation.
+  const setHref = (link: HTMLAnchorElement, href: string | null) => {
+    if (href) {
+      link.href = href;
+      link.removeAttribute('aria-disabled');
+      link.removeAttribute('aria-describedby');
+    } else {
+      link.removeAttribute('href');
+      link.setAttribute('aria-disabled', 'true');
+      if (hint) link.setAttribute('aria-describedby', hint.id);
+    }
+    link.classList.toggle('is-disabled', !href);
+  };
+
+  const render = () => {
+    const ids = ordered();
+    const n = ids.length;
+    for (const [id, { item, button }] of items) {
+      const on = chosen.has(id);
+      button.setAttribute('aria-pressed', String(on));
+      item.classList.toggle('is-selected', on);
+      item.hidden = filter === 'selects' && !on;
+    }
+    chipAll.setAttribute('aria-pressed', String(filter === 'all'));
+    chipSelects.setAttribute('aria-pressed', String(filter === 'selects'));
+    chipSelects.textContent = fillText(copy.filterSelects, { n });
+    const empty = filter === 'selects' && n === 0;
+    grid.hidden = empty;
+    if (emptyBox) emptyBox.hidden = !empty;
+
+    count.textContent = n === 0 ? fillText(copy.counterNone, { included }) : fillText(copy.counter, { n, included });
+    const extra = n - included;
+    note.hidden = extra <= 0;
+    note.textContent = extra > 0 ? fillText(extra === 1 ? copy.overOne : copy.over, { extra }) : '';
+    setHref(send, n > 0 ? `/contact/?gallery=${encodeURIComponent(slug)}&selects=${ids.map(encodeURIComponent).join(',')}` : null);
+    const body = n > 0 ? selectsMessage(copy, shoot, date, ids) : '';
+    const subject = fillText(copy.mailSubject, { shoot });
+    setHref(mail, n > 0 && email ? `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}` : null);
+    if (hint) hint.hidden = n > 0;
+    listeners.forEach((cb) => cb());
+  };
+
+  const visibleButtons = () => Array.from(items.values()).filter((v) => !v.item.hidden).map((v) => v.button);
+
+  const toggle = (id: string) => {
+    if (!items.has(id)) return;
+    // Under the Selects filter an unselected photo leaves the grid: keep keyboard focus nearby.
+    const focused = document.activeElement;
+    const at = focused instanceof HTMLButtonElement ? visibleButtons().indexOf(focused) : -1;
+    if (chosen.has(id)) chosen.delete(id);
+    else chosen.add(id);
+    saveSelects(key, ordered());
+    render();
+    if (at >= 0 && focused instanceof HTMLElement && focused.closest('li')?.hidden) {
+      const after = visibleButtons();
+      (after[Math.min(at, after.length - 1)] ?? chipAll).focus();
+    }
+  };
+
+  for (const [id, { button }] of items) button.addEventListener('click', () => toggle(id));
+  chipAll.addEventListener('click', () => {
+    filter = 'all';
+    render();
+  });
+  chipSelects.addEventListener('click', () => {
+    filter = 'selects';
+    render();
+  });
+  emptyBox?.querySelector('[data-selects-reset]')?.addEventListener('click', () => {
+    filter = 'all';
+    render();
+    chipAll.focus();
+  });
+  // An unavailable link does nothing.
+  for (const link of [send, mail]) {
+    link.addEventListener('click', (e) => {
+      if (link.getAttribute('aria-disabled') === 'true') e.preventDefault();
+    });
+  }
+
+  // Reveal: all of this needs the script.
+  tools.hidden = false;
+  bar.hidden = false;
+  items.forEach(({ button }) => (button.hidden = false));
+  render();
+
+  return {
+    has: (id) => chosen.has(id),
+    toggle,
+    onChange: (callback) => {
+      listeners.push(callback);
+    },
+    markLabel: (alt) => fillText(mark, { alt }),
+  };
+}
+
 /* ---------- viewer ---------- */
 
 interface ViewerFrame {
@@ -85,11 +259,6 @@ interface ViewerFrame {
   width: number;
   height: number;
 }
-
-const positive = (value: string | undefined): number => {
-  const n = Number(value);
-  return Number.isFinite(n) && n > 0 ? n : 0;
-};
 
 /** A grid link with everything the viewer needs; null leaves it a plain link to the image. */
 function readFrame(link: HTMLAnchorElement): ViewerFrame | null {
@@ -110,9 +279,9 @@ function readFrame(link: HTMLAnchorElement): ViewerFrame | null {
 // A horizontal move this long (px), and longer than it is tall, is a swipe.
 const SWIPE = 48;
 
-function wireViewer(dialog: HTMLDialogElement) {
+function wireViewer(dialog: HTMLDialogElement, selects: Selects | null) {
   const scope = dialog.closest('main') ?? document;
-  const frames = Array.from(scope.querySelectorAll<HTMLAnchorElement>('a[data-viewer-open]'))
+  const all = Array.from(scope.querySelectorAll<HTMLAnchorElement>('a[data-viewer-open]'))
     .map(readFrame)
     .filter((f): f is ViewerFrame => f !== null);
   const img = dialog.querySelector<HTMLImageElement>('[data-viewer-img]');
@@ -120,8 +289,11 @@ function wireViewer(dialog: HTMLDialogElement) {
   const name = dialog.querySelector<HTMLElement>('[data-viewer-name]');
   const count = dialog.querySelector<HTMLElement>('[data-viewer-count]');
   const error = dialog.querySelector<HTMLElement>('[data-viewer-error]');
-  if (!img || !stage || frames.length === 0) return;
+  const mark = dialog.querySelector<HTMLButtonElement>('[data-viewer-select]');
+  if (!img || !stage || all.length === 0) return;
   const of = count?.dataset.of ?? 'of';
+  // The photos the viewer steps through: those the grid shows when it opens (the Selects filter hides the rest).
+  let frames = all;
   let index = 0;
   // Each show() bumps this, so a slow image never replaces a later one.
   let request = 0;
@@ -135,12 +307,29 @@ function wireViewer(dialog: HTMLDialogElement) {
     pre.src = f.src;
   };
 
+  // The select mark follows the shown photo and the selects.
+  function syncMark() {
+    const f = frames[index];
+    if (!mark || !selects || !f) return;
+    mark.setAttribute('aria-pressed', String(selects.has(f.id)));
+    mark.setAttribute('aria-label', selects.markLabel(f.alt));
+  }
+  if (mark && selects) {
+    mark.hidden = false;
+    mark.addEventListener('click', () => {
+      const f = frames[index];
+      if (f) selects.toggle(f.id);
+    });
+    selects.onChange(syncMark);
+  }
+
   function show(i: number) {
     index = (i + frames.length) % frames.length;
     const f = frames[index];
     if (!f || !img) return;
     const mine = ++request;
     if (name) name.textContent = f.id;
+    syncMark();
     if (count) count.textContent = `${index + 1} ${of} ${frames.length}`;
     if (error) error.hidden = true;
     img.classList.add('is-loading');
@@ -175,11 +364,14 @@ function wireViewer(dialog: HTMLDialogElement) {
     preload(index - 1);
   }
 
-  frames.forEach((f, i) => {
+  all.forEach((f) => {
     f.link.addEventListener('click', (e) => {
       // Let modified clicks (new tab, download) open the image file.
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
+      frames = all.filter((v) => !v.link.closest('li')?.hidden);
+      const i = frames.indexOf(f);
+      if (i < 0) return;
       img.removeAttribute('src');
       img.removeAttribute('srcset');
       img.alt = '';
@@ -233,6 +425,9 @@ function wireViewer(dialog: HTMLDialogElement) {
   // Back to the photo last shown, in the grid.
   dialog.addEventListener('close', () => {
     request++;
-    frames[index]?.link.focus();
+    // Back to the photo last shown; if the Selects filter has hidden it meanwhile, to the filter.
+    const link = frames[index]?.link;
+    if (link && !link.closest('li')?.hidden) link.focus();
+    else document.querySelector<HTMLElement>('[data-selects-filter][aria-pressed="true"]')?.focus();
   });
 }

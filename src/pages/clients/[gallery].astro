@@ -4,7 +4,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/Icon.astro';
 import { site } from '../../data/site';
 import { formatDate } from '../../scripts/dates';
-import { clientGalleries, galleryPage as copy, galleryViewer, type ClientGallery } from '../../data/client-galleries';
+import { fillText } from '../../scripts/gallery-selects';
+import { clientGalleries, galleryPage as copy, gallerySelects, galleryViewer, type ClientGallery } from '../../data/client-galleries';
 
 // Demo only: with site.demo off no gallery page is built (a real client's galleries live in a gallery service).
 export function getStaticPaths() {
@@ -31,6 +32,8 @@ const frames = await Promise.all(
 // Rendered width of a frame: rows are about 300px high above 860px (rows stretch to fill, so some headroom);
 // on a phone a landscape frame takes the row, two portrait frames share it.
 const sizesFor = (ratio: number) => `(min-width: 861px) ${Math.ceil(ratio * 380)}px, ${ratio >= 1 ? 100 : 50}vw`;
+const selects = gallerySelects;
+const selectsCopy = JSON.stringify(gallerySelects);
 const [footBefore = '', footAfter = ''] = copy.foot.split('{email}');
 const [emptyBefore = '', emptyAfter = ''] = copy.empty.split('{email}');
 ---
@@ -55,6 +58,15 @@ const [emptyBefore = '', emptyAfter = ''] = copy.empty.split('{email}');
 
   <section class="sh-section sh-section--flush">
     <div class="sh-container--wide">
+      {frames.length > 0 && (
+        <div class="sh-cgallery__tools" data-selects-tools hidden>
+          <p class="sh-meta-s" id="sh-selects-filter-label">{selects.filterLabel}</p>
+          <div class="sh-filters" role="group" aria-labelledby="sh-selects-filter-label">
+            <button class="sh-chip" type="button" aria-pressed="true" data-selects-filter="all">{selects.filterAll}</button>
+            <button class="sh-chip" type="button" aria-pressed="false" data-selects-filter="selects" data-label={selects.filterSelects}>{fillText(selects.filterSelects, { n: 0 })}</button>
+          </div>
+        </div>
+      )}
       {frames.length > 0 ? (
         <ul class="sh-cgallery__grid" role="list" data-cgallery>
           {frames.map((frame, i) => (
@@ -81,9 +93,13 @@ const [emptyBefore = '', emptyAfter = ''] = copy.empty.split('{email}');
                   loading={i < 4 ? 'eager' : 'lazy'}
                 />
               </a>
-              {/* The foot holds the file name; slice 2 adds the select toggle next to it. */}
               <div class="sh-cgallery__foot">
                 <p class="sh-meta-s sh-cgallery__name" id={`f-${frame.id}`}>{frame.id}</p>
+                {/* Script-only: revealed by client-gallery.ts, so without JS no dead button shows. */}
+                <button class="sh-select" type="button" aria-pressed="false" aria-label={fillText(selects.mark, { alt: frame.alt })} data-select-toggle={frame.id} hidden>
+                  <span class="sh-select__off"><Icon name="plus" /></span>
+                  <span class="sh-select__on"><Icon name="check" /></span>
+                </button>
               </div>
             </li>
           ))}
@@ -92,6 +108,38 @@ const [emptyBefore = '', emptyAfter = ''] = copy.empty.split('{email}');
         <div class="sh-cgallery__empty">
           <p class="sh-body-s sh-muted">{emptyBefore}<a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a>{emptyAfter}</p>
           <a class="sh-btn sh-btn--outline" href="/clients/">{copy.back}</a>
+        </div>
+      )}
+      {frames.length > 0 && (
+        <div class="sh-cgallery__empty sh-cgallery__empty--selects" data-selects-empty hidden>
+          <p class="sh-body-s sh-muted">{selects.emptyText}</p>
+          <button class="sh-btn sh-btn--outline" type="button" data-selects-reset>{selects.emptyAction}</button>
+        </div>
+      )}
+      {frames.length > 0 && (
+        <div
+          class="sh-cgallery__bar"
+          role="group"
+          aria-label={selects.barLabel}
+          data-selects-bar
+          data-slug={gallery.slug}
+          data-included={gallery.included}
+          data-shoot={name}
+          data-date={date}
+          data-email={site.email}
+          data-copy={selectsCopy}
+          data-mark={selects.mark}
+          hidden
+        >
+          <div class="sh-cgallery__status" aria-live="polite">
+            <p class="sh-meta sh-meta--ink sh-cgallery__count" data-selects-count></p>
+            <p class="sh-body-s sh-muted sh-cgallery__note" data-selects-note hidden></p>
+          </div>
+          <div class="sh-cgallery__actions">
+            <a class="sh-btn sh-btn--primary" href="/contact/" aria-describedby="sh-selects-hint" data-selects-send>{selects.send}</a>
+            <a class="sh-link sh-body-s" href={`mailto:${site.email}`} aria-describedby="sh-selects-hint" data-selects-mail>{selects.email}</a>
+          </div>
+          <p class="sh-body-s sh-muted sh-cgallery__hint" id="sh-selects-hint" data-selects-hint>{selects.sendNone}</p>
         </div>
       )}
       {frames.length > 0 && (
@@ -107,8 +155,11 @@ const [emptyBefore = '', emptyAfter = ''] = copy.empty.split('{email}');
     <dialog class="sh-viewer" aria-labelledby="sh-viewer-name" data-viewer>
       <div class="sh-viewer__head">
         <p class="sh-meta sh-meta--ink sh-viewer__name" id="sh-viewer-name" data-viewer-name></p>
-        {/* Slice 2: the select toggle sits here, before the close button. */}
         <div class="sh-viewer__tools">
+          <button class="sh-select" type="button" aria-pressed="false" data-viewer-select hidden>
+            <span class="sh-select__off"><Icon name="plus" /></span>
+            <span class="sh-select__on"><Icon name="check" /></span>
+          </button>
           <button class="sh-burger sh-viewer__btn" type="button" aria-label={galleryViewer.close} data-viewer-close>
             <Icon name="close" />
           </button>

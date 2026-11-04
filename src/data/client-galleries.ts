@@ -98,6 +98,34 @@ export const galleryPage = {
   open: 'View',
 };
 
+// Selects (slice 2): the marks, the counter, the filter and the message that goes back to the photographer.
+// Placeholders: {alt} {n} {included} {extra} {shoot} {date} {ids} {count}.
+export const gallerySelects = {
+  // The mark on a photo; the accessible name stays the same whether it is set or not (aria-pressed says it).
+  mark: 'Add to selects: {alt}',
+  barLabel: 'Your selects',
+  filterLabel: 'Show',
+  filterAll: 'All photos',
+  filterSelects: 'Selects ({n})',
+  // "7 of 10 included"
+  counter: '{n} of {included} included',
+  counterNone: 'No selects yet — {included} included',
+  // Above the package: selecting more stays possible.
+  over: "{extra} beyond your package — I'll quote them separately",
+  overOne: "{extra} beyond your package — I'll quote it separately",
+  emptyText: 'Nothing in your selects yet. Tap the + under a photo to pick it.',
+  emptyAction: 'Show all photos',
+  send: 'Send my selection',
+  sendNone: 'Pick at least one photo, then you can send your selection.',
+  email: 'or email them',
+  // The message that fills the brief (and the email): "My selects from Harbour & Co — Content day (14 October 2026): RH_0412, RH_0419 (2 photos)."
+  message: 'My selects from {shoot} ({date}): {ids} ({count}).',
+  photoOne: '1 photo',
+  photoMany: '{n} photos',
+  mailSubject: 'My selects from {shoot}',
+};
+export type GallerySelectsCopy = typeof gallerySelects;
+
 export const galleryViewer = {
   previous: 'Previous photo',
   next: 'Next photo',

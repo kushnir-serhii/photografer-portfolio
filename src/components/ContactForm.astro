@@ -3,6 +3,8 @@ import { site, plans, addOns, quoteCopy, shootTypes, budgetRanges, enquiryForm a
 import type { Plan } from '../data/site';
 import { areas } from '../data/areas';
 import { formatPrice } from '../data/format';
+import { clientGalleries, gallerySelects } from '../data/client-galleries';
+import { formatDate } from '../scripts/dates';
 import Icon from './Icon.astro';
 
 // Option text doubles as the submitted value, so the email reads "Full day — £1,750".
@@ -16,6 +18,16 @@ const quoteData = JSON.stringify({
   copy: quoteCopy,
   budgets: budgetRanges,
 });
+// ?gallery=&selects= from a client gallery (demo only): slug, shoot, date and frame ids, to check the link and write the brief.
+const selectsGalleries = site.demo
+  ? JSON.stringify(clientGalleries.map((g) => ({
+      slug: g.slug,
+      shoot: `${g.client} — ${g.title}`,
+      date: formatDate(g.date) ?? g.date,
+      ids: g.frames.map((f) => f.id),
+    })))
+  : undefined;
+const selectsCopy = site.demo ? JSON.stringify(gallerySelects) : undefined;
 const action = site.formEndpoint || `mailto:${site.email}`;
 ---
 <form
@@ -29,6 +41,8 @@ const action = site.formEndpoint || `mailto:${site.email}`;
   data-areas={areaData}
   data-area-brief={copy.briefArea}
   data-quote-data={quoteData}
+  data-galleries={selectsGalleries}
+  data-selects-copy={selectsCopy}
 >
   <p class="sh-enquiry__choice sh-body-s" data-plan-choice aria-live="polite" hidden>
     <span data-plan-choice-text></span> · <button class="sh-enquiry__change" type="button" data-plan-change>{copy.packageChange}</button><span data-quote-edit-wrap hidden> · <a class="sh-link" href="/rates/#quote" data-quote-edit>{copy.quoteEdit}</a></span>
