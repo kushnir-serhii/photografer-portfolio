@@ -18,10 +18,12 @@ interface Props {
   image?: string;
   // Page-specific JSON-LD objects (see src/data/schema.ts); the business block is always added.
   schema?: JsonLdObject[];
+  // Keeps the page out of search results (client galleries).
+  noindex?: boolean;
 }
 // Default share image: the hero photo at 1200px as a JPG, the format social previews expect.
 const ogDefault = await getImage({ src: hero.image, width: 1200, format: 'jpg' });
-const { title, description = site.description, image = ogDefault.src, schema = [] } = Astro.props;
+const { title, description = site.description, image = ogDefault.src, schema = [], noindex = false } = Astro.props;
 const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — brand & commercial photographer, ${site.city}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -32,6 +34,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

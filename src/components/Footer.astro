@@ -1,5 +1,5 @@
 ---
-import { nav, site } from '../data/site';
+import { nav, site, clientGalleriesHref } from '../data/site';
 import { areas, areaLabel, serviceArea } from '../data/areas';
 ---
 <footer class="sh-footer">
@@ -22,7 +22,7 @@ import { areas, areaLabel, serviceArea } from '../data/areas';
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
           <li><a href={site.phoneHref}>{site.phone}</a></li>
           <li><a href={site.instagram} rel="noopener">Instagram</a></li>
-          <li><a href={site.clientGalleries}>Client galleries</a></li>
+          {clientGalleriesHref && <li><a href={clientGalleriesHref}>Client galleries</a></li>}
         </ul>
       </div>
       <div>

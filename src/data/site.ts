@@ -38,7 +38,9 @@ export const site = {
   // Facebook Messenger username for m.me links. Empty hides Messenger.
   messenger: '',
   instagram: 'https://instagram.com/',
-  clientGalleries: '#',
+  // The client's gallery service (e.g. a Pixieset or Pic-Time address). Empty: no footer link when demo is off.
+  // While demo is true the footer links to the mocked gallery at /clients/ instead (spec 006).
+  clientGalleries: '',
   // The next bookable period; used in the hero, marquee and footer instead of a hard-coded date.
   season: 'January 2027',
   // Where the enquiry form posts (e.g. a Formspree endpoint). Set PUBLIC_FORM_ENDPOINT in .env.
@@ -46,6 +48,9 @@ export const site = {
   // Shows demo-only features and their labels; set false for a real client's site.
   demo: true,
 };
+
+// The footer's "Client galleries" link: the demo gallery, else the client's gallery service; '' hides it.
+export const clientGalleriesHref: string = site.demo ? '/clients/' : site.clientGalleries;
 
 export const nav = [
   { label: 'Work', href: '/work/' },

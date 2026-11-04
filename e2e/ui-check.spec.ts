@@ -1,7 +1,7 @@
 import { test, expect, type Page, type Response } from '@playwright/test';
 
 /** Every existing page; used when ROUTES is empty. Update when a spec adds a route. */
-export const DEFAULT_ROUTES = ['root', 'work', 'studio', 'rates', 'contact', 'privacy', '404'];
+export const DEFAULT_ROUTES = ['root', 'work', 'studio', 'rates', 'contact', 'privacy', '404', 'clients', 'clients/harbour-content-day'];
 
 // 375 is emulated as a phone (overlay scrollbars, touch), 1280 as a desktop.
 const WIDTHS = [

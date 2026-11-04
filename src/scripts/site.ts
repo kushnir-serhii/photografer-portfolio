@@ -4,6 +4,7 @@ import { initBooking } from './booking';
 import { initCalendar } from './calendar';
 import { initCalculator } from './calculator';
 import { initFilms } from './film';
+import { initClientGallery } from './client-gallery';
 
 type Runtime = { init(root?: ParentNode): unknown; theme: { get(): string } };
 const runtime = (window as unknown as { StillHours?: Runtime }).StillHours;
@@ -65,6 +66,7 @@ document.addEventListener('astro:page-load', () => {
   initCalendar();
   initCalculator();
   initFilms();
+  initClientGallery();
 });
 
 /* ---------- gallery filters ---------- */

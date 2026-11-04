@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../data/site';
+import { clientGalleries, galleryGate as copy } from '../../data/client-galleries';
+
+// Without the demo there is no gallery here: send visitors to the client's gallery service, or home.
+if (!site.demo) return Astro.redirect(site.clientGalleries || '/');
+
+// Code -> slug for the script (src/scripts/client-gallery.ts). Demo only: a code in the page is no protection.
+const codes = JSON.stringify(Object.fromEntries(clientGalleries.map((g) => [g.code.trim().toUpperCase(), g.slug])));
+const demoCode = site.demo ? clientGalleries[0]?.code : undefined;
+const describedBy = [demoCode && 'g-code-help', 'g-code-err'].filter(Boolean).join(' ');
+// Copy with "{email}" in it: the text around a mailto link.
+const [errorBefore = '', errorAfter = ''] = copy.error.split('{email}');
+const [noJsBefore = '', noJsAfter = ''] = copy.noJs.split('{email}');
+---
+<BaseLayout title={copy.title} description={copy.description} noindex>
+  <section class="sh-section sh-section--huge">
+    <div class="sh-container sh-gate">
+      <p class="sh-meta sh-head__eyebrow">{copy.eyebrow}</p>
+      <h1 class="sh-d-xl sh-gate__title" data-split>{copy.title}</h1>
+      <p class="sh-lead sh-gate__lead">{copy.lead}</p>
+
+      {/* Needs the script to open a gallery: hidden until client-gallery.ts shows it. */}
+      <form class="sh-gate__form" novalidate hidden data-gate data-codes={codes}>
+        <div class="sh-field">
+          <label class="sh-label" for="g-code">{copy.label}</label>
+          <div class="sh-gate__row">
+            <input
+              class="sh-input sh-gate__input"
+              id="g-code"
+              name="code"
+              type="text"
+              placeholder={copy.placeholder}
+              autocomplete="off"
+              autocapitalize="characters"
+              spellcheck="false"
+              required
+              aria-describedby={describedBy}
+              data-gate-input
+            />
+            <button class="sh-btn sh-btn--primary sh-gate__submit" type="submit">
+              {copy.submit} <Icon name="arrow-right" />
+            </button>
+          </div>
+          {demoCode && (
+            <p class="sh-help sh-gate__help" id="g-code-help">
+              {copy.demoCode} <button class="sh-gate__fill" type="button" data-gate-fill={demoCode}>{demoCode}</button>
+            </p>
+          )}
+          <p class="sh-error" id="g-code-err" role="alert" hidden data-gate-error>
+            <Icon name="error" />
+            <span>{errorBefore}<a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a>{errorAfter}</span>
+          </p>
+        </div>
+      </form>
+
+      <p class="sh-body-s sh-muted sh-gate__nojs" data-gate-nojs>
+        {noJsBefore}<a class="sh-link" href={`mailto:${site.email}`}>{site.email}</a>{noJsAfter}
+      </p>
+
+      {site.demo && <p class="sh-demo-note sh-gate__demo">{copy.demoNote}</p>}
+    </div>
+  </section>
+</BaseLayout>
